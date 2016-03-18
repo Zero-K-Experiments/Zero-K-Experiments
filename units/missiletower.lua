@@ -24,7 +24,7 @@ unitDef = {
   customParams                  = {
     description_de = [[Flugabwehrraketenturm]],
     description_pl = [[Wieza przeciwlotnicza]],
-    helptext       = [[The Hacksaw's twin missiles can drop even the most heavily armored bomber in one pair of hits, but take a considerable amount of time to reload, making them less than ideal against light targets.]],
+    helptext       = [[Hacksaw is loaded with 8 missiles, that can drop even the most heavily armored bomber in one volley of hits, but it takes a considerable amount of time to reload, making Hacksaw less than ideal against massive raids or tough targets.]],
 	helptext_de    = [[Seine Zwillingsraketen können sogar die schwersten Bomber mit einem Schuss vom Himmel holen, brauchen aber eine beachtliche Zeit zum Nachladen, was sie gegen leichtere Ziele nicht sehr effektiv macht.]],
 	helptext_pl    = [[Podwojne rakiety, ktore wystrzeliwuje Hacksaw, zadaja bardzo duze obrazenia, jednak maja rownie dlugi czas przeladowania.]],
   },
@@ -78,8 +78,8 @@ unitDef = {
     MISSILE = {
       name                    = [[Homing Missiles]],
       areaOfEffect            = 24,
-      burst                   = 2,
-      burstrate               = 0.7,
+      burst                   = 8,
+      burstrate               = 0.125,
       canattackground         = false,
       cegTag                  = [[missiletrailbluebig]],
       craterBoost             = 0,
@@ -92,8 +92,8 @@ unitDef = {
 	  },
 
       damage                  = {
-        default = 60.1,
-        planes  = 600.1,
+        default = 15.1,
+        planes  = 150.1,
       },
 
       explosionGenerator      = [[custom:FLASH2]],
@@ -107,7 +107,7 @@ unitDef = {
       model                   = [[wep_m_phoenix.s3o]],
       noSelfDamage            = true,
       range                   = 420,
-      reloadtime              = 15,
+      reloadtime              = 12,
       smokeTrail              = true,
       soundHit                = [[explosion/ex_med11]],
       soundStart              = [[weapon/missile/missile_fire3]],
