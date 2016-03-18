@@ -48,12 +48,12 @@ local econ = {
 }
 
 local defense = {
-	corrl =    {order = 0, row = 1, col = 1},
-	corllt =   {order = 1, row = 1, col = 2},
-	armdeva =  {order = 2, row = 1, col = 3},
-	armartic = {order = 3, row = 1, col = 4},
-	armpb =    {order = 5, row = 1, col = 5},
-	corhlt =   {order = 6, row = 1, col = 6},
+--	corrl =    {order = 0, row = 1, col = 1},
+	corllt =   {order = 1, row = 1, col = 1},
+	armdeva =  {order = 2, row = 1, col = 2},
+	armartic = {order = 3, row = 1, col = 3},
+	armpb =    {order = 5, row = 1, col = 4},
+	corhlt =   {order = 6, row = 1, col = 5},
 
 	missiletower =  {order = 9, row = 2, col = 1},
 	corrazor =     {order = 10, row = 2, col = 2},

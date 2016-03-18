@@ -26,7 +26,7 @@ local buildOpts = {
 	[[armsonar]],
 	[[corjamt]],
 	[[armjamt]],
-	[[corrl]],
+--	[[corrl]],
 	[[corllt]],
 	[[corgrav]],
 	[[armartic]],
