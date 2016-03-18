@@ -750,9 +750,9 @@
 		"helptext" : "The Phoenix's napalm bombs decimate large clumps of units and light structures."
 	},
 	"armsnipe" : {
-		"name" : "Spectre",
+		"name" : "Sniper",
 		"description" : "Cloaked Skirmish/Anti-Heavy Artillery Bot",
-		"helptext" : "The Spectre's energy rifle inflicts heavy damage to a single target. It can fire while cloaked; however its visible round betrays its position. It requires quite a bit of energy to keep cloaked, especially when moving. The best way to locate a Spectre is by sweeping the area with many cheap units."
+		"helptext" : "The Sniper's energy rifle inflicts heavy damage to a single target. It can fire while cloaked; however its visible round betrays its position. It requires quite a bit of energy to keep cloaked, especially when moving. The best way to locate a Sniper is by sweeping the area with many cheap units."
 	},
 	"corbhmth" : {
 		"name" : "Behemoth",
