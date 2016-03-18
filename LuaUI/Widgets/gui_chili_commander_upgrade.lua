@@ -558,10 +558,19 @@ end
 local mainWindowShown = false
 local mainWindow, timeLabel, costLabel, morphBuildPower
 
+-- to control its visibility from outside
+local acceptButton
+local maxLevelReachedLabel
+
 function UpdateMorphCost(newCost)
-	newCost = (newCost or 0) + morphBaseCost
-	costLabel:SetCaption(math.floor(newCost))
-	timeLabel:SetCaption(math.floor(newCost/morphBuildPower))
+	if newCost then
+		newCost = (newCost or 0) + morphBaseCost
+		costLabel:SetCaption(math.floor(newCost))
+		timeLabel:SetCaption(math.floor(newCost/morphBuildPower))
+	else
+		costLabel:SetCaption("N/A")
+		timeLabel:SetCaption("N/A")
+	end
 end
 
 local function HideMainWindow()
@@ -573,7 +582,7 @@ local function HideMainWindow()
 	HideModuleSelection()
 end
 
-local function CreateMainWindow()
+local function CreateMainWindow(upgradeEnabled)
 	local screenWidth, screenHeight = Spring.GetWindowGeometry()
 	local minimapHeight = screenWidth/6 + 45
 	
@@ -611,6 +620,18 @@ local function CreateMainWindow()
 		caption = "Modules",
 		autosize = false,
 		font   = {size = 20, outline = true, color = {.8,.8,.8,.9}, outlineWidth = 2, outlineWeight = 2},
+	}
+	
+	maxLevelReachedLabel  = Chili.Label:New{
+		x      = 2,
+		right  = 0,
+		y      = 35,
+		height = BUTTON_SIZE * 3,
+		valign = "center",
+		align  = "center",
+		caption = "Maximum Level of Commander Reached",
+		autosize = false,
+		font   = {size = 26, outline = true, color = {.8,.1,.1,.8}, outlineWidth = 2, outlineWeight = 2},
 	}
 	
 	currentModuleList = StackPanel:New{  
@@ -668,7 +689,7 @@ local function CreateMainWindow()
 		font     = {size = 24, outline = true, color = cyan, outlineWidth = 2, outlineWeight = 2},
 	}
 	
-	local acceptButton = Button:New{
+	acceptButton = Button:New{
 		caption = "",
 		right = 135,
 		bottom = 15,
@@ -679,7 +700,7 @@ local function CreateMainWindow()
 		tooltip = "Start upgrade",
 		OnClick = {
 			function()
-				if mainWindowShown then
+				if mainWindowShown and upgradeEnabled then 
 					SendUpgradeCommand(GetCurrentModules())
 				end
 			end
@@ -718,7 +739,7 @@ local function CreateMainWindow()
 			end
 		},
 	}
-	
+
 	Image:New{
 		x = 2,
 		right = 2,
@@ -758,13 +779,31 @@ local function CreateMainWindow()
 		bottom = 0,
 		padding = {0, 0, 0, 0},	
 		backgroundColor = {1, 1, 1, 0.8},
-		children = {topLabel, currentModuleList, timeImage, timeLabel, costImage, costLabel, acceptButton, viewAlreadyOwnedButton, cancelButton}
+		children = {topLabel, maxLevelReachedLabel ,currentModuleList, timeImage, timeLabel, costImage, costLabel, acceptButton, viewAlreadyOwnedButton, cancelButton}
 	}
 end
 
 local function ShowModuleListWindow(slotDefaults, level, chassis, alreadyOwnedModules)
+	UNBOUNDED_LEVEL = false
+	chassisDefs[chassis].maxNormalLevel = 3 - 1
+	local upgradeEnabled = UNBOUNDED_LEVEL or chassisDefs[chassis].maxNormalLevel >= level
+	Spring.Echo("UNBOUNDED_LEVEL="..tostring(UNBOUNDED_LEVEL))
+	Spring.Echo("chassisDefs[chassis].maxNormalLevel="..tostring(chassisDefs[chassis].maxNormalLevel))
+	Spring.Echo("level="..tostring(level))
+	Spring.Echo("upgradeEnabled="..tostring(upgradeEnabled))
 	if not currentModuleList then
-		CreateMainWindow()
+		Spring.Echo("CreateMainWindow()")		
+		CreateMainWindow(upgradeEnabled)
+	end
+	
+	if acceptButton.visible ~= upgradeEnabled then
+		if upgradeEnabled then
+			acceptButton:Show()
+			maxLevelReachedLabel:Hide()
+		else
+			acceptButton:Hide()
+			maxLevelReachedLabel:Show()
+		end
 	end
 	
 	if level > chassisDefs[chassis].maxNormalLevel then
@@ -793,38 +832,45 @@ local function ShowModuleListWindow(slotDefaults, level, chassis, alreadyOwnedMo
 	ResetCurrentModuleData()
 	ResetCurrentModules(alreadyOwnedModules)
 	
-	-- Data is added here to generate reasonable replacementSets in actual adding.
-	for i = 1, #slots do
-		local slotData = slots[i]
-		UpdateSlotModule(i, (slotDefaults and slotDefaults[i]) or slotData.defaultModule)
-	end
+	local newCost = nil
+	if upgradeEnabled then
 	
-	-- Check that the module in each slot is valid
-	local requireUpdate = true
-	local newCost = 0
-	for repeatBreak = 1, 2 * #slots do
-		requireUpdate = false
-		newCost = 0
+		-- Data is added here to generate reasonable replacementSets in actual adding.
 		for i = 1, #slots do
 			local slotData = slots[i]
-			if ModuleIsValid(level, chassis, slotData.slotAllows, i) then
-				newCost = newCost + moduleDefs[GetSlotModule(i, slotData.empty)].cost
-			else
-				requireUpdate = true
-				UpdateSlotModule(i, slotData.empty)
+			UpdateSlotModule(i, (slotDefaults and slotDefaults[i]) or slotData.defaultModule)
+		end
+		
+		-- Check that the module in each slot is valid
+		local requireUpdate = true
+		newCost = 0
+		for repeatBreak = 1, 2 * #slots do
+			requireUpdate = false
+			newCost = 0
+			for i = 1, #slots do
+				local slotData = slots[i]
+				if ModuleIsValid(level, chassis, slotData.slotAllows, i) then
+					newCost = newCost + moduleDefs[GetSlotModule(i, slotData.empty)].cost
+				else
+					requireUpdate = true
+					UpdateSlotModule(i, slotData.empty)
+				end
+			end
+			if not requireUpdate then
+				break
 			end
 		end
-		if not requireUpdate then
-			break
-		end
+		
 	end
 	
 	UpdateMorphCost(newCost)
 	
-	-- Actually add the default modules and slot data
-	for i = 1, #slots do
-		local slotData = slots[i]
-		currentModuleList:AddChild(GetCurrentModuleButton(GetSlotModule(i, slotData.empty), i, level, chassis, slotData.slotAllows, slotData.empty))
+	if upgradeEnabled then
+		-- Actually add the default modules and slot data
+		for i = 1, #slots do
+			local slotData = slots[i]
+			currentModuleList:AddChild(GetCurrentModuleButton(GetSlotModule(i, slotData.empty), i, level, chassis, slotData.slotAllows, slotData.empty))
+		end
 	end
 end
 

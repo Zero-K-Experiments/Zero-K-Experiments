@@ -2,12 +2,17 @@ local skinDefs = VFS.Include("LuaRules/Configs/dynamic_comm_skins.lua")
 
 local UNBOUNDED_LEVEL = true
 local COST_MULT = 1
+local comm_maxlevel = nil
 
 if (Spring.GetModOptions) then
 	local modOptions = Spring.GetModOptions()
 	if (modOptions and modOptions.commtest and modOptions.commtest ~= 0) then
 		COST_MULT = 0.1
 	end
+	if (modOptions and modOptions.comm_maxlevel and tonumber(modOptions.comm_maxlevel) < 100) then
+		UNBOUNDED_LEVEL = false
+		comm_maxlevel = tonumber(modOptions.comm_maxlevel) - 1
+	end	
 end
 ------------------------------------------------------------------------
 -- Module Definitions
@@ -861,7 +866,7 @@ local chassisDefs = {
 		humanName = "Strike",
 		baseUnitDef = UnitDefNames and UnitDefNames["dynstrike0"].id,
 		extraLevelCostFunction = extraLevelCostFunction,
-		maxNormalLevel = 5,
+		maxNormalLevel = comm_maxlevel or 5,
 		secondPeashooter = true,
 		levelDefs = {
 			[0] = {
@@ -994,7 +999,7 @@ local chassisDefs = {
 		humanName = "Recon",
 		baseUnitDef = UnitDefNames and UnitDefNames["dynrecon0"].id,
 		extraLevelCostFunction = extraLevelCostFunction,
-		maxNormalLevel = 5,
+		maxNormalLevel = comm_maxlevel or 5,
 		levelDefs = {
 			[0] = {
 				morphBuildPower = 10,
@@ -1126,7 +1131,7 @@ local chassisDefs = {
 		humanName = "Engineer",
 		baseUnitDef = UnitDefNames and UnitDefNames["dynsupport0"].id,
 		extraLevelCostFunction = extraLevelCostFunction,
-		maxNormalLevel = 5,
+		maxNormalLevel = comm_maxlevel or 5,
 		levelDefs = {
 			[0] = {
 				morphBuildPower = 10,
@@ -1270,7 +1275,7 @@ local chassisDefs = {
 		humanName = "Guardian",
 		baseUnitDef = UnitDefNames and UnitDefNames["dynassault0"].id,
 		extraLevelCostFunction = extraLevelCostFunction,
-		maxNormalLevel = 5,
+		maxNormalLevel = comm_maxlevel or 5,
 		secondPeashooter = true,
 		levelDefs = {
 			[0] = {

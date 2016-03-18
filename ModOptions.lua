@@ -74,6 +74,17 @@ local options = {
     section= 'a_important',
     def = false,
   },
+  {
+    key    = 'comm_maxlevel',
+    name   = 'Max comm level',
+    desc   = 'Sets maximum level one can morph a commander to',
+    type   = 'number',
+    section= 'a_important',
+    def    = 2,
+    min    = 1,
+    max    = 100,
+    step   = 1,
+  },  
 	{
 		key     = 'mutespec',
 		name    = 'Mute Spectators',
