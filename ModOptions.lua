@@ -76,13 +76,13 @@ local options = {
   },
   {
     key    = 'comm_maxlevel',
-    name   = 'Max comm level',
-    desc   = 'Sets maximum level one can morph a commander to',
+    name   = 'Max commander level',
+    desc   = 'Sets maximum level one can morph a commander to. 0 - no limits',
     type   = 'number',
     section= 'a_important',
-    def    = 2,
-    min    = 1,
-    max    = 100,
+    def    = 0,
+    min    = 0,
+    max    = 5,
     step   = 1,
   },  
 	{

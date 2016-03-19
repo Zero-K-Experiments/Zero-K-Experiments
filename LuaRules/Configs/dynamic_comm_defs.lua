@@ -9,7 +9,7 @@ if (Spring.GetModOptions) then
 	if (modOptions and modOptions.commtest and modOptions.commtest ~= 0) then
 		COST_MULT = 0.1
 	end
-	if (modOptions and modOptions.comm_maxlevel and tonumber(modOptions.comm_maxlevel) < 100) then
+	if (modOptions and modOptions.comm_maxlevel and tonumber(modOptions.comm_maxlevel) > 0) then
 		UNBOUNDED_LEVEL = false
 		comm_maxlevel = tonumber(modOptions.comm_maxlevel) - 1
 	end	
