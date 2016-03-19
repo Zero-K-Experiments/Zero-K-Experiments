@@ -218,7 +218,7 @@
 	},
 	"armmstor" : {
 		"name" : "Storage",
-		"description" : "Stores Metal and Energy (500)",
+		"description" : "Stores Metal and Energy (1000)",
 		"helptext" : "Storages act as a buffer when one expects a big influx of metal, such as reclaiming a vast wreckage field. However, longer periods of increased metal income are better dealt with by acquiring more buildpower."
 	},
 	"corclog" : {

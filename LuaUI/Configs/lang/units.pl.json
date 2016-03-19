@@ -219,7 +219,7 @@
     },
     "armmstor": {
         "name": "Magazyn",
-        "description": "Magazynuje metal i energię (po 500)",
+        "description": "Magazynuje metal i energię (po 1000)",
         "helptext": "Magazyn pozwala na przechowywanie surowców na wypadek, gdy nie ma wystarczająco dużo budowniczych, by je wykorzystać. Lepiej jest jednak zbudować więcej budowniczych, a magazynu używać bardziej jako bufora na wypadek dużych, niespodziewanych zysków, na przykład zbierania dużego złomowiska."
     },
     "corclog": {
