@@ -779,7 +779,7 @@ local function CreateMainWindow(upgradeEnabled)
 		bottom = 0,
 		padding = {0, 0, 0, 0},	
 		backgroundColor = {1, 1, 1, 0.8},
-		children = {topLabel, maxLevelReachedLabel ,currentModuleList, timeImage, timeLabel, costImage, costLabel, acceptButton, viewAlreadyOwnedButton, cancelButton}
+		children = {topLabel, maxLevelReachedLabel,currentModuleList, timeImage, timeLabel, costImage, costLabel, acceptButton, viewAlreadyOwnedButton, cancelButton}
 	}
 end
 
