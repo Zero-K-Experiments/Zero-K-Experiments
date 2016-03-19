@@ -784,15 +784,9 @@ local function CreateMainWindow(upgradeEnabled)
 end
 
 local function ShowModuleListWindow(slotDefaults, level, chassis, alreadyOwnedModules)
-	UNBOUNDED_LEVEL = false
-	chassisDefs[chassis].maxNormalLevel = 3 - 1
 	local upgradeEnabled = UNBOUNDED_LEVEL or chassisDefs[chassis].maxNormalLevel >= level
-	Spring.Echo("UNBOUNDED_LEVEL="..tostring(UNBOUNDED_LEVEL))
-	Spring.Echo("chassisDefs[chassis].maxNormalLevel="..tostring(chassisDefs[chassis].maxNormalLevel))
-	Spring.Echo("level="..tostring(level))
-	Spring.Echo("upgradeEnabled="..tostring(upgradeEnabled))
+
 	if not currentModuleList then
-		Spring.Echo("CreateMainWindow()")		
 		CreateMainWindow(upgradeEnabled)
 	end
 	
