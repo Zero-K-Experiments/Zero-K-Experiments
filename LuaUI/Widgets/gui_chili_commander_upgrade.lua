@@ -790,14 +790,12 @@ local function ShowModuleListWindow(slotDefaults, level, chassis, alreadyOwnedMo
 		CreateMainWindow(upgradeEnabled)
 	end
 	
-	if acceptButton.visible ~= upgradeEnabled then
-		if upgradeEnabled then
-			acceptButton:Show()
-			maxLevelReachedLabel:Hide()
-		else
-			acceptButton:Hide()
-			maxLevelReachedLabel:Show()
-		end
+	if upgradeEnabled then
+		if not acceptButton.visible then acceptButton:Show() end
+		if maxLevelReachedLabel.visible then maxLevelReachedLabel:Hide() end
+	else
+		if acceptButton.visible then acceptButton:Hide() end
+		if not maxLevelReachedLabel.visible then maxLevelReachedLabel:Show() end
 	end
 	
 	if level > chassisDefs[chassis].maxNormalLevel then
