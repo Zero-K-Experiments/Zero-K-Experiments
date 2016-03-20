@@ -33,6 +33,7 @@ unitDef = {
 
   energyMake                    = 100,
   energyUse                     = 0,
+  energyStorage                 = 500,    
   explodeAs                     = [[NUCLEAR_MISSILE]],
   footprintX                    = 5,
   footprintZ                    = 5,
@@ -41,6 +42,7 @@ unitDef = {
   idleTime                      = 1800,
   maxDamage                     = 3250,
   maxSlope                      = 255,
+  metalStorage                  = 500,  
   minCloakDistance              = 150,
   objectName                    = [[amgeo.dae]],
   script                        = [[amgeo.lua]],

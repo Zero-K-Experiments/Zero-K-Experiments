@@ -33,6 +33,7 @@ unitDef = {
 
   damageModifier                = 0.25,
   energyMake                    = 2,
+  energyStorage                 = 25,
   explodeAs                     = [[SMALL_BUILDINGEX]],
   footprintX                    = 5,
   footprintZ                    = 5,
@@ -44,6 +45,7 @@ unitDef = {
   maxSlope                      = 18,
   maxVelocity                   = 0,
   maxWaterDepth                 = 0,
+  metalStorage                  = 25,  
   minCloakDistance              = 150,
   noAutoFire                    = false,
   objectName                    = [[arm_solar.s3o]],

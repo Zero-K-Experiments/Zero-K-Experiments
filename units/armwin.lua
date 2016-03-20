@@ -35,6 +35,7 @@ unitDef = {
 
   energyMake                    = 1.2,
   energyUse                     = 0,
+  energyStorage                 = 15,
   explodeAs                     = [[SMALL_BUILDINGEX]],
   floater                       = true,
   footprintX                    = 3,
@@ -46,6 +47,7 @@ unitDef = {
   losEmitHeight                 = 30,
   maxDamage                     = 130,
   maxSlope                      = 255,
+  metalStorage                  = 15,
   minCloakDistance              = 150,
   objectName                    = [[arm_wind_generator.s3o]],
   script                        = [[armwin.lua]],
