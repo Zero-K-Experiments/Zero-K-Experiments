@@ -79,6 +79,7 @@ function PokeDecloakUnit(unitID, duration)
 	else
 		spSetUnitRulesParam(unitID, "cannotcloak", 1, alliedTrueTable)
 		spSetUnitCloak(unitID, 0)
+		
 		recloakUnit[unitID] = duration or DEFAULT_DECLOAK_TIME
 	end
 
@@ -126,7 +127,7 @@ local function SetWantedCloaked(unitID, state)
 	if (not unitID) or spGetUnitIsDead(unitID) then
 		return 
 	end
-	
+
 	local wantCloakState = spGetUnitRulesParam(unitID, "wantcloak")
 	local cmdDescID = Spring.FindUnitCmdDesc(unitID, CMD_WANT_CLOAK)
 	if (cmdDescID) then

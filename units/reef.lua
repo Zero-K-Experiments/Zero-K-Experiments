@@ -66,6 +66,7 @@ unitDef = {
   },
   showNanoSpray          = false,
   sightDistance          = 1105,
+  sonarDistance          = 1200,  
   turninplace            = 0,
   turnRate               = 233,
   waterline              = 20,

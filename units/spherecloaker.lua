@@ -59,6 +59,7 @@ unitDef = {
   seismicSignature       = 16,
   selfDestructAs         = [[BIG_UNITEX]],
   sightDistance          = 400,
+  sonarDistanceJam       = 440,  
   trackOffset            = 0,
   trackStrength          = 8,
   trackStretch           = 1,

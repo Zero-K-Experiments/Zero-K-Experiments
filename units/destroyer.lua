@@ -63,7 +63,7 @@ unitDef = {
   },  
   
   smoothAnim             = true,
-  sonarDistance          = 700,
+--  sonarDistance          = 700,
   turninplace            = 0,
   turnRate               = 311,
   waterline              = 0,

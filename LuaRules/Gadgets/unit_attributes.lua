@@ -93,8 +93,10 @@ local function UpdateSensorAndJamm(unitID, unitDefID, enabled, radarOverride, so
 	if sonarUnitDef[unitDefID] or sonarOverride then 
 		Spring.SetUnitSensorRadius(unitID, "sonar", (enabled and (sonarOverride or sonarUnitDef[unitDefID])) or 0)
 	end
-	if jammerUnitDef[unitDefID] or jammerOverride then 
+	if jammerUnitDef[unitDefID] or jammerOverride then
+		Spring.Echo("Setting radarJammer and sonarJammer")
 		Spring.SetUnitSensorRadius(unitID, "radarJammer", (enabled and (jammerOverride or jammerUnitDef[unitDefID])) or 0)
+		Spring.SetUnitSensorRadius(unitID, "sonarJammer", (enabled and (jammerOverride or jammerUnitDef[unitDefID])) or 0)
 	end
 	if sightOverride then
 		Spring.SetUnitSensorRadius(unitID, "los", sightOverride)

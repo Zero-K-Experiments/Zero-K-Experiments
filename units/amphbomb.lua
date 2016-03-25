@@ -67,7 +67,7 @@ unitDef = {
 
   side                   = [[CORE]],
   sightDistance          = 240,
-  sonarDistance          = 260,
+--  sonarDistance          = 260,
   smoothAnim             = true,
   turnRate               = 3000,
   workerTime             = 0,

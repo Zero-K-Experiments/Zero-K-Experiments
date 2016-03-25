@@ -121,6 +121,7 @@ local function ApplyModuleEffects(unitID, data, totalCost, images)
 	
 	if data.radarRange then
 		Spring.SetUnitRulesParam(unitID, "radarRangeOverride", data.radarRange, INLOS)
+		Spring.SetUnitRulesParam(unitID, "sonarRangeOverride", data.radarRange, INLOS)
 	end
 	
 	if data.radarJammingRange then

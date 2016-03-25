@@ -71,14 +71,14 @@ local defense = {
 
 local aux = {	--merged into special
 	corrad =   {order = 10, row = 1, col = 1},
-	armsonar = {order = 11, row = 1, col = 2},
-	armjamt =  {order = 12, row = 1, col = 3},
-	armarad =  {order = 14, row = 1, col = 4},
+--	armsonar = {order = 11, row = 1, col = 2},
+	armjamt =  {order = 12, row = 1, col = 2},
+	armarad =  {order = 14, row = 1, col = 3},
 }
 
 local super = {	--merged into special
-	missilesilo = {order = 15, row = 1, col = 5},
-	armamd =      {order = 16, row = 1, col = 6},
+	missilesilo = {order = 15, row = 1, col = 4},
+	armamd =      {order = 16, row = 1, col = 5},
 	corbhmth =     {order = 2, row = 2, col = 1},
 	armbrtha =     {order = 3, row = 2, col = 2},
 	corsilo =      {order = 4, row = 2, col = 3},

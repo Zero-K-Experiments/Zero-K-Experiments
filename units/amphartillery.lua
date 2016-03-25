@@ -50,7 +50,7 @@ unitDef = {
   },
 
   sightDistance          = 660,
-  sonarDistance          = 380,
+--  sonarDistance          = 380,
   trackOffset            = 0,
   trackStrength          = 8,
   trackStretch           = 1,

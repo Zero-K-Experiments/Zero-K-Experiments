@@ -56,6 +56,7 @@ unitDef = {
   side                          = [[ARM]],
   sightDistance                 = 660,
   smoothAnim                    = true,
+  sonarDistance			 		= 2500,  
   TEDClass                      = [[FORT]],
   turnRate                      = 0,
   useBuildingGroundDecal        = true,

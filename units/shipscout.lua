@@ -58,7 +58,7 @@ unitDef = {
   },
   
   sightDistance          = 800,
-  sonarDistance          = 350,
+--  sonarDistance          = 350,
   turninplace            = 0,
   turnRate               = 740,
   waterline              = 2,

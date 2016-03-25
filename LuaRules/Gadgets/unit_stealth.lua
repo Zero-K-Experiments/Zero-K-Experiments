@@ -44,6 +44,7 @@ include("LuaRules/Configs/customcmds.h.lua")
 include("LuaRules/Configs/constants.lua")
 
 local SetUnitStealth    = Spring.SetUnitStealth
+local SetUnitSonarStealth    = Spring.SetUnitSonarStealth
 local UseUnitResource   = Spring.UseUnitResource
 local SetUnitRulesParam = Spring.SetUnitRulesParam
 
@@ -175,6 +176,7 @@ function gadget:GameFrame()
       if (stealthData.active ~= newState) then
         stealthData.active = newState
         SetUnitStealth(unitID, stealthData.active)
+		SetUnitSonarStealth(unitID, stealthData.active)
         if (newState) then
           SetUnitRulesParam(unitID, "stealth", 2)
         else
@@ -205,6 +207,7 @@ function SetStealth(unitID, state)
 
   stealthData.active = state
   SetUnitStealth(unitID, state)
+  SetUnitSonarStealth(unitID, state)
 end
 
 function gadget:UnitCloaked(unitID, unitDefID, teamID)

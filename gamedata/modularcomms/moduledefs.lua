@@ -616,6 +616,7 @@ upgrades = {
 				unitDef.mincloakdistance = math.max(150, unitDef.mincloakdistance or 0)
 				unitDef.onoffable = true
 				unitDef.radarDistanceJam = (unitDef.radarDistanceJam and unitDef.radarDistanceJam > 350 and unitDef.radarDistanceJam) or 350
+				unitDef.sonarDistanceJam = (unitDef.sonarDistanceJam and unitDef.sonarDistanceJam > 350 and unitDef.sonarDistanceJam) or 350
 				unitDef.customparams.area_cloak = "1"
 				unitDef.customparams.area_cloak_upkeep = "15"
 				unitDef.customparams.area_cloak_radius = "350"
@@ -623,10 +624,11 @@ upgrades = {
 			end,
 	},
 	module_jammer = {
-		name = "Radar Jammer",
-		description = "Masks radar signals of all units within 500 m",
+		name = "Radar/Sonar Jammer",
+		description = "Masks radar and sonar signals of all units within 500 m",
 		func = function(unitDef)
-				unitDef.radardistancejam = 500
+				unitDef.radarDistanceJam = 500
+				unitDef.sonarDistanceJam = 500
 				unitDef.activatewhenbuilt = true
 				unitDef.onoffable = true
 			end,

@@ -841,17 +841,23 @@ local function printAbilities(ud, unitID)
 	end
 
 	local radarRadius = unitID and Spring.GetUnitRulesParam(unitID, "radarRangeOverride") or ud.radarRadius
-	local jammerRadius = unitID and Spring.GetUnitRulesParam(unitID, "jammingRangeOverride") or ud.jammerRadius
+	local sonarRadius = unitID and Spring.GetUnitRulesParam(unitID, "sonarRangeOverride") or ud.radarRadius
+	local jammerRadius = unitID and Spring.GetUnitRulesParam(unitID, "jammingRangeOverride") or ud.jammerRadius --should be equal to sonarJamRadius 
 	
-	if (radarRadius > 0) or (jammerRadius > 0) or ud.targfac then
+	
+	if (radarRadius > 0) or (sonarRadius > 0) or (jammerRadius > 0) or ud.targfac then
 		cells[#cells+1] = 'Provides intel'
 		cells[#cells+1] = ''
 		if (radarRadius > 0) then
 			cells[#cells+1] = ' - Radar:'
 			cells[#cells+1] = numformat(radarRadius) .. " elmo"
 		end
+		if (sonarRadius > 0) then
+			cells[#cells+1] = ' - Sonar:'
+			cells[#cells+1] = numformat(sonarRadius) .. " elmo"
+		end		
 		if (jammerRadius > 0) then
-			cells[#cells+1] = ' - Radar jamming:'
+			cells[#cells+1] = ' - Sensor jamming:'
 			cells[#cells+1] = numformat(jammerRadius) .. " elmo"
 		end
 		if ud.targfac then

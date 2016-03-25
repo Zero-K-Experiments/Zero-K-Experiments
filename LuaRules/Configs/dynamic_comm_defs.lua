@@ -568,8 +568,8 @@ local moduleDefs = {
 	},
 	{
 		name = "module_jammer",
-		humanName = "Radar Jammer",
-		description = "Radar Jammer - Hide the radar signals of nearby units.",
+		humanName = "Radar/Sonar Jammer",
+		description = "Radar/Sonar Jammer - Hide the radar signals of nearby units.",
 		image = "unitpics/module_jammer.png",
 		limit = 1,
 		cost = 200 * COST_MULT,

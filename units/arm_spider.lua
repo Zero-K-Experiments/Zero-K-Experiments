@@ -71,6 +71,7 @@ unitDef = {
   selfDestructAs         = [[BIG_UNITEX]],
   showNanoSpray          = false,
   sightDistance          = 380,
+  sonarDistance			 = 1200,
   trackOffset            = 0,
   trackStrength          = 10,
   trackStretch           = 1,

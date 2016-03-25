@@ -59,6 +59,7 @@ unitDef = {
   selfDestructAs         = [[BIG_UNITEX]],
   side                   = [[CORE]],
   sightDistance          = 660,
+  sonarDistance          = 1000,  
   smoothAnim             = true,
   TEDClass               = [[SHIP]],
   turninplace            = 0,
