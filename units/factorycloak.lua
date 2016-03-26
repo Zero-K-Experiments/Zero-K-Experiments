@@ -68,7 +68,7 @@ unitDef = {
 
   },
 
-  showNanoSpray                 = false,
+  showNanoSpray                 = true,
   sightDistance                 = 273,
   useBuildingGroundDecal        = true,
   workerTime                    = 10,

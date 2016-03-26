@@ -79,7 +79,7 @@ unitDef = {
 
   },
 
-  showNanoSpray                 = false,
+  showNanoSpray                 = true,
   side                          = [[THUNDERBIRDS]],
   sightDistance                 = 273,
   smoothAnim                    = true,

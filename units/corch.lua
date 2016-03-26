@@ -66,7 +66,7 @@ unitDef = {
 
   },
 
-  showNanoSpray       = false,
+  showNanoSpray       = true,
   script              = [[corch.lua]],
   sightDistance       = 325,
   smoothAnim          = true,

@@ -80,7 +80,7 @@ unitDef = {
 
   },
 
-  showNanoSpray          = false,
+  showNanoSpray          = true,
   sightDistance          = 500,
 --  sonarDistance          = 300,
   trackOffset            = 0,

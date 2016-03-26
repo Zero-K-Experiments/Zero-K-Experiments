@@ -90,7 +90,7 @@ unitDef = {
 
   },
 
-  showNanoSpray       = false,
+  showNanoSpray       = true,
   showPlayerName      = true,
   side                = [[THUNDERBIRDS]],
   sightDistance       = 1024,
