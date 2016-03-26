@@ -247,8 +247,51 @@ for name, ud in pairs(UnitDefs) do
 	else
 		ud.faction = "chicken"
 	end
-end 
+end
 
+-- unitDefs DRY
+local BP2RES = 0.03
+local BP2TERRASPEED = 60
+local SEISMICSIG = 4
+for name, ud in pairs (UnitDefs) do
+	local cost = math.max (ud.buildcostenergy or 0, ud.buildcostmetal or 0, ud.buildtime or 0) --one of these should be set in actual unitdef file	
+	if cost > 0 then
+		--setting uniform buildTime, M/E cost
+		if not ud.buildcostenergy then ud.buildcostenergy = cost end
+		if not ud.buildcostmetal then ud.buildcostmetal = cost end
+		if not ud.buildtime then ud.buildtime = cost end		
+	end
+
+	if tobool(ud.builder) and ud.workertime and ud.workertime > 0 then
+		local bp = ud.workertime
+		if not ud.metalmake then ud.metalmake = bp * BP2RES end
+		if not ud.energymake then ud.energymake = bp * BP2RES end
+		if ud.faction == "arm" and not ud.terraformspeed then
+			ud.terraformspeed = bp * BP2TERRASPEED
+		end
+	end	
+	
+	local sensorRange = math.max (ud.radardistance or 0, ud.sonardistance or 0)	
+	if sensorRange > 0 then
+		--setting uniform radar & sonar distances
+		if not ud.radardistance then ud.radardistance = sensorRange end
+		if not ud.sonardistance then ud.sonardistance = sensorRange end		
+	end
+
+	local jamRange = math.max (ud.radardistancejam or 0, ud.sonardistancejam or 0)	
+	if jamRange > 0 then
+		--setting uniform radar & sonar jammer distances
+		if not ud.radardistancejam then ud.radardistancejam = jamRange end
+		if not ud.sonardistancejam then ud.sonardistancejam = jamRange end		
+	end
+	
+	if ud.floater or ud.canhover or ud.canfly then
+		--setting standard seismicSignature
+		if not ud.seismicsignature then ud.seismicsignature = 0 end
+	else
+		if not ud.seismicsignature then ud.seismicsignature = SEISMICSIG end		
+	end
+end
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -798,13 +841,13 @@ end
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
--- Remove Restore
+-- Remove Restore, deal with shownanospray
 -- 
-
+local modNanoSpray = modOptions.modnanospray == "1"
 for name, ud in pairs(UnitDefs) do
   if tobool(ud.builder) then
 	ud.canrestore = false
-	--ud.shownanospray = true
+	ud.shownanospray = not modNanoSpray
   end
 end
 

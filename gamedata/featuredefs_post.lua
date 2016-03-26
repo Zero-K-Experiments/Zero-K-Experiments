@@ -109,6 +109,9 @@ end
 --  Per-unitDef featureDefs
 --
 
+local DEAD_MULT = 0.4
+local HEAP_MULT = 0.2
+
 local function ProcessUnitDef(udName, ud)
 
   local fds = ud.featuredefs
@@ -151,7 +154,39 @@ local function ProcessUnitDef(udName, ud)
 	  --end
     end
   end
-
+  
+  --featureDefs DRY
+  local maxDamage = ud.maxdamage --max health
+  local humanName = ud.name --human name
+  for fdName, _ in pairs(fds) do
+    if isstring(fdName) then
+      local fullName = udName .. '_' .. fdName
+	  local fd = FeatureDefs[fullName]
+	  if fd then
+		if fd.featuredead then -- it's a DEAD feature
+			if not fd.metal then fd.metal = ud.buildcostmetal * DEAD_MULT end
+			if not fd.description then fd.description = "Wreckage - "..humanName end
+			if not fd.blocking then fd.blocking = true end
+		else --it's a HEAP feature
+			if not fd.metal then fd.metal = ud.buildcostmetal * HEAP_MULT end
+			if not fd.description then fd.description = "Debris - "..humanName end
+			if not fd.blocking then fd.blocking = false end
+		end
+		
+		--standard unit wrecks attributes
+		if not fd.reclaimable then fd.reclaimable = true end
+		if not fd.reclaimtime then fd.reclaimtime = fd.metal end
+		if not fd.energy then fd.energy = 0 end
+		if not fd.damage then fd.damage = maxDamage end
+		
+		--some presumably useless stuff
+		if not fd.featurereclamate then fd.featurereclamate = "smudge01" end
+		if not fd.seqnamereclamate then fd.seqnamereclamate = "tree1reclamate" end
+		if not fd.world then fd.world = "allworld" end
+		
+	  end
+	end
+  end
 end
 
 
