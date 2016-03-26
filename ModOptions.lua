@@ -420,6 +420,14 @@ local options = {
     type	= "bool",
     def		= false,
     section	= "experimental",
+  },
+  {
+    key		= "modnanospray",
+    name	= "Mod NanoSpray",
+    desc	= "Allow mod-based rendering of Nano Sprays (vs. engine-based)",
+    type	= "bool",
+    def		= true,
+    section	= "experimental",
   },  
   {
     key		= "pathfinder",
