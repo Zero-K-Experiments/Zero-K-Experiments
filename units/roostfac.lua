@@ -5,7 +5,6 @@ unitDef = {
   acceleration                  = 0,
   brakeRate                     = 0,
   buildAngle                    = 4096,
-  buildCostEnergy               = 0,
   buildCostMetal                = 0,
   builder                       = true,
   buildingGroundDecalDecaySpeed = 30,
@@ -27,7 +26,6 @@ unitDef = {
   },
 
   buildPic                      = [[roostfac.png]],
-  buildTime                     = 200,
   canMove                       = true,
   canPatrol                     = true,
   canstop                       = [[1]],
@@ -52,7 +50,6 @@ unitDef = {
   iconType                      = [[factory]],
   idleAutoHeal                  = 5,
   idleTime                      = 1800,
-  mass                          = 380,
   maxDamage                     = 8000,
   maxSlope                      = 15,
   maxVelocity                   = 0,
@@ -61,8 +58,6 @@ unitDef = {
   minCloakDistance              = 150,
   noAutoFire                    = false,
   objectName                    = [[roostfac_big]],
-  power                         = 1000,
-  seismicSignature              = 4,
   selfDestructAs                = [[NOWEAPON]],
 
   sfxtypes                      = {

@@ -4,7 +4,6 @@ unitDef = {
   description         = [[Ugly Turkey]],
   acceleration        = 0.2,
   brakeRate           = 0.205,
-  buildCostEnergy     = 1200,
   buildCostMetal      = 1200,
   buildDistance       = 120,
   builder             = true,
@@ -13,7 +12,6 @@ unitDef = {
   },
 
   buildPic            = [[chickenbroodqueen.png]],
-  buildTime           = 1200,
   canAttack           = true,
   canGuard            = true,
   canMove             = true,
@@ -38,7 +36,6 @@ unitDef = {
   idleAutoHeal        = 0,
   idleTime            = 300,
   leaveTracks         = true,
-  mass                = 712,
   maxDamage           = 2000,
   maxSlope            = 36,
   maxVelocity         = 1.2,
@@ -49,10 +46,8 @@ unitDef = {
   noAutoFire          = false,
   noChaseCategory     = [[TERRAFORM SATELLITE FIXEDWING GUNSHIP HOVER SHIP SWIM SUB LAND FLOAT SINK TURRET]],
   objectName          = [[chickenbroodqueen.s3o]],
-  power               = 2500,
   reclaimable         = false,
   script			  = [[chickenbroodqueen.cob]],
-  seismicSignature    = 4,
   selfDestructAs      = [[SMALL_UNITEX]],
 
   sfxtypes            = {

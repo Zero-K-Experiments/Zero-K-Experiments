@@ -273,8 +273,8 @@ local function ProcessComm(name, config)
 		-- set costs
 		config.cost = config.cost or 0
 		commDefs[name].buildcostmetal = commDefs[name].buildcostmetal + config.cost
-		commDefs[name].buildcostenergy = commDefs[name].buildcostenergy + config.cost
-		commDefs[name].buildtime = commDefs[name].buildtime + config.cost
+		commDefs[name].buildcostenergy = commDefs[name].buildcostmetal
+		commDefs[name].buildtime = commDefs[name].buildcostmetal
 		cp.cost = config.cost
 		
 		if config.power then
@@ -433,7 +433,7 @@ for name, data in pairs(commDefs) do
 	end
 	
 	-- set mass
-	data.mass = ((data.buildtime/2 + data.maxdamage/10)^0.55)*9
+	data.mass = ((data.buildcostmetal/2 + data.maxdamage/10)^0.55)*9
 	--Spring.Echo("mass " .. (data.mass or "nil") .. " BT/HP " .. (data.buildtime or "nil") .. "  " .. (data.maxdamage or "nil"))
 	
 	-- rez speed
@@ -454,7 +454,7 @@ for name, data in pairs(commDefs) do
 
 	-- set morph time
 	if data.customparams.morphto then
-		local morph_time = (commDefs[data.customparams.morphto].buildtime - data.buildtime) / (5 * (data.customparams.level + 2))
+		local morph_time = (commDefs[data.customparams.morphto].buildcostmetal - data.buildcostmetal) / (5 * (data.customparams.level + 2))
 		data.customparams.morphtime = tostring(math.floor(morph_time))
 	end
 end

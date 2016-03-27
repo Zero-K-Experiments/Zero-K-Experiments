@@ -5,7 +5,6 @@ unitDef = {
   acceleration                  = 0,
   brakeRate                     = 0,
   buildAngle                    = 4096,
-  buildCostEnergy               = 0,
   buildCostMetal                = 0,
   builder                       = true,
   buildingGroundDecalDecaySpeed = 30,
@@ -29,7 +28,6 @@ unitDef = {
   },
 
   buildPic                      = [[roost.png]],
-  buildTime                     = 200,
   CanBeAssisted                 = 0,
   canMove                       = true,
   canPatrol                     = true,
@@ -46,7 +44,6 @@ unitDef = {
     chickenFac = [[true]],
   },
 
-  energyMake                    = 0.5,
   energyStorage                 = 50,
   energyUse                     = 0,
   explodeAs                     = [[NOWEAPON]],
@@ -55,7 +52,6 @@ unitDef = {
   iconType                      = [[factory]],
   idleAutoHeal                  = 5,
   idleTime                      = 1800,
-  mass                          = 208,
   maxDamage                     = 2000,
   maxSlope                      = 15,
   maxVelocity                   = 0,
@@ -64,9 +60,7 @@ unitDef = {
   minCloakDistance              = 150,
   noAutoFire                    = false,
   objectName                    = [[roost]],
-  power                         = 600,
   script                        = [[roost.cob]],
-  seismicSignature              = 4,
   selfDestructAs                = [[NOWEAPON]],
 
   sfxtypes                      = {

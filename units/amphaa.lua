@@ -5,14 +5,12 @@ unitDef = {
   acceleration           = 0.18,
   activateWhenBuilt      = true,
   brakeRate              = 0.375,
-  buildCostEnergy        = 180,
   buildCostMetal         = 180,
 
   buildoptions           = {
   },
 
   buildPic               = [[amphaa.png]],
-  buildTime              = 180,
   canAttack              = true,
   canGuard               = true,
   canMove                = true,
@@ -46,7 +44,6 @@ unitDef = {
   noChaseCategory        = [[TERRAFORM LAND SINK TURRET SHIP SWIM FLOAT SUB HOVER]],
   objectName             = [[amphaa.s3o]],
   script                 = [[amphaa.lua]],
-  seismicSignature       = 4,
   selfDestructAs         = [[BIG_UNITEX]],
 
   sfxtypes               = {

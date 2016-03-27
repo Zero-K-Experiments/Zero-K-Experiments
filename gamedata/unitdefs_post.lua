@@ -255,14 +255,14 @@ local BP2TERRASPEED = 60
 local SEISMICSIG = 4
 for name, ud in pairs (UnitDefs) do
 	local cost = math.max (ud.buildcostenergy or 0, ud.buildcostmetal or 0, ud.buildtime or 0) --one of these should be set in actual unitdef file	
-	if cost > 0 then
+	if cost >= 0 then
 		--setting uniform buildTime, M/E cost
 		if not ud.buildcostenergy then ud.buildcostenergy = cost end
 		if not ud.buildcostmetal then ud.buildcostmetal = cost end
 		if not ud.buildtime then ud.buildtime = cost end		
 	end
 
-	if tobool(ud.builder) and ud.workertime and ud.workertime > 0 then
+	if tobool(ud.builder) and ud.workertime then
 		local bp = ud.workertime
 		if not ud.metalmake then ud.metalmake = bp * BP2RES end
 		if not ud.energymake then ud.energymake = bp * BP2RES end

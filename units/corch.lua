@@ -4,7 +4,6 @@ unitDef = {
   description         = [[Construction Hovercraft, Builds at 5 m/s]],
   acceleration        = 0.066,
   brakeRate           = 1.5,
-  buildCostEnergy     = 150,
   buildCostMetal      = 150,
   buildDistance       = 160,
   builder             = true,
@@ -13,7 +12,6 @@ unitDef = {
   },
 
   buildPic            = [[CORCH.png]],
-  buildTime           = 150,
   canGuard            = true,
   canHover            = true,
   canMove             = true,
@@ -37,7 +35,6 @@ unitDef = {
 	modelradius    = [[15]],
   },
 
-  energyMake          = 0.15,
   energyUse           = 0,
   explodeAs           = [[BIG_UNITEX]],
   floater             = true,
@@ -46,16 +43,13 @@ unitDef = {
   iconType            = [[builder]],
   idleAutoHeal        = 5,
   idleTime            = 1800,
-  mass                = 150,
   maxDamage           = 800,
   maxSlope            = 36,
   maxVelocity         = 2.8,
-  metalMake           = 0.15,
   minCloakDistance    = 75,
   movementClass       = [[HOVER3]],
   noChaseCategory     = [[TERRAFORM SATELLITE FIXEDWING GUNSHIP HOVER SHIP SWIM SUB LAND FLOAT SINK TURRET]],
   objectName          = [[corch.s3o]],
-  seismicSignature    = 4,
   selfDestructAs      = [[BIG_UNITEX]],
 
   sfxtypes            = {
@@ -70,7 +64,6 @@ unitDef = {
   script              = [[corch.lua]],
   sightDistance       = 325,
   smoothAnim          = true,
-  terraformSpeed      = 300,
   turninplace         = 0,
   turnRate            = 550,
   workerTime          = 5,
