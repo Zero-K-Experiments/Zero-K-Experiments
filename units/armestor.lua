@@ -55,30 +55,16 @@ unitDef = {
   featureDefs                   = {
 
     DEAD  = {
-      description      = [[Wreckage - Energy Transmission Pylon]],
-      blocking         = true,
-      damage           = 1000,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 3,
       footprintZ       = 3,
-      metal            = 80,
       object           = [[ARMESTOR_DEAD.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 80,
     },
 
     HEAP  = {
-      description      = [[Debris - Energy Transmission Pylon]],
-      blocking         = false,
-      damage           = 1000,
-      energy           = 0,
       footprintX       = 3,
       footprintZ       = 3,
-      metal            = 40,
       object           = [[debris4x4b.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 40,
     },
 
   },

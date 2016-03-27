@@ -133,30 +133,16 @@ unitDef = {
   featureDefs            = {
 
     DEAD  = {
-      description      = [[Wreckage - Warrior]],
-      blocking         = true,
-      damage           = 820,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 88,
       object           = [[spherewarrior_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 88,
     },
 
     HEAP  = {
-      description      = [[Debris - Warrior]],
-      blocking         = false,
-      damage           = 820,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 44,
       object           = [[debris3x3a.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 44,
     },
 
   },

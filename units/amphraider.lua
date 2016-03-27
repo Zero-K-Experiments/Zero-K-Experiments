@@ -149,30 +149,16 @@ unitDef = {
   featureDefs            = {
 
     DEAD      = {
-      description      = [[Wreckage - Grebe]],
-      blocking         = true,
-      damage           = 900,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 3,
       footprintZ       = 3,
-      metal            = 120,
       object           = [[wreck2x2b.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 120,
     },
 
     HEAP      = {
-      description      = [[Debris - Grebe]],
-      blocking         = false,
-      damage           = 900,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 60,
       object           = [[debris2x2c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 60,
     },
 
   },

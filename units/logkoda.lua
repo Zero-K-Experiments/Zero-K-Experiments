@@ -184,43 +184,19 @@ unitDef = {
   featureDefs         = {
 
     DEAD = {
-      description      = [[Wreckage - Kodachi]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 750,
-      energy           = 0,
       featureDead      = [[HEAP]],
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[20]],
-      hitdensity       = [[100]],
-      metal            = 72,
       object           = [[logkoda_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 72,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP = {
-      description      = [[Debris - Kodachi]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 750,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 36,
       object           = [[debris2x2c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 36,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

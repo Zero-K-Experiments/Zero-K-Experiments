@@ -132,30 +132,16 @@ unitDef = {
   featureDefs            = {
 
     DEAD  = {
-      description      = [[Wreckage - Banshee]],
-      blocking         = true,
-      damage           = 860,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 88,
       object           = [[banshee_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 88,
     },
 
     HEAP  = {
-      description      = [[Debris - Banshee]],
-      blocking         = false,
-      damage           = 860,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 44,
       object           = [[debris2x2a.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 44,
     },
 
   },

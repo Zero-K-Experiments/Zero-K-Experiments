@@ -136,37 +136,19 @@ unitDef = {
   featureDefs            = {
 
     DEAD  = {
-      description      = [[Wreckage - Catapult]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 4000,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 3,
       footprintZ       = 3,
       height           = [[40]],
-      hitdensity       = [[100]],
-      metal            = 1400,
       object           = [[catapult_wreck.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 1400,
     },
 
 
     HEAP  = {
-      description      = [[Debris - Catapult]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 4000,
-      energy           = 0,
       footprintX       = 3,
       footprintZ       = 3,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 700,
       object           = [[debris3x3b.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 700,
     },
 
   },

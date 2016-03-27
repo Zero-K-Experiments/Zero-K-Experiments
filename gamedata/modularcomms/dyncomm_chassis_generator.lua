@@ -111,7 +111,7 @@ local commanderCost = 1000
 if (Spring.GetModOptions) then
 	local modOptions = Spring.GetModOptions()
 	if (modOptions and modOptions.commtest and modOptions.commtest ~= 0) then
-		commanderCost = 100
+		commanderCost = commanderCost * 0.1
 	end
 end
 
@@ -123,17 +123,19 @@ local statOverrides = {
 	buildcostmetal  = commanderCost,
 	buildcostenergy = commanderCost,
 	buildtime       = commanderCost,
-	power           = 1200,
+--	power           = 1200,
 }
 
 for i = 1, #chassisDefs do
 	local name = chassisDefs[i].name
 	local unitDef = UnitDefs[name]
 	
+	--[[
 	for _, wreckDef in pairs(unitDef.featuredefs) do
 		wreckDef.metal = wreckDef.metal*commanderCost/1200
 		wreckDef.reclaimtime = wreckDef.reclaimtime*commanderCost/1200
 	end
+	]]--
 	
 	for key, data in pairs(statOverrides) do
 		unitDef[key] = data

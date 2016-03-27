@@ -124,30 +124,16 @@ unitDef = {
   featureDefs                   = {
 
     DEAD = {
-      description      = [[Wreckage - Flea]],
-      blocking         = false,
-      damage           = 40,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 1,
       footprintZ       = 1,
-      metal            = 8,
       object           = [[flea_d.dae]],
-      reclaimable      = true,
-      reclaimTime      = 8,
     },
 
     HEAP = {
-      description      = [[Debris - Flea]],
-      blocking         = false,
-      damage           = 40,
-      energy           = 0,
       footprintX       = 1,
       footprintZ       = 1,
-      metal            = 4,
       object           = [[debris1x1b.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 4,
     },
 
   },

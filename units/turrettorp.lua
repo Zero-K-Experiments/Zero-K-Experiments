@@ -115,41 +115,18 @@ unitDef = {
   featureDefs       = {
 
     DEAD  = {
-      description      = [[Wreckage - Urchin]],
-      blocking         = false,
-      category         = [[corpses]],
-      damage           = 1000,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 3,
       footprintZ       = 3,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 48,
       object           = [[torpedo launcher_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 48,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP  = {
-      description      = [[Debris - Urchin]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 1000,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 3,
       footprintZ       = 3,
-      hitdensity       = [[100]],
-      metal            = 24,
       object           = [[debris3x3c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 24,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

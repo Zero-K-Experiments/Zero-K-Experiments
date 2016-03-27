@@ -73,41 +73,18 @@ unitDef = {
   featureDefs      = {
 
     DEAD  = {
-      description      = [[Wreckage - Hovercraft Platform]],
-      blocking         = false,
-      category         = [[corpses]],
-      damage           = 4000,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 8,
       footprintZ       = 7,
       height           = [[20]],
-      hitdensity       = [[100]],
-      metal            = 240,
       object           = [[ARMFHP_DEAD.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 240,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP  = {
-      description      = [[Debris - Hovercraft Platform]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 4000,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 8,
       footprintZ       = 7,
-      hitdensity       = [[100]],
-      metal            = 120,
       object           = [[debris4x4c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 120,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

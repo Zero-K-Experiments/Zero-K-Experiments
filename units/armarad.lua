@@ -59,30 +59,16 @@ unitDef = {
   featureDefs                   = {
 
     DEAD  = {
-      description      = [[Wreckage - Advanced Radar Tower]],
-      blocking         = true,
-      damage           = 330,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 200,
       object           = [[novaradar_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 200,
     },
 
     HEAP  = {
-      description      = [[Debris - Advanced Radar Tower]],
-      blocking         = false,
-      damage           = 330,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 100,
       object           = [[debris2x2b.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 100,
     },
 
   },

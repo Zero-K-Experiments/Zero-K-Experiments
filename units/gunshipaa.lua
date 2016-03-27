@@ -146,37 +146,19 @@ unitDef = {
   featureDefs            = {
 
     DEAD  = {
-      description      = [[Wreckage - Trident]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 900,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[40]],
-      hitdensity       = [[100]],
-      metal            = 108,
       object           = [[trifighter_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 108,
     },
 
     
     HEAP  = {
-      description      = [[Debris - Trident]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 900,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 54,
       object           = [[debris3x3c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 54,
     },
 
   },

@@ -215,42 +215,18 @@ unitDef = {
   featureDefs         = {
 
     DEAD      = {
-      description      = [[Wreckage - Recon Commander]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 1650,
-      energy           = 0,
       featureDead      = [[HEAP]],
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[20]],
-      hitdensity       = [[100]],
-      metal            = 480,
       object           = [[commrecon_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 480,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP      = {
-      description      = [[Debris - Recon Commander]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 1650,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 2,
       footprintZ       = 2,
-      hitdensity       = [[100]],
-      metal            = 480,
       object           = [[debris2x2c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 480,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

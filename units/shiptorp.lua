@@ -128,41 +128,18 @@ unitDef = {
   featureDefs         = {
 
     DEAD  = {
-      description      = [[Wreckage - Hunter]],
-      blocking         = false,
-      category         = [[corpses]],
-      damage           = 1850,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 3,
       footprintZ       = 3,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 140,
       object           = [[hunter_d.3ds]],
-      reclaimable      = true,
-      reclaimTime      = 140,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP  = {
-      description      = [[Debris - Hunter]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 1850,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 4,
       footprintZ       = 4,
-      hitdensity       = [[100]],
-      metal            = 70,
       object           = [[debris4x4c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 70,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

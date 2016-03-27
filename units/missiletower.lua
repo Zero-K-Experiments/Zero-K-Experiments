@@ -128,41 +128,19 @@ unitDef = {
   featureDefs                   = {
 
     DEAD  = {
-      description      = [[Wreckage - Hacksaw]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 580,
       featureDead      = [[HEAP]],
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 3,
       footprintZ       = 3,
       height           = [[20]],
-      hitdensity       = [[100]],
-      metal            = 88,
       object           = [[missiletower_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 88,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP  = {
-      description      = [[Debris - Hacksaw]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 580,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 3,
       footprintZ       = 3,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 44,
       object           = [[debris3x3a.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 44,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

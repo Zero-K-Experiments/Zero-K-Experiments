@@ -80,37 +80,19 @@ unitDef = {
   featureDefs         = {
 
     DEAD  = {
-      description      = [[Wreckage - Valkyrie]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 300,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[40]],
-      hitdensity       = [[100]],
-      metal            = 40,
       object           = [[smalltrans_d.dae]],
-      reclaimable      = true,
-      reclaimTime      = 40,
     },
 
 
     HEAP  = {
-      description      = [[Debris - Valkyrie]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 300,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 20,
       object           = [[debris2x2c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 20,
     },
 
   },

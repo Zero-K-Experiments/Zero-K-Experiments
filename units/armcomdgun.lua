@@ -132,42 +132,18 @@ unitDef = {
   featureDefs            = {
 
     DEAD      = {
-      description      = [[Wreckage - Ultimatum]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 2000,
-      energy           = 0,
       featureDead      = [[HEAP]],
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[20]],
-      hitdensity       = [[100]],
-      metal            = 800,
       object           = [[ultimatum_d.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 800,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP      = {
-      description      = [[Debris - Ultimatum]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 2000,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 2,
       footprintZ       = 2,
-      hitdensity       = [[100]],
-      metal            = 400,
       object           = [[debris2x2b.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 400,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

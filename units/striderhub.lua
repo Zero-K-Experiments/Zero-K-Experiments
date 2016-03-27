@@ -94,43 +94,19 @@ unitDef = {
   featureDefs                   = {
 
     DEAD = {
-      description      = [[Wreckage - Strider Hub]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 2000,
-      energy           = 0,
       featureDead      = [[HEAP]],
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 4,
       footprintZ       = 4,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 240,
       object           = [[striderhub_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 240,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP = {
-      description      = [[Debris - Strider Hub]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 2000,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 4,
       footprintZ       = 4,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 120,
       object           = [[debris4x4a.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 120,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

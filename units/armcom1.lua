@@ -208,30 +208,16 @@ unitDef = {
   featureDefs            = {
 
     DEAD      = {
-      description      = [[Wreckage - Strike Commander]],
-      blocking         = true,
-      damage           = 2500,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 3,
       footprintZ       = 3,
-      metal            = 480,
       object           = [[armcom1_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 480,
     },
 
     HEAP      = {
-      description      = [[Debris - Strike Commander]],
-      blocking         = false,
-      damage           = 2500,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 240,
       object           = [[debris2x2c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 240,
     },
 
 

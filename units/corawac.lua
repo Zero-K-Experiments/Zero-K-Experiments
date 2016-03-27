@@ -73,43 +73,19 @@ unitDef = {
   featureDefs         = {
 
     DEAD = {
-      description      = [[Wreckage - Vulture]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 950,
-      energy           = 0,
       featureDead      = [[HEAP]],
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[40]],
-      hitdensity       = [[100]],
-      metal            = 136,
       object           = [[armpnix_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 136,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP = {
-      description      = [[Debris - Vulture]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 950,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 68,
       object           = [[debris2x2b.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 68,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

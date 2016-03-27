@@ -119,30 +119,16 @@ unitDef = {
   featureDefs           = {
 
     DEAD = {
-      description      = [[Wreckage - Infiltrator]],
-      blocking         = true,
-      damage           = 270,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 112,
       object           = [[Infiltrator_wreck.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 112,
     },
 
     HEAP = {
-      description      = [[Debris - Infiltrator]],
-      blocking         = false,
-      damage           = 270,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 56,
       object           = [[debris2x2a.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 56,
     },
 
   },

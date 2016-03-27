@@ -199,40 +199,22 @@ unitDef = {
   featureDefs            = {
 
     DEAD  = {
-      description      = [[Wreckage - Vindicator]],
-      blocking         = true,
-      category         = [[corpses]],
 	  collisionVolumeScales  = [[60 40 80]],
 	  collisionVolumeTest	 = 1,
 	  collisionVolumeType    = [[CylZ]],
-      damage           = 1100,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[40]],
-      hitdensity       = [[100]],
-      metal            = 200,
       object           = [[heavytrans_d.dae]],
-      reclaimable      = true,
-      reclaimTime      = 200,
     },
 
 
     HEAP  = {
-      description      = [[Debris - Vindicator]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 1100,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 100,
       object           = [[debris3x3c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 100,
     },
 
   },

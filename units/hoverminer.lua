@@ -112,36 +112,19 @@ unitDef = {
   featureDefs         = {
 
     DEAD  = {
-      description      = [[Wreckage - Dampener]],
-      blocking         = true,
-      damage           = 400,
-      energy           = 0,
       featureDead      = [[HEAP]],
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[20]],
-      hitdensity       = [[100]],
-      metal            = 80,
       object           = [[hoverminer_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 80,
     },
 
 
     HEAP  = {
-      description      = [[Debris - Dampener]],
-      blocking         = false,
-      damage           = 400,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 40,
       object           = [[debris2x2c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 40,
     },
 
   },

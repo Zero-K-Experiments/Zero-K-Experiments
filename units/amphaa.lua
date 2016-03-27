@@ -131,29 +131,15 @@ unitDef = {
   featureDefs            = {
 
     DEAD      = {
-      description      = [[Wreckage - Angler]],
-      blocking         = true,
-      damage           = 1100,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 72,
       object           = [[amphaa_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 72,
     },
 
     HEAP      = {
-      description      = [[Debris - Angler]],
-      blocking         = false,
-      damage           = 1100,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 36,
       object           = [[debris2x2c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 36,
     },
 
   },

@@ -141,36 +141,18 @@ unitDef = {
   featureDefs                   = {
 
     DEAD  = {
-      description      = [[Wreckage - Chainsaw]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 2500,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 4,
       footprintZ       = 4,
       height           = [[20]],
-      hitdensity       = [[100]],
-      metal            = 360,
       object           = [[chainsaw_d.dae]],
-      reclaimable      = true,
-      reclaimTime      = 360,
     },
 
     HEAP  = {
-      description      = [[Debris - Chainsaw]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 2500,
-      energy           = 0,
       footprintX       = 3,
       footprintZ       = 3,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 180,
       object           = [[debris3x3a.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 180,
     },
 
   },

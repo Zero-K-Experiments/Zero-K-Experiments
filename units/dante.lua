@@ -315,41 +315,18 @@ unitDef = {
   featureDefs         = {
 
     DEAD  = {
-      description      = [[Wreckage - Dante]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 11000,
-      energy           = 0,
       featureDead      = [[HEAP]],
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 3,
       footprintZ       = 3,
       height           = [[40]],
-      hitdensity       = [[100]],
-      metal            = 1400,
       object           = [[dante_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 1400,
-      world            = [[All Worlds]],
     },
 
 
     HEAP  = {
-      description      = [[Debris - Dante]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 11000,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 4,
       footprintZ       = 4,
-      hitdensity       = [[100]],
-      metal            = 700,
       object           = [[debris4x4c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 700,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

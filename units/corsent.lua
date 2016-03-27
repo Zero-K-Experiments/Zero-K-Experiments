@@ -136,43 +136,19 @@ unitDef = {
   featureDefs            = {
 
     DEAD  = {
-      description      = [[Wreckage - Copperhead]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 1200,
-      energy           = 0,
       featureDead      = [[HEAP]],
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[20]],
-      hitdensity       = [[100]],
-      metal            = 220,
       object           = [[corsent_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 220,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP  = {
-      description      = [[Debris - Copperhead]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 1200,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 110,
       object           = [[debris2x2a.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 110,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

@@ -133,30 +133,16 @@ unitDef = {
   featureDefs            = {
 
     DEAD = {
-      description      = [[Wreckage - Sniper]],
-      blocking         = true,
-      damage           = 560,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 300,
       object           = [[sharpshooter_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 300,
     },
 
     HEAP = {
-      description      = [[Debris - Sniper]],
-      blocking         = false,
-      damage           = 560,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 150,
       object           = [[debris2x2b.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 150,
     },
 
   },

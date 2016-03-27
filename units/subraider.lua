@@ -179,41 +179,18 @@ unitDef = {
   featureDefs            = {
 
     DEAD = {
-      description      = [[Wreckage - Snake]],
-      blocking         = false,
-      category         = [[corpses]],
-      damage           = 560,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 4,
       footprintZ       = 4,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 84,
       object           = [[sub_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 84,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP = {
-      description      = [[Debris - Snake]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 560,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 4,
       footprintZ       = 4,
-      hitdensity       = [[100]],
-      metal            = 42,
       object           = [[debris4x4c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 42,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

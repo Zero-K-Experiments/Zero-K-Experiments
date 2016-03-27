@@ -47,7 +47,10 @@ unitDef = {
     aimposoffset   = [[0 15 0]],
 	dynamic_comm   = 1,
   },
-
+  
+  energyStorage          = 0,
+  energyMake             = 0,
+  energyUse              = 0,
   explodeAs              = [[ESTOR_BUILDINGEX]],
   footprintX             = 2,
   footprintZ             = 2,
@@ -62,6 +65,8 @@ unitDef = {
   maxSlope               = 36,
   maxVelocity            = 1.35,
   maxWaterDepth          = 5000,
+  metalMake              = 0,
+  metalStorage           = 0,  
   minCloakDistance       = 75,
   movementClass          = [[AKBOT2]],
   noChaseCategory        = [[TERRAFORM SATELLITE FIXEDWING GUNSHIP HOVER SHIP SWIM SUB LAND FLOAT SINK TURRET]],
@@ -96,30 +101,16 @@ unitDef = {
   featureDefs            = {
 
     DEAD      = {
-      description      = [[Wreckage - Strike Commander]],
-      blocking         = true,
-      damage           = 2500,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 3,
       footprintZ       = 3,
-      metal            = 480,
       object           = [[strikecom_dead_1.dae]],
-      reclaimable      = true,
-      reclaimTime      = 480,
     },
 
     HEAP      = {
-      description      = [[Debris - Strike Commander]],
-      blocking         = false,
-      damage           = 2500,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 240,
       object           = [[debris2x2c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 240,
     },
 
 

@@ -181,35 +181,17 @@ unitDef = {
   featureDefs            = {
 
     DEAD  = {
-      description      = [[Wreckage - Firewalker]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 1250,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 3,
       footprintZ       = 3,
       height           = [[40]],
-      hitdensity       = [[100]],
-      metal            = 360,
       object           = [[firewalker_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 360,
     },
 
     HEAP  = {
-      description      = [[Debris - Firewalker]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 1250,
-      energy           = 0,
       footprintX       = 4,
       footprintZ       = 4,
-      hitdensity       = [[100]],
-      metal            = 180,
       object           = [[debris4x4c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 180,
     },
 
   },

@@ -127,38 +127,19 @@ unitDef = {
   featureDefs            = {
 
     DEAD  = {
-      description      = [[Wreckage - Ravager]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 1850,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[20]],
-      hitdensity       = [[100]],
-      metal            = 100,
       object           = [[corraid_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 100,
     },
 
 
     HEAP  = {
-      description      = [[Debris - Ravager]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 1850,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 50,
       object           = [[debris2x2c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 50,
     },
 
   },

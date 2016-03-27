@@ -334,43 +334,19 @@ unitDef = {
   featureDefs                   = {
 
     DEAD  = {
-      description      = [[Wreckage - Starlight]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 10000,
-      energy           = 0,
       featureDead      = [[HEAP]],
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 3,
       footprintZ       = 3,
       height           = [[40]],
-      hitdensity       = [[100]],
-      metal            = 16000,
       object           = [[starlight_d.dae]],
-      reclaimable      = true,
-      reclaimTime      = 16000,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP  = {
-      description      = [[Debris - Starlight]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 10000,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 3,
       footprintZ       = 3,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 8000,
       object           = [[debris3x3c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 8000,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

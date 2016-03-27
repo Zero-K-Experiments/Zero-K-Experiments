@@ -55,30 +55,16 @@ unitDef = {
   featureDefs                   = {
 
     DEAD  = {
-      description      = [[Wreckage - Moho Geothermal Powerplant]],
-      blocking         = true,
-      damage           = 3250,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 5,
       footprintZ       = 5,
-      metal            = 600,
       object           = [[amgeo_dead.dae]],
-      reclaimable      = true,
-      reclaimTime      = 600,
     },
 
     HEAP  = {
-      description      = [[Debris - Moho Geothermal Powerplant]],
-      blocking         = false,
-      damage           = 3250,
-      energy           = 0,
       footprintX       = 5,
       footprintZ       = 5,
-      metal            = 300,
       object           = [[debris4x4a.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 300,
     },
 
   },

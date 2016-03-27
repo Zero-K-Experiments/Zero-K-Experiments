@@ -124,35 +124,19 @@ unitDef = {
   featureDefs                   = {
 
     DEAD = {
-      description      = [[Wreckage - Sunlance]],
-      blocking         = true,
-      category         = [[arm_corpses]],
-      damage           = 5600,
       featureDead      = [[HEAP]],
       footprintX       = 3,
       footprintZ       = 3,
       height           = 100,
-      hitdensity       = 100,
-      metal            = 280,
       object           = [[heavyturret_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 280,
     },
 
 
     HEAP = {
-      description      = [[Debris - Sunlance]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 5600,
       footprintX       = 3,
       footprintZ       = 3,
       height           = 4,
-      hitdensity       = 100,
-      metal            = 140,
       object           = [[debris4x4b.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 140,
     },
 
   },

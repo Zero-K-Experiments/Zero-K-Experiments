@@ -68,30 +68,16 @@ unitDef = {
   featureDefs      = {
 
     DEAD  = {
-      description      = [[Wreckage - Amphibious Operations Plant]],
-      blocking         = true,
-      damage           = 4000,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 7,
       footprintZ       = 7,
-      metal            = 240,
       object           = [[FACTORY2_DEAD.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 240,
     },
 
     HEAP  = {
-      description      = [[Debris - Amphibious Operations Plant]],
-      blocking         = false,
-      damage           = 4000,
-      energy           = 0,
       footprintX       = 7,
       footprintZ       = 7,
-      metal            = 120,
       object           = [[debris4x4c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 120,
     },
 
   },

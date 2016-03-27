@@ -129,30 +129,16 @@ unitDef = {
   featureDefs            = {
 
     DEAD  = {
-      description      = [[Wreckage - Hammer]],
-      blocking         = true,
-      damage           = 350,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 52,
       object           = [[milo_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 52,
     },
 
     HEAP  = {
-      description      = [[Debris - Hammer]],
-      blocking         = false,
-      damage           = 350,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 26,
       object           = [[debris2x2c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 26,
     },
 
   },

@@ -130,43 +130,19 @@ unitDef = {
   featureDefs                   = {
 
     DEAD  = {
-      description      = [[Wreckage - Cobra]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 3000,
-      energy           = 0,
       featureDead      = [[HEAP]],
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 3,
       footprintZ       = 3,
       height           = [[20]],
-      hitdensity       = [[100]],
-      metal            = 200,
       object           = [[corflak_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 200,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP  = {
-      description      = [[Debris - Cobra]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 3000,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 3,
       footprintZ       = 3,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 100,
       object           = [[debris3x3a.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 100,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

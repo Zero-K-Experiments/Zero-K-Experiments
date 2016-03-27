@@ -136,43 +136,19 @@ unitDef = {
   featureDefs            = {
 
     DEAD  = {
-      description      = [[Wreckage - Tremor]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 2045,
-      energy           = 0,
       featureDead      = [[HEAP]],
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[8]],
-      hitdensity       = [[100]],
-      metal            = 600,
       object           = [[tremor_dead_new.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 600,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP  = {
-      description      = [[Debris - Tremor]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 2045,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[2]],
-      hitdensity       = [[100]],
-      metal            = 300,
       object           = [[debris2x2a.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 300,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

@@ -137,38 +137,18 @@ unitDef = {
   featureDefs            = {
 
     DEAD  = {
-      description      = [[Wreckage - Dirtbag]],
-      blocking         = false,
-      damage           = 600,
       featureDead      = [[HEAP]],
-      featurereclamate = [[smudge01]],
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[20]],
-      hitdensity       = [[100]],
-      metal            = 12,
       object           = [[debris1x1a.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 12,
-      seqnamereclamate = [[tree1reclamate]],
-      world            = [[All Worlds]],
     },
 
     HEAP  = {
-      description      = [[Debris - Dirtbag]],
-      blocking         = false,
-      damage           = 600,
-      featurereclamate = [[smudge01]],
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 6,
       object           = [[debris1x1a.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 6,
-      seqnamereclamate = [[tree1reclamate]],
-      world            = [[All Worlds]],
     },
 
   },

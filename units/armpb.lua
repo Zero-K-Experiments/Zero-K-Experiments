@@ -129,37 +129,19 @@ unitDef = {
   featureDefs                   = {
 
     DEAD  = {
-      description      = [[Wreckage - Gauss]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 3000,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[15]],
-      hitdensity       = [[100]],
-      metal            = 160,
       object           = [[gauss_91_dead1.dae]],
-      reclaimable      = true,
-      reclaimTime      = 160,
     },
 
 
     HEAP  = {
-      description      = [[Debris - Gauss]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 3000,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 80,
       object           = [[debris2x2b.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 80,
     },
 
   },

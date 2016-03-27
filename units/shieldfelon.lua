@@ -144,30 +144,16 @@ unitDef = {
   featureDefs         = {
 
     DEAD  = {
-      description      = [[Wreckage - Felon]],
-      blocking         = true,
-      damage           = 1400,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 248,
       object           = [[shieldfelon_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 248,
     },
 
     HEAP  = {
-      description      = [[Debris - Felon]],
-      blocking         = false,
-      damage           = 1400,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 124,
       object           = [[debris2x2c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 124,
     },
 
   },

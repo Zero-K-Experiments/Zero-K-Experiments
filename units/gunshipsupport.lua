@@ -128,30 +128,16 @@ unitDef = {
   featureDefs            = {
 
     DEAD  = {
-      description      = [[Wreckage - Rapier]],
-      blocking         = true,
-      damage           = 1100,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 3,
       footprintZ       = 3,
-      metal            = 120,
       object           = [[rapier_d.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 120,
     },
 
     HEAP  = {
-      description      = [[Debris - Rapier]],
-      blocking         = false,
-      damage           = 1100,
-      energy           = 0,
       footprintX       = 3,
       footprintZ       = 3,
-      metal            = 60,
       object           = [[debris2x2c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 60,
     },
 
   },

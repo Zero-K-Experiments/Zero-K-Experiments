@@ -127,30 +127,16 @@ unitDef = {
   featureDefs            = {
 
     DEAD  = {
-      description      = [[Wreckage - Bandit]],
-      blocking         = false,
-      damage           = 250,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 30,
       object           = [[mbot_d.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 30,
     },
 
     HEAP  = {
-      description      = [[Debris - Bandit]],
-      blocking         = false,
-      damage           = 250,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 15,
       object           = [[debris2x2b.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 15,
     },
 
   },

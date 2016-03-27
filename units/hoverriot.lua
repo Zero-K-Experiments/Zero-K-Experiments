@@ -134,42 +134,18 @@ unitDef = {
   featureDefs         = {
 
     DEAD  = {
-      description      = [[Wreckage - Mace]],
-      blocking         = false,
-      category         = [[corpses]],
-      damage           = 1200,
-      energy           = 0,
       featureDead      = [[HEAP]],
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 3,
       footprintZ       = 3,
       height           = [[20]],
-      hitdensity       = [[100]],
-      metal            = 160,
       object           = [[hoverriot_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 160,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP  = {
-      description      = [[Debris - Mace]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 1200,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 3,
       footprintZ       = 3,
-      hitdensity       = [[100]],
-      metal            = 80,
       object           = [[debris3x3c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 80,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

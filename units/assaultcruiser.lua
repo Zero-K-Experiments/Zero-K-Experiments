@@ -245,42 +245,18 @@ unitDef = {
   featureDefs            = {
 
     DEAD = {
-      description      = [[Wreckage - Vanquisher]],
-      blocking         = false,
-      category         = [[corpses]],
-      damage           = 9600,
-      energy           = 0,
       featureDead      = [[HEAP]],
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 5,
       footprintZ       = 5,
       height           = [[20]],
-      hitdensity       = [[100]],
-      metal            = 640,
       object           = [[cremcrus_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 640,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP = {
-      description      = [[Debris - Vanquisher]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 9600,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 4,
       footprintZ       = 4,
-      hitdensity       = [[100]],
-      metal            = 320,
       object           = [[debris4x4a.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 320,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

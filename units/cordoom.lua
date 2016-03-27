@@ -192,39 +192,19 @@ unitDef = {
   featureDefs                   = {
 
     DEAD = {
-      description      = [[Wreckage - Doomsday Machine]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 10000,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 3,
       footprintZ       = 3,
       height           = [[20]],
-      hitdensity       = [[100]],
-      metal            = 640,
       object           = [[ddm_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 640,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP = {
-      description      = [[Debris - Doomsday Machine]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 10000,
-      energy           = 0,
       footprintX       = 3,
       footprintZ       = 3,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 320,
       object           = [[debris3x3c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 320,
     },
 
   },

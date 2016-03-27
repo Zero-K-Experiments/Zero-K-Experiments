@@ -58,30 +58,16 @@ unitDef = {
   featureDefs         = {
 
     DEAD  = {
-      description      = [[Wreckage - Surfboard]],
-      blocking         = false,
-      damage           = 1200,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 4,
       footprintZ       = 4,
-      metal            = 88,
       object           = [[surfboard_d.dae]],
-      reclaimable      = true,
-      reclaimTime      = 88,
     },
 
     HEAP  = {
-      description      = [[Debris - Surfboard]],
-      blocking         = false,
-      damage           = 1200,
-      energy           = 0,
       footprintX       = 4,
       footprintZ       = 4,
-      metal            = 44,
       object           = [[debris3x3a.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 44,
     },
 
   },

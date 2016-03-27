@@ -134,30 +134,16 @@ unitDef = {
   featureDefs            = {
 
     DEAD = {
-      description      = [[Wreckage - Vandal]],
-      blocking         = true,
-      damage           = 650,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 36,
       object           = [[crasher_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 36,
     },
 
     HEAP = {
-      description      = [[Debris - Vandal]],
-      blocking         = false,
-      damage           = 650,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 18,
       object           = [[debris2x2a.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 18,
     },
 
   },

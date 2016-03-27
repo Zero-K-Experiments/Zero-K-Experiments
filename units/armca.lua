@@ -82,37 +82,19 @@ unitDef = {
   featureDefs         = {
 
     DEAD  = {
-      description      = [[Wreckage - Crane]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 240,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[40]],
-      hitdensity       = [[100]],
-      metal            = 88,
       object           = [[crane_d.dae]],
-      reclaimable      = true,
-      reclaimTime      = 88,
     },
 
 
     HEAP  = {
-      description      = [[Debris - Crane]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 240,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 44,
       object           = [[debris2x2b.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 44,
     },
 
   },

@@ -124,30 +124,16 @@ unitDef = {
   featureDefs            = {
 
     DEAD  = {
-      description      = [[Wreckage - Recluse]],
-      blocking         = true,
-      damage           = 650,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 3,
       footprintZ       = 3,
-      metal            = 112,
       object           = [[recluse_wreck.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 112,
     },
 
     HEAP  = {
-      description      = [[Debris - Recluse]],
-      blocking         = false,
-      damage           = 650,
-      energy           = 0,
       footprintX       = 3,
       footprintZ       = 3,
-      metal            = 56,
       object           = [[debris3x3a.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 56,
     },
 
   },

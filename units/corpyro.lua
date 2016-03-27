@@ -179,42 +179,18 @@ unitDef = {
   featureDefs           = {
 
     DEAD  = {
-      description      = [[Wreckage - Pyro]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 620,
-      energy           = 0,
       featureDead      = [[HEAP]],
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 88,
       object           = [[m-5_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 88,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 	
     HEAP  = {
-      description      = [[Debris - Pyro]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 620,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 2,
       footprintZ       = 2,
-      hitdensity       = [[100]],
-      metal            = 44,
       object           = [[debris2x2c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 44,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

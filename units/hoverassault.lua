@@ -129,42 +129,18 @@ unitDef = {
   featureDefs         = {
 
     DEAD  = {
-      description      = [[Wreckage - Halberd]],
-      blocking         = false,
-      category         = [[corpses]],
-      damage           = 1250,
-      energy           = 0,
       featureDead      = [[HEAP]],
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 3,
       footprintZ       = 3,
       height           = [[20]],
-      hitdensity       = [[100]],
-      metal            = 96,
       object           = [[hoverassault_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 96,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP  = {
-      description      = [[Debris - Halberd]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 1250,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 3,
       footprintZ       = 3,
-      hitdensity       = [[100]],
-      metal            = 48,
       object           = [[debris3x3c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 48,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

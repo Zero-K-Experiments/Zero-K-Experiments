@@ -184,30 +184,16 @@ unitDef = {
   featureDefs         = {
 
     DEAD = {
-      description      = [[Wreckage - Grizzly]],
-      blocking         = true,
-      damage           = 9000,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 4,
       footprintZ       = 4,
-      metal            = 800,
       object           = [[amphassault_wreck.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 800,
     },
 
     HEAP = {
-      description      = [[Debris - Grizzly]],
-      blocking         = false,
-      damage           = 9000,
-      energy           = 0,
       footprintX       = 4,
       footprintZ       = 4,
-      metal            = 400,
       object           = [[debris4x4c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 400,
     },
 
   },

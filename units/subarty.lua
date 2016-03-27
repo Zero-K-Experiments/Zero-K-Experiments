@@ -126,37 +126,19 @@ unitDef = {
   featureDefs            = {
 
     DEAD = {
-      description      = [[Wreckage - Serpent]],
-      blocking         = false,
-      category         = [[corpses]],
-      damage           = 1000,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 6,
       footprintZ       = 6,
       height           = [[10]],
-      hitdensity       = [[100]],
-      metal            = 400,
       object           = [[serpent_dead]],
-      reclaimable      = true,
-      reclaimTime      = 560,
     },
 
 
     HEAP = {
-      description      = [[Debris - Serpent]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 1000,
-      energy           = 0,
       footprintX       = 6,
       footprintZ       = 6,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 200,
       object           = [[debris3x3c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 280,
     },
 
   },

@@ -169,30 +169,16 @@ unitDef = {
   featureDefs            = {
 
     DEAD      = {
-      description      = [[Wreckage - Scallop]],
-      blocking         = true,
-      damage           = 1100,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 3,
       footprintZ       = 3,
-      metal            = 112,
       object           = [[amphriot_wreck.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 112,
     },
 
     HEAP      = {
-      description      = [[Debris - Scallop]],
-      blocking         = false,
-      damage           = 1100,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 56,
       object           = [[debris2x2c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 56,
     },
 
   },

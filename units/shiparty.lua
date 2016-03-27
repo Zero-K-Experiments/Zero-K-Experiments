@@ -149,30 +149,16 @@ unitDef = {
   featureDefs            = {
 
     DEAD  = {
-      description      = [[Wreckage - Crusader]],
-      blocking         = false,
-      damage           = 1600,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 4,
       footprintZ       = 4,
-      metal            = 220,
       object           = [[armroy_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 220,
     },
 
     HEAP  = {
-      description      = [[Debris - Crusader]],
-      blocking         = false,
-      damage           = 1600,
-      energy           = 0,
       footprintX       = 4,
       footprintZ       = 4,
-      metal            = 110,
       object           = [[debris4x4b.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 110,
     },
 
   },

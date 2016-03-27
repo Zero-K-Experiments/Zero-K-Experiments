@@ -139,33 +139,19 @@ unitDef = {
   featureDefs         = {
 
     DEAD  = {
-      description      = [[Wreckage - Penetrator]],
-      blocking         = true,
 	  collisionVolumeScales  = [[40 40 60]],
 	  collisionVolumeTest	 = 1,
 	  collisionVolumeType    = [[CylZ]],
-      damage           = 1000,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 3,
       footprintZ       = 3,
-      metal            = 400,
       object           = [[Lordmuffe_Pene_dead.dae]],
-      reclaimable      = true,
-      reclaimTime      = 400,
     },
 
     HEAP  = {
-      description      = [[Debris - Penetrator]],
-      blocking         = false,
-      damage           = 1000,
-      energy           = 0,
       footprintX       = 3,
       footprintZ       = 3,
-      metal            = 200,
       object           = [[debris3x3b.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 200,
     },
 
   },

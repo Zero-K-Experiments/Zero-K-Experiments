@@ -332,36 +332,19 @@ unitDef = {
   featureDefs            = {
 
     DEAD  = {
-      description      = [[Wreckage - Detriment]],
-      blocking         = true,
-      category         = [[arm_corpses]],
-      damage           = 85800,
       featureDead      = [[HEAP]],
       footprintX       = 6,
       footprintZ       = 6,
       height           = [[60]],
-      hitdensity       = [[150]],
-      metal            = 9600,
       object           = [[Detriment_wreck.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 9600,
     },
 
     
     HEAP  = {
-      description      = [[Debris - Detriment]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 85800,
       footprintX       = 4,
       footprintZ       = 4,
       height           = [[2]],
-      hitdensity       = [[105]],
-      metal            = 4800,
       object           = [[debris4x4b.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 4800,
-      world            = [[All Worlds]],
     },
 
   },

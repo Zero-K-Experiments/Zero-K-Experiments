@@ -159,30 +159,16 @@ unitDef = {
   featureDefs            = {
 
     DEAD      = {
-      description      = [[Wreckage - Buoy]],
-      blocking         = true,
-      damage           = 1250,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 120,
       object           = [[can_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 120,
     },
 
     HEAP      = {
-      description      = [[Debris - Buoy]],
-      blocking         = false,
-      damage           = 1250,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 60,
       object           = [[debris2x2c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 60,
     },
 
   },

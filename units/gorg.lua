@@ -319,43 +319,19 @@ unitDef = {
   featureDefs            = {
 
     DEAD  = {
-      description      = [[Wreckage - Jugglenaut]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 100000,
-      energy           = 0,
       featureDead      = [[HEAP]],
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 4,
       footprintZ       = 4,
       height           = [[8]],
-      hitdensity       = [[100]],
-      metal            = 4800,
       object           = [[GORG_DEAD]],
-      reclaimable      = true,
-      reclaimTime      = 4800,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP  = {
-      description      = [[Debris - Jugglenaut]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 100000,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 4,
       footprintZ       = 4,
       height           = [[2]],
-      hitdensity       = [[100]],
-      metal            = 2400,
       object           = [[debris4x4a.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 2400,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

@@ -129,28 +129,16 @@ unitDef = {
   featureDefs                   = {
 
     DEAD  = {
-      description      = [[Wreckage - Razor]],
-      blocking         = true,
-      damage           = 3000,
       featureDead      = [[HEAP]],
       footprintX       = 3,
       footprintZ       = 3,
-      metal            = 112,
       object           = [[aapopup_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 112,
     },
 
 	HEAP  = {
-      description      = [[Debris - Razor]],
-      blocking         = false,
-      damage           = 3000,
       footprintX       = 3,
       footprintZ       = 3,
-      metal            = 56,
       object           = [[debris3x3a.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 56,
     },
 
   },

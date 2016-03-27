@@ -77,30 +77,16 @@ unitDef = {
   featureDefs                   = {
 
     DEAD  = {
-      description      = [[Wreckage - Cloaky Bot Factory]],
-      blocking         = true,
-      damage           = 4000,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 7,
       footprintZ       = 7,
-      metal            = 240,
       object           = [[cremfactorywreck.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 240,
     },
 
     HEAP  = {
-      description      = [[Debris - Cloaky Bot Factory]],
-      blocking         = false,
-      damage           = 4000,
-      energy           = 0,
       footprintX       = 7,
       footprintZ       = 7,
-      metal            = 120,
       object           = [[debris4x4b.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 120,
     },
 
   },

@@ -108,30 +108,16 @@ unitDef = {
   featureDefs         = {
 
     DEAD  = {
-      description      = [[Wreckage - Convict]],
-      blocking         = true,
-      damage           = 650,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 56,
       object           = [[conbot_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 56,
     },
 
     HEAP  = {
-      description      = [[Debris - Convict]],
-      blocking         = false,
-      damage           = 650,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 28,
       object           = [[debris2x2a.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 28,
     },
 
   },

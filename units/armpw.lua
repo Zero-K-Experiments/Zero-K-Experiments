@@ -138,30 +138,16 @@ unitDef = {
   featureDefs            = {
 
     DEAD  = {
-      description      = [[Wreckage - Glaive]],
-      blocking         = false,
-      damage           = 200,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 26,
       object           = [[spherebot_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 26,
     },
 
     HEAP  = {
-      description      = [[Debris - Glaive]],
-      blocking         = false,
-      damage           = 200,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 13,
       object           = [[debris2x2b.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 13,
     },
 
   },

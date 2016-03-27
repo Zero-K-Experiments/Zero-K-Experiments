@@ -221,42 +221,18 @@ unitDef = {
   featureDefs         = {
 
     DEAD  = {
-      description      = [[Wreckage - Claymore]],
-      blocking         = false,
-      category         = [[corpses]],
-      damage           = 1350,
-      energy           = 0,
       featureDead      = [[HEAP]],
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 3,
       footprintZ       = 3,
       height           = [[20]],
-      hitdensity       = [[100]],
-      metal            = 132,
       object           = [[hoverdepthcharge_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 132,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP  = {
-      description      = [[Debris - Claymore]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 1350,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 3,
       footprintZ       = 3,
-      hitdensity       = [[100]],
-      metal            = 66,
       object           = [[debris3x3c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 66,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

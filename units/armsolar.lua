@@ -63,30 +63,16 @@ unitDef = {
   featureDefs                   = {
 
     DEAD  = {
-      description      = [[Wreckage - Solar Collector]],
-      blocking         = true,
-      damage           = 500,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 5,
       footprintZ       = 5,
-      metal            = 28,
       object           = [[arm_solar_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 28,
     },
 
     HEAP  = {
-      description      = [[Debris - Solar Collector]],
-      blocking         = false,
-      damage           = 500,
-      energy           = 0,
       footprintX       = 5,
       footprintZ       = 5,
-      metal            = 14,
       object           = [[debris4x4a.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 14,
     },
 
   },

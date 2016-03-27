@@ -121,28 +121,16 @@ unitDef = {
   featureDefs                   = {
 
     DEAD  = {
-      description      = [[Wreckage - Stardust]],
-      blocking         = true,
-      damage           = 1500,
       featureDead      = [[HEAP]],
       footprintX       = 3,
       footprintZ       = 3,
-      metal            = 88,
       object           = [[afury_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 88,
     },
 
 	HEAP  = {
-      description      = [[Debris - Stardust]],
-      blocking         = false,
-      damage           = 1500,
       footprintX       = 3,
       footprintZ       = 3,
-      metal            = 44,
       object           = [[debris4x4b.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 44,
     },
 
   },

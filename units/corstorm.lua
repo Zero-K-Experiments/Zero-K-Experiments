@@ -129,30 +129,16 @@ unitDef = {
   featureDefs            = {
 
     DEAD  = {
-      description      = [[Wreckage - Rogue]],
-      blocking         = true,
-      damage           = 570,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 48,
       object           = [[storm_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 48,
     },
 
     HEAP  = {
-      description      = [[Debris - Rogue]],
-      blocking         = false,
-      damage           = 570,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 24,
       object           = [[debris2x2c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 24,
     },
 
   },

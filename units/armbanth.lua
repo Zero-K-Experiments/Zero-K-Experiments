@@ -259,43 +259,19 @@ unitDef = {
   featureDefs            = {
 
     DEAD  = {
-      description      = [[Wreckage - Bantha]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 36000,
-      energy           = 0,
       featureDead      = [[HEAP]],
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 4,
       footprintZ       = 4,
       height           = [[20]],
-      hitdensity       = [[100]],
-      metal            = 4200,
       object           = [[bantha_wreck.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 4200,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP  = {
-      description      = [[Debris - Bantha]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 36000,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 4,
       footprintZ       = 4,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 2100,
       object           = [[debris4x4b.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 2100,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

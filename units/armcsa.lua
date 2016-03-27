@@ -105,36 +105,18 @@ unitDef = {
   featureDefs         = {
 
     DEAD  = {
-      description      = [[Wreckage - Athena]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 750,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[40]],
-      hitdensity       = [[100]],
-      metal            = 200,
       object           = [[selene_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 200,
     },
 
     HEAP  = {
-      description      = [[Debris - Athena]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 750,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 100,
       object           = [[debris2x2c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 100,
     },
 
   },

@@ -72,43 +72,19 @@ unitDef = {
   featureDefs            = {
 
     DEAD  = {
-      description      = [[Wreckage - Metal Extractor]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 400,
-      energy           = 0,
       featureDead      = [[HEAP]],
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 3,
       footprintZ       = 3,
       height           = [[20]],
-      hitdensity       = [[100]],
-      metal            = 30,
       object           = [[AMETALEXTRACTORLVL1_DEAD.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 30,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP  = {
-      description      = [[Debris - Metal Extractor]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 400,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 3,
       footprintZ       = 3,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 15,
       object           = [[debris3x3c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 15,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

@@ -77,43 +77,19 @@ unitDef = {
   featureDefs                   = {
 
     DEAD = {
-      description      = [[Wreckage - Heavy Tank Factory]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 4000,
-      energy           = 0,
       featureDead      = [[HEAP]],
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 6,
       footprintZ       = 6,
       height           = [[20]],
-      hitdensity       = [[100]],
-      metal            = 240,
       object           = [[CORAVP_DEAD.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 240,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP = {
-      description      = [[Debris - Heavy Tank Factory]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 4000,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 6,
       footprintZ       = 6,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 120,
       object           = [[debris4x4a.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 120,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

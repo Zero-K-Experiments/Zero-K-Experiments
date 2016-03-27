@@ -329,34 +329,19 @@ unitDef = {
   featureDefs                   = {
 
     DEAD  = {
-      description      = [[Wreckage - Zenith]],
-      blocking         = true,
-      damage           = 12000,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 8,
       footprintZ       = 8,
-      metal            = 12000,
       object           = [[zenith_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 12000,
       collisionVolumeOffsets = [[0 0 0]],
       collisionVolumeScales  = [[90 194 90]],
       collisionVolumeType    = [[cylY]],
     },
 
     HEAP  = {
-      description      = [[Debris - Zenith]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 12000,
-      energy           = 0,
       footprintX       = 3,
       footprintZ       = 3,
-      metal            = 6000,
       object           = [[debris4x4c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 6000,
     },
 
   },

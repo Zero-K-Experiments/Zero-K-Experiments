@@ -84,28 +84,16 @@ unitDef = {
   featureDefs            = {
 
     DEAD  = {
-      description      = [[Wreckage - Weaver]],
-      blocking         = true,
-      damage           = 820,
       featureDead      = [[HEAP]],
       footprintX       = 3,
       footprintZ       = 3,
-      metal            = 80,
       object           = [[weaver_wreck.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 80,
     },
 
     HEAP  = {
-      description      = [[Debris - Weaver]],
-      blocking         = false,
-      damage           = 820,
       footprintX       = 3,
       footprintZ       = 3,
-      metal            = 40,
       object           = [[debris3x3b.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 40,
     },
 
   },

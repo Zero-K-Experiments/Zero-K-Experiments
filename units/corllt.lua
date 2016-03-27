@@ -138,43 +138,19 @@ unitDef = {
   featureDefs                   = {
 
     DEAD  = {
-      description      = [[Wreckage - Lotus]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 785,
-      energy           = 0,
       featureDead      = [[HEAP]],
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[20]],
-      hitdensity       = [[100]],
-      metal            = 36,
       object           = [[lotus_d.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 36,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP  = {
-      description      = [[Debris - Lotus]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 785,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 18,
       object           = [[debris2x2b.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 18,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

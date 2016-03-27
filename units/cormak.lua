@@ -211,28 +211,16 @@ unitDef = {
   featureDefs            = {
 
     DEAD  = {
-      description      = [[Wreckage - Outlaw]],
-      blocking         = true,
-      damage           = 1050,
       featureDead      = [[HEAP]],
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 100,
       object           = [[behethud_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 100,
     },
 
     HEAP  = {
-      description      = [[Debris - Outlaw]],
-      blocking         = false,
-      damage           = 1050,
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 50,
       object           = [[debris2x2c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 50,
     },
 
   },

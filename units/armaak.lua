@@ -183,35 +183,19 @@ unitDef = {
   featureDefs         = {
 
     DEAD  = {
-      description      = [[Wreckage - Archangel]],
-      blocking         = true,
-      damage           = 1500,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 4,
       footprintZ       = 4,
       height           = [[15]],
-      hitdensity       = [[100]],
-      metal            = 220,
       object           = [[hunchback_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 220,
     },
 
 
     HEAP  = {
-      description      = [[Debris - Archangel]],
-      blocking         = false,
-      damage           = 1500,
-      energy           = 0,
       footprintX       = 4,
       footprintZ       = 4,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 110,
       object           = [[debris4x4c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 110,
     },
 
   },

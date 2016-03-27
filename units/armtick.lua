@@ -75,28 +75,16 @@ unitDef = {
   featureDefs            = {
 
     DEAD  = {
-      description      = [[Wreckage - Tick]],
-      blocking         = false,
-      damage           = 50,
       featureDead      = [[HEAP]],
       footprintX       = 1,
       footprintZ       = 1,
-      metal            = 48,
       object           = [[wreck2x2b.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 48,
     },
 
     HEAP  = {
-      description      = [[Debris - Tick]],
-      blocking         = false,
-      damage           = 50,
       footprintX       = 1,
       footprintZ       = 1,
-      metal            = 24,
       object           = [[debris1x1a.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 24,
     },
 
   },

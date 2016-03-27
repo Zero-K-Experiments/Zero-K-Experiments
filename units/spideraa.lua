@@ -116,30 +116,16 @@ unitDef = {
   featureDefs            = {
 
     DEAD  = {
-      description      = [[Wreckage - Tarantula]],
-      blocking         = true,
-      damage           = 1200,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 3,
       footprintZ       = 3,
-      metal            = 160,
       object           = [[tarantula_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 160,
     },
 
     HEAP  = {
-      description      = [[Debris - Tarantula]],
-      blocking         = false,
-      damage           = 1200,
-      energy           = 0,
       footprintX       = 3,
       footprintZ       = 3,
-      metal            = 80,
       object           = [[debris3x3a.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 80,
     },
 
   },

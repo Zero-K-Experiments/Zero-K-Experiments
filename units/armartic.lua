@@ -117,28 +117,16 @@ unitDef = {
   featureDefs                   = {
 
     DEAD  = {
-      description      = [[Wreckage - Faraday]],
-      blocking         = true,
-      damage           = 1000,
       featureDead      = [[HEAP]],
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 80,
       object           = [[armartic_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 80,
     },
 
     HEAP  = {
-      description      = [[Debris - Faraday]],
-      blocking         = false,
-      damage           = 1000,
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 40,
       object           = [[debris3x3b.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 40,
     },
 
   },

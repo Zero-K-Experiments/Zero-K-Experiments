@@ -136,42 +136,18 @@ unitDef = {
   featureDefs            = {
 
     DEAD = {
-      description      = [[Wreckage - Enforcer]],
-      blocking         = false,
-      category         = [[corpses]],
-      damage           = 2800,
-      energy           = 0,
       featureDead      = [[HEAP]],
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 5,
       footprintZ       = 5,
       height           = [[4]],
-      hitdensity       = [[100]],
-      metal            = 320,
       object           = [[logsiren_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 320,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP = {
-      description      = [[Debris - Enforcer]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 2800,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 4,
       footprintZ       = 4,
-      hitdensity       = [[100]],
-      metal            = 160,
       object           = [[debris4x4c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 160,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },

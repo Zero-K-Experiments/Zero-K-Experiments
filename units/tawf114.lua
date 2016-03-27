@@ -127,43 +127,19 @@ unitDef = {
   featureDefs         = {
 
     DEAD  = {
-      description      = [[Wreckage - Banisher]],
-      blocking         = true,
-      category         = [[corpses]],
-      damage           = 1650,
-      energy           = 0,
       featureDead      = [[HEAP]],
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 3,
       footprintZ       = 3,
       height           = [[30]],
-      hitdensity       = [[100]],
-      metal            = 208,
       object           = [[corbanish_dead.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 208,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
 
     HEAP  = {
-      description      = [[Debris - Banisher]],
-      blocking         = false,
-      category         = [[heaps]],
-      damage           = 1650,
-      energy           = 0,
-      featurereclamate = [[SMUDGE01]],
       footprintX       = 3,
       footprintZ       = 3,
       height           = [[5]],
-      hitdensity       = [[100]],
-      metal            = 104,
       object           = [[debris3x3a.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 104,
-      seqnamereclamate = [[TREE1RECLAMATE]],
-      world            = [[All Worlds]],
     },
 
   },
