@@ -16,7 +16,7 @@ unitDef = {
     [[corrad]],
     [[armarad]],
     [[armjamt]],
-    [[armsonar]],
+--    [[armsonar]],
     [[armrectr]],
     [[armflea]],
     [[corak]],

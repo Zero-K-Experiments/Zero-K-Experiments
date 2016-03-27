@@ -23,7 +23,7 @@ local buildOpts = {
 	[[factoryship]],
 	[[corrad]],
 	[[armarad]],
-	[[armsonar]],
+--	[[armsonar]],
 	[[corjamt]],
 	[[armjamt]],
 --	[[corrl]],
