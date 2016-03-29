@@ -53,7 +53,6 @@ unitDef = {
 	helptext_pl    = [[Matka roju - zajmuje sie skladaniem i ochrona jajek, a zatem bierze glowny udzial w tworzeniu sil zbrojnych Kurczakow.]],
   },
 
-  energyStorage       = 0,
   explodeAs           = [[SMALL_UNITEX]],
   footprintX          = 4,
   footprintZ          = 4,
@@ -65,7 +64,6 @@ unitDef = {
   maxSlope            = 72,
   maxVelocity         = 2,
   maxWaterDepth       = 22,
-  metalStorage        = 0,
   minCloakDistance    = 75,
   movementClass       = [[TKBOT3]],
   noAutoFire          = false,
