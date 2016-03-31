@@ -27,12 +27,27 @@ local LEG_Z_SPEED = 1100 * 8/PERIOD
 local LEG_RAISE_DISPLACEMENT = 2
 local LEG_Y_SPEED = 1100 * LEG_RAISE_DISPLACEMENT/PERIOD * 2
 
-local unitDefID = Spring.GetUnitDefID(unitID)
+local unitDefID = UnitDefNames["amphartillery"].id
 local wd = UnitDefs[unitDefID].weapons[1] and UnitDefs[unitDefID].weapons[1].weaponDef
 local reloadTime = wd and WeaponDefs[wd].reload*30 or 30
-local torpRange = 440
-local shotRange = 680
 local longRange = true
+
+local grenNum, torpNum, fakeNum
+
+local torpRange
+local grenRange
+
+for num, wd in ipairs(UnitDefs[unitDefID].weapons) do
+	if WeaponDefs[wd.weaponDef].name == "amphartillery_fake_grenade" then		
+		fakeNum = num
+	elseif WeaponDefs[wd.weaponDef].name == "amphartillery_torpedo" then		
+		torpNum = num
+		torpRange = WeaponDefs[wd.weaponDef].range
+	elseif WeaponDefs[wd.weaponDef].name == "amphartillery_grenade" then
+		grenNum = num
+		grenRange = WeaponDefs[wd.weaponDef].range
+	end
+end
 
 local smokePiece = {pelvis, turret}
 
@@ -43,13 +58,11 @@ local function WeaponRangeUpdate()
 		local height = select(2, Spring.GetUnitPosition(unitID))
 		if height < -32 then
 			if longRange then
-				Spring.SetUnitWeaponState(unitID, 3, {range = torpRange})
-				Spring.SetUnitRulesParam(unitID, "secondary_range", shotRange, INLOS)
+				Spring.SetUnitWeaponState(unitID, grenNum, {range = torpRange})
 				longRange = false
 			end
 		elseif not longRange then
-			Spring.SetUnitWeaponState(unitID, 3, {range = shotRange})
-			Spring.SetUnitRulesParam(unitID, "secondary_range", torpRange, INLOS)
+			Spring.SetUnitWeaponState(unitID, grenNum, {range = grenRange})
 			longRange = true
 		end
 		Sleep(200)
@@ -57,7 +70,7 @@ local function WeaponRangeUpdate()
 end
 
 function script.Create()
-	StartThread(WeaponRangeUpdate)
+--	StartThread(WeaponRangeUpdate)
 	StartThread(SmokeUnit, smokePiece)	
 end
 
@@ -69,13 +82,16 @@ local function Bob()
 	Signal(SIG_BOB)
 	SetSignalMask(SIG_BOB)
 	while true do
-		Turn(ground, x_axis, math.rad(math.random(-3,3)), math.rad(math.random(1,2)))
-		Turn(ground, z_axis, math.rad(math.random(-3,3)), math.rad(math.random(1,2)))
-		Move(ground, y_axis, math.rad(math.random(0,6)), math.rad(math.random(2,6)))
+		local dx, dy, dz = math.rad(math.random(-3,3)), math.rad(math.random(-3,3)), math.rad(math.random(0,6))
+		local sx, sy, sz = math.rad(math.random(1,2)), math.rad(math.random(1,2)), math.rad(math.random(2,6))
+		
+		Turn(ground, x_axis, dx, sx)
+		Turn(ground, z_axis, dz, sz)
+		Move(ground, y_axis, dy, sy)
 		Sleep(2000)
-		Turn(ground, x_axis, math.rad(math.random(-3,3)), math.rad(math.random(1,2)))
-		Turn(ground, z_axis, math.rad(math.random(-3,3)), math.rad(math.random(1,2)))
-		Move(ground, y_axis, math.rad(math.random(-6,0)), math.rad(math.random(2,6)))
+		Turn(ground, x_axis, -dx, sx)
+		Turn(ground, z_axis, -dz, sz)
+		Move(ground, y_axis, -dy, sy)
 		Sleep(2000)
 	end
 end
@@ -126,7 +142,6 @@ end
 
 function Float_stationaryOnSurface()
 	Signal(SIG_FLOAT)
-	bUnpacked = true
 end
 
 function unit_teleported(position)
@@ -176,6 +191,7 @@ end
 
 function script.StopMoving()
 	StartThread(Stopping)
+	GG.Floating_StopMoving(unitID)
 end
 
 local function RestoreAfterDelay()
@@ -189,38 +205,44 @@ local function RestoreAfterDelay()
 	Turn(gun2, z_axis, 0, 2)
 end
 
+local function IsUnitInWater(unitID)
+	local uy = select(2, Spring.GetUnitPosition(unitID))
+	return uy <= 0
+end
+
 function script.AimWeapon(num, heading, pitch)
 	Spring.Echo("AimWeapon num = "..num)
-	local res, isUserTarget, val = Spring.GetUnitWeaponTarget(unitID, num)
-	local ty
-	if res == 1 then --unitID
-		ty = select(5, Spring.GetUnitPosition(val, false, true)) --must be Y of aimPos
+	local res, _, val = Spring.GetUnitWeaponTarget(unitID, num)	
+	local tID, tx, ty, tz
+	if res == 1 then --unit
+		tID = val
+		_, _, _, tx, ty, tz = Spring.GetUnitPosition(tID, false, true)
 	elseif res == 2 then --groundPos
-		ty = val[2]
-	end
-	
-	Spring.Echo("AimWeapon ty = "..(ty or "nil"))
-	
-	if not ty then return false end
+		tx, ty, tz = val[1], val[2], val[3]
+	end	
 	
 	if ty >= 0 then -- target is in water or above
-		Spring.Echo("AimWeapon GG.Floating_AimWeapon")
-		GG.Floating_AimWeapon(unitID) --signal float
-		if num == 3 then -- selected weapon is Grenade Launcher (2)
+		if IsUnitInWater(unitID) then
+			--Spring.Echo("AimWeapon GG.Floating_AimWeapon")
+			GG.Floating_AimWeapon(unitID) --signal float
+		end
+		--[[
+		if num == torpNum then
 			--wrong weapon
 			Spring.Echo("AimWeapon wrong weapon1")
 			return false
 		end
+		]]--
 	else --target is under water
-		if num == 1 then -- selected weapon is Torpedo Launcher (1)
+		--[[
+		if num == grenNum then
 			Spring.Echo("AimWeapon wrong weapon2")
 			--wrong weapon
 			return false
-		end		
+		end	
+		]]--		
 	end
-	
-	--if num == 1 then return false end
-	
+
 	Signal(SIG_AIM)
 	SetSignalMask(SIG_AIM)
 	Turn(turret, y_axis, heading, 1.9)
@@ -233,24 +255,23 @@ function script.AimWeapon(num, heading, pitch)
 end
 
 function script.FireWeapon(num)
-	--[[
-	Spring.Echo("FireWeapon num = "..num)
-	local toChange = 3 - num
+--[[
 	local reloadSpeedMult = Spring.GetUnitRulesParam(unitID, "totalReloadSpeedChange") or 1
 	if reloadSpeedMult <= 0 then
 		-- Safety for div0. In theory a unit with reloadSpeedMult = 0 cannot fire because it never reloads.
 		reloadSpeedMult = 1
 	end
+	
 	local reloadTimeMult = 1/reloadSpeedMult
-	Spring.SetUnitWeaponState(unitID, toChange, "reloadFrame", Spring.GetGameFrame() + reloadTime*reloadTimeMult)
-	if num == 2 then
+	Spring.SetUnitWeaponState(unitID, num, "reloadFrame", Spring.GetGameFrame() + reloadTime*reloadTimeMult)
+	if num == torpNum then
 		local px, py, pz = Spring.GetUnitPosition(unitID)
 		if py < -8 then
 		else
 			Spring.PlaySoundFile("sounds/weapon/torp_land.wav", 5, px, py, pz)
 		end
 	end
-	]]--
+]]--
 	Sleep(150)
 	Move(gun1, z_axis, 0, 3)
 	Move(gun2, z_axis, 0, 3)

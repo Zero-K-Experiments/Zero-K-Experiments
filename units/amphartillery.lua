@@ -21,6 +21,8 @@ unitDef = {
 	sink_on_emp    = 0,
     floattoggle    = [[1]],
 	
+	extradrawrange = 440,
+	
       description_pl = [[Lekki bot amfibijny]],
       helptext       = [[The Kraken is a mobile short ranged artillery bot, armed with twin-firing cannons. For underwater combat it can rapidly fire unguided charges to kill slow enemies. ]],
       helptext_pl    = [[Grebe to lekki bot z granatami krotkiego zasiegu, ktore dobrze sprawdzaja sie przeciwko ciezszym celom. Mimo ze jest amfibijny, nie moze atakowac spod wody.]],
@@ -61,57 +63,19 @@ unitDef = {
 
   weapons                = {
     {
-      def                = [[GRENADE_FAKE]],
+      def                = [[GRENADE]],
       badTargetCategory  = [[FIXEDWING]],
       onlyTargetCategory = [[FIXEDWING LAND SINK TURRET SHIP SWIM FLOAT GUNSHIP HOVER]],
     },  
     {
-      def                = [[GRENADE]],
-      badTargetCategory  = [[FIXEDWING]],
-      onlyTargetCategory = [[FIXEDWING LAND SINK TURRET SHIP SWIM FLOAT GUNSHIP HOVER]],
-    },
-    {
       def                = [[TORPEDO]],
       badTargetCategory  = [[FIXEDWING]],
       onlyTargetCategory = [[FIXEDWING LAND SINK TURRET SHIP SWIM FLOAT GUNSHIP HOVER]],
-    },
+    },	
   },
 
   weaponDefs             = {
   
-  	FAKE_GRENADE = {
-      name                    = [[Fake Grenade Launcher]],
-      accuracy                = 200,
-      areaOfEffect            = 48,
-      craterBoost             = 1,
-      craterMult              = 2,
-
-      damage                  = {
-        default = 80,
-      },
-
-      explosionGenerator      = [[custom:MARY_SUE]],
-      fireStarter             = 180,
-      impulseBoost            = 0,
-      impulseFactor           = 0.2,
-      interceptedByShieldType = 2,
-      model                   = [[diskball.s3o]],
-      projectiles             = 2,
-      range                   = 680,
-      reloadtime              = 3,
-      smokeTrail              = true,
-      soundHit                = [[explosion/ex_med6]],
-      soundHitVolume          = 8,
-      soundStart              = [[weapon/cannon/cannon_fire3]],
-      soundStartVolume        = 2,
-      soundTrigger			  = true,
-      sprayangle              = 512,
-      turret                  = true,
-	  waterWeapon             = true,	  
-      weaponType              = [[Cannon]],
-      weaponVelocity          = 400,
-	},
-
 	GRENADE = {
       name                    = [[Grenade Launcher]],
       accuracy                = 200,
@@ -130,7 +94,7 @@ unitDef = {
       interceptedByShieldType = 2,
       model                   = [[diskball.s3o]],
       projectiles             = 2,
-      range                   = 680,
+      range                   = 900,
       reloadtime              = 3,
       smokeTrail              = true,
       soundHit                = [[explosion/ex_med6]],
@@ -148,6 +112,8 @@ unitDef = {
       name                    = [[Torpedo]],
       areaOfEffect            = 16,
       avoidFriendly           = false,
+      bouncerebound           = 0.5,
+      bounceslip              = 0.5,	  
       burnblow                = true,
       collideFriendly         = false,
       craterBoost             = 0,
@@ -160,7 +126,8 @@ unitDef = {
 
       explosionGenerator      = [[custom:TORPEDO_HIT]],
       flightTime              = 6,
-      impactOnly              = true,
+      impactOnly              = false,
+      edgeEffectiveness       = 0.6,
       impulseBoost            = 0,
       impulseFactor           = 0.4,
       interceptedByShieldType = 1,
@@ -172,8 +139,8 @@ unitDef = {
       soundStart              = [[weapon/torpedofast]],
       startVelocity           = 120,
       tolerance               = 1000,
-      tracks                  = false,
-      turnRate                = 100000,
+      tracks                  = true,
+      turnRate                = 2000,
       turret                  = true,
       waterWeapon             = true,
       weaponAcceleration      = 25,
