@@ -19,7 +19,8 @@ unitDef = {
     amph_regen = 10,
     amph_submerged_at = 40,
 	sink_on_emp    = 0,
-    floattoggle    = [[1]],	
+    floattoggle    = [[1]],
+	
       description_pl = [[Lekki bot amfibijny]],
       helptext       = [[The Kraken is a mobile short ranged artillery bot, armed with twin-firing cannons. For underwater combat it can rapidly fire unguided charges to kill slow enemies. ]],
       helptext_pl    = [[Grebe to lekki bot z granatami krotkiego zasiegu, ktore dobrze sprawdzaja sie przeciwko ciezszym celom. Mimo ze jest amfibijny, nie moze atakowac spod wody.]],
@@ -60,11 +61,15 @@ unitDef = {
 
   weapons                = {
     {
+      def                = [[GRENADE_FAKE]],
+      badTargetCategory  = [[FIXEDWING]],
+      onlyTargetCategory = [[FIXEDWING LAND SINK TURRET SHIP SWIM FLOAT GUNSHIP HOVER]],
+    },  
+    {
       def                = [[GRENADE]],
       badTargetCategory  = [[FIXEDWING]],
       onlyTargetCategory = [[FIXEDWING LAND SINK TURRET SHIP SWIM FLOAT GUNSHIP HOVER]],
     },
-
     {
       def                = [[TORPEDO]],
       badTargetCategory  = [[FIXEDWING]],
@@ -73,6 +78,39 @@ unitDef = {
   },
 
   weaponDefs             = {
+  
+  	FAKE_GRENADE = {
+      name                    = [[Fake Grenade Launcher]],
+      accuracy                = 200,
+      areaOfEffect            = 48,
+      craterBoost             = 1,
+      craterMult              = 2,
+
+      damage                  = {
+        default = 80,
+      },
+
+      explosionGenerator      = [[custom:MARY_SUE]],
+      fireStarter             = 180,
+      impulseBoost            = 0,
+      impulseFactor           = 0.2,
+      interceptedByShieldType = 2,
+      model                   = [[diskball.s3o]],
+      projectiles             = 2,
+      range                   = 680,
+      reloadtime              = 3,
+      smokeTrail              = true,
+      soundHit                = [[explosion/ex_med6]],
+      soundHitVolume          = 8,
+      soundStart              = [[weapon/cannon/cannon_fire3]],
+      soundStartVolume        = 2,
+      soundTrigger			  = true,
+      sprayangle              = 512,
+      turret                  = true,
+	  waterWeapon             = true,	  
+      weaponType              = [[Cannon]],
+      weaponVelocity          = 400,
+	},
 
 	GRENADE = {
       name                    = [[Grenade Launcher]],
@@ -99,13 +137,13 @@ unitDef = {
       soundHitVolume          = 8,
       soundStart              = [[weapon/cannon/cannon_fire3]],
       soundStartVolume        = 2,
-      soundTrigger			= true,
+      soundTrigger			  = true,
       sprayangle              = 512,
       turret                  = true,
       weaponType              = [[Cannon]],
       weaponVelocity          = 400,
 	},
-
+	
 	TORPEDO = {
       name                    = [[Torpedo]],
       areaOfEffect            = 16,

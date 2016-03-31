@@ -3,6 +3,8 @@
 include "constants.lua"
 
 local ground, pelvis, turret, gun1, gun2, lleg, rleg, lfoot, rfoot, firept1, firept2 = piece('ground', 'pelvis', 'turret', 'gun1', 'gun2', 'lleg', 'rleg', 'lfoot', 'rfoot', 'firept1', 'firept2')
+local vent = piece('vent')
+
 local SIG_AIM = {}
 local firepoints = {[0] = firept1, [1] = firept2}
 local barrels = {[0] = gun1, [1] = gun2}
@@ -13,6 +15,8 @@ local firing = 0
 local SIG_WALK = 1
 local SIG_AIM = {2, 4}
 local SIG_RESTORE = 8
+local SIG_BOB = 16
+local SIG_FLOAT = 32
 
 local PERIOD = 500
 local INTERMISSION = 100
@@ -32,16 +36,20 @@ local longRange = true
 
 local smokePiece = {pelvis, turret}
 
+local INLOS = {inlos = true}
+
 local function WeaponRangeUpdate()
 	while true do
 		local height = select(2, Spring.GetUnitPosition(unitID))
 		if height < -32 then
 			if longRange then
-				Spring.SetUnitWeaponState(unitID, 1, {range = torpRange})
+				Spring.SetUnitWeaponState(unitID, 3, {range = torpRange})
+				Spring.SetUnitRulesParam(unitID, "secondary_range", shotRange, INLOS)
 				longRange = false
 			end
 		elseif not longRange then
-			Spring.SetUnitWeaponState(unitID, 1, {range = shotRange})
+			Spring.SetUnitWeaponState(unitID, 3, {range = shotRange})
+			Spring.SetUnitRulesParam(unitID, "secondary_range", torpRange, INLOS)
 			longRange = true
 		end
 		Sleep(200)
@@ -52,6 +60,81 @@ function script.Create()
 	StartThread(WeaponRangeUpdate)
 	StartThread(SmokeUnit, smokePiece)	
 end
+
+--------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------
+-- Swim functions
+
+local function Bob()
+	Signal(SIG_BOB)
+	SetSignalMask(SIG_BOB)
+	while true do
+		Turn(ground, x_axis, math.rad(math.random(-3,3)), math.rad(math.random(1,2)))
+		Turn(ground, z_axis, math.rad(math.random(-3,3)), math.rad(math.random(1,2)))
+		Move(ground, y_axis, math.rad(math.random(0,6)), math.rad(math.random(2,6)))
+		Sleep(2000)
+		Turn(ground, x_axis, math.rad(math.random(-3,3)), math.rad(math.random(1,2)))
+		Turn(ground, z_axis, math.rad(math.random(-3,3)), math.rad(math.random(1,2)))
+		Move(ground, y_axis, math.rad(math.random(-6,0)), math.rad(math.random(2,6)))
+		Sleep(2000)
+	end
+end
+
+local function SinkBubbles()
+	SetSignalMask(SIG_FLOAT)
+	while true do
+		EmitSfx(vent, SFX.BUBBLE)
+		Sleep(66)
+	end
+end
+
+local function dustBottom()
+	local x,y,z = Spring.GetUnitPiecePosDir(unitID,rfoot)
+	Spring.SpawnCEG("uw_vindiback", x, y+5, z, 0, 0, 0, 0)
+	local x,y,z = Spring.GetUnitPiecePosDir(unitID,lfoot)
+	Spring.SpawnCEG("uw_vindiback", x, y+5, z, 0, 0, 0, 0)
+end
+--------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------
+-- Swim gadget callins
+
+function Float_startFromFloor()
+	dustBottom()
+	Signal(SIG_WALK)
+	Signal(SIG_FLOAT)
+	StartThread(Bob)
+end
+
+function Float_stopOnFloor()
+	dustBottom()
+	Signal(SIG_BOB)
+	Signal(SIG_FLOAT)
+end
+
+function Float_rising()
+	 Signal(SIG_FLOAT)
+end
+
+function Float_sinking()
+	Signal(SIG_FLOAT)
+	StartThread(SinkBubbles)
+end
+
+function Float_crossWaterline(speed)
+	--Signal(SIG_FLOAT)
+end
+
+function Float_stationaryOnSurface()
+	Signal(SIG_FLOAT)
+	bUnpacked = true
+end
+
+function unit_teleported(position)
+	return GG.Floating_UnitTeleported(unitID, position)
+end
+
+--------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------
 
 local function Walk()
 	Signal(SIG_WALK)
@@ -107,6 +190,37 @@ local function RestoreAfterDelay()
 end
 
 function script.AimWeapon(num, heading, pitch)
+	Spring.Echo("AimWeapon num = "..num)
+	local res, isUserTarget, val = Spring.GetUnitWeaponTarget(unitID, num)
+	local ty
+	if res == 1 then --unitID
+		ty = select(5, Spring.GetUnitPosition(val, false, true)) --must be Y of aimPos
+	elseif res == 2 then --groundPos
+		ty = val[2]
+	end
+	
+	Spring.Echo("AimWeapon ty = "..(ty or "nil"))
+	
+	if not ty then return false end
+	
+	if ty >= 0 then -- target is in water or above
+		Spring.Echo("AimWeapon GG.Floating_AimWeapon")
+		GG.Floating_AimWeapon(unitID) --signal float
+		if num == 3 then -- selected weapon is Grenade Launcher (2)
+			--wrong weapon
+			Spring.Echo("AimWeapon wrong weapon1")
+			return false
+		end
+	else --target is under water
+		if num == 1 then -- selected weapon is Torpedo Launcher (1)
+			Spring.Echo("AimWeapon wrong weapon2")
+			--wrong weapon
+			return false
+		end		
+	end
+	
+	--if num == 1 then return false end
+	
 	Signal(SIG_AIM)
 	SetSignalMask(SIG_AIM)
 	Turn(turret, y_axis, heading, 1.9)
@@ -119,6 +233,8 @@ function script.AimWeapon(num, heading, pitch)
 end
 
 function script.FireWeapon(num)
+	--[[
+	Spring.Echo("FireWeapon num = "..num)
 	local toChange = 3 - num
 	local reloadSpeedMult = Spring.GetUnitRulesParam(unitID, "totalReloadSpeedChange") or 1
 	if reloadSpeedMult <= 0 then
@@ -134,6 +250,7 @@ function script.FireWeapon(num)
 			Spring.PlaySoundFile("sounds/weapon/torp_land.wav", 5, px, py, pz)
 		end
 	end
+	]]--
 	Sleep(150)
 	Move(gun1, z_axis, 0, 3)
 	Move(gun2, z_axis, 0, 3)

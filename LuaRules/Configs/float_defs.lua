@@ -79,6 +79,23 @@ local floatDefs = {
 		stopPositionLeeway = 0.1,
 	},
 	
+	[UnitDefNames["amphartillery"].id] = {
+		initialRiseSpeed = 4,
+		riseAccel = 0.15,
+		riseUpDrag = 0.99,
+		riseDownDrag = 0.7,
+		sinkAccel = -0.12,
+		sinkUpDrag = 0.9,
+		sinkDownDrag = 0.9,
+		airAccel = -0.2, -- aka gravity, only effective out of water
+		airDrag = 0.92,
+		waterHitDrag = 0.5,
+		floatPoint = -10,
+		depthRequirement = -30,
+		stopSpeedLeeway = 0.05, 
+		stopPositionLeeway = 0.1,
+	},	
+	
 	-- Big epic unit moves up and down about as quickly as Atlantis
 	[UnitDefNames["amphassault"].id] = {
 		initialRiseSpeed = 1.5,
