@@ -211,7 +211,7 @@ local function IsUnitInWater(unitID)
 end
 
 function script.AimWeapon(num, heading, pitch)
-	Spring.Echo("AimWeapon num = "..num)
+--	Spring.Echo("AimWeapon num = "..num)
 	local res, _, val = Spring.GetUnitWeaponTarget(unitID, num)	
 	local tID, tx, ty, tz
 	if res == 1 then --unit

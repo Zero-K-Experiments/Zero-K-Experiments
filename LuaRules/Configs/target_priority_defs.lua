@@ -135,6 +135,7 @@ local unitIsBadAgainstFastStuff = {
 	[UnitDefNames["armanni"].id] = true,
 	[UnitDefNames["corstorm"].id] = true,
 	[UnitDefNames["armham"].id] = true,
+	[UnitDefNames["amphartillery"].id] = true,
 	[UnitDefNames["armsnipe"].id] = true,
 	[UnitDefNames["armmerl"].id] = true,
 	[UnitDefNames["shieldarty"].id] = true,
