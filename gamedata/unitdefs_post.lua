@@ -726,8 +726,11 @@ end
 --------------------------------------------------------------------------------
 -- Set mass
 -- 
+VFS.Include("LuaRules/Utilities/GetMass.lua")
+local GetMass = Spring.Utilities.GetMass
+
 for name, ud in pairs(UnitDefs) do
-	ud.mass = (((ud.buildtime/2) + (ud.maxdamage/8))^0.6)*6.5
+	ud.mass = GetMass(ud.buildtime, ud.maxdamage)
 	if ud.customparams.massmult then
 		ud.mass = ud.mass*ud.customparams.massmult
 	end

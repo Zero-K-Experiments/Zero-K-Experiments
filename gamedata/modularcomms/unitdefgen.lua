@@ -356,6 +356,9 @@ for name, data in pairs(UnitDefs) do
 	end
 end
 
+VFS.Include("LuaRules/Utilities/GetMass.lua")
+local GetMass = Spring.Utilities.GetMass
+
 for name, data in pairs(commDefs) do
 	--Spring.Echo("\tPostprocessing commtype: ".. name)
 	
@@ -433,9 +436,12 @@ for name, data in pairs(commDefs) do
 	end
 	
 	-- set mass
-	data.mass = ((data.buildcostmetal/2 + data.maxdamage/10)^0.55)*9
+	data.mass = GetMass(data.buildcostmetal, data.maxdamage)
 	--Spring.Echo("mass " .. (data.mass or "nil") .. " BT/HP " .. (data.buildtime or "nil") .. "  " .. (data.maxdamage or "nil"))
 	
+	-- set crush resistance to engine's default
+	data.crushresistance = 0.4 * data.buildcostmetal + 0.1 * data.maxdamage
+		
 	-- rez speed
 	if data.canresurrect then 
 		data.resurrectspeed = data.workertime*0.5

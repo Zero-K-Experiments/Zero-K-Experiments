@@ -55,6 +55,10 @@ local baseModuleHeap = {
 	},
 }
 
+
+local DEAD_MULT = 0.4
+local HEAP_MULT = 0.2
+
 local function GenerateModuleWrecks()
 	local moduleDefs = VFS.Include("LuaRules/Configs/dynamic_comm_defs.lua")
 	for i = 1, #moduleDefs do
@@ -62,8 +66,8 @@ local function GenerateModuleWrecks()
 		local wreck = CopyTable(baseModuleWreck, true)
 		local heap = CopyTable(baseModuleHeap, true)
 		wreck.description = moduleDef.humanName .. " Shards"
-		wreck.metal = moduleDef.cost * 0.4
-		wreck.reclaimtime = moduleDef.cost * 0.4
+		wreck.metal = moduleDef.cost * DEAD_MULT
+		wreck.reclaimtime = wreck.metal
 		wreck.damage = moduleDef.cost * 2
 		wreck.name = "module_wreck_" .. i
 		wreck.featuredead = "module_heap_" .. i
@@ -71,8 +75,8 @@ local function GenerateModuleWrecks()
 		FeatureDefs["module_wreck_" .. i] = wreck
 		
 		heap.description = moduleDef.humanName .. " Fragments"
-		heap.metal = moduleDef.cost * 0.2
-		heap.reclaimtime = moduleDef.cost * 0.2
+		heap.metal = moduleDef.cost * HEAP_MULT
+		heap.reclaimtime = heap.metal
 		heap.damage = moduleDef.cost * 2
 		heap.name = "module_heap_" .. i
 		
@@ -109,8 +113,8 @@ end
 --  Per-unitDef featureDefs
 --
 
-local DEAD_MULT = 0.4
-local HEAP_MULT = 0.2
+VFS.Include("LuaRules/Utilities/GetMass.lua")
+local GetMass = Spring.Utilities.GetMass
 
 local function ProcessUnitDef(udName, ud)
 
@@ -183,6 +187,12 @@ local function ProcessUnitDef(udName, ud)
 		if not fd.featurereclamate then fd.featurereclamate = "smudge01" end
 		if not fd.seqnamereclamate then fd.seqnamereclamate = "tree1reclamate" end
 		if not fd.world then fd.world = "allworld" end
+		
+		--set feature mass for transporters
+		fd.mass = GetMass(fd.metal, maxDamage)
+		
+		--set crushresistance to engine's default
+		fd.crushresistance = 0.4 * fd.metal + 0.1 * maxDamage
 		
 	  end
 	end
