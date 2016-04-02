@@ -68,7 +68,7 @@ unitDef = {
   featureDefs      = {
 
     DEAD  = {
-      description      = [[Wreckage - Amphibious Bot Plant]],
+      description      = [[Wreckage - Amphibious Operations Plant]],
       blocking         = true,
       damage           = 4000,
       energy           = 0,
@@ -82,7 +82,7 @@ unitDef = {
     },
 
     HEAP  = {
-      description      = [[Debris - Amphibious Bot Plant]],
+      description      = [[Debris - Amphibious Operations Plant]],
       blocking         = false,
       damage           = 4000,
       energy           = 0,

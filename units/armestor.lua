@@ -55,7 +55,7 @@ unitDef = {
   featureDefs                   = {
 
     DEAD  = {
-      description      = [[Wreckage - Energy Pylon]],
+      description      = [[Wreckage - Energy Transmission Pylon]],
       blocking         = true,
       damage           = 1000,
       energy           = 0,
@@ -69,7 +69,7 @@ unitDef = {
     },
 
     HEAP  = {
-      description      = [[Debris - Energy Pylon]],
+      description      = [[Debris - Energy Transmission Pylon]],
       blocking         = false,
       damage           = 1000,
       energy           = 0,
