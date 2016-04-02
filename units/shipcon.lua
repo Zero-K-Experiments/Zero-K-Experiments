@@ -54,7 +54,6 @@ unitDef = {
   objectName             = [[shipcon.s3o]],
   script				 = [[shipcon.cob]],
   selfDestructAs         = [[SMALL_UNITEX]],
-  showNanoSpray          = true,
   side                   = [[CORE]],
   sightDistance          = 325,
   smoothAnim             = true,

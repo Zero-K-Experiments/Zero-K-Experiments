@@ -43,7 +43,6 @@ unitDef = {
   objectName          = [[amphcon.s3o]],
   selfDestructAs      = [[BIG_UNITEX]],
   script              = [[amphcon.lua]],
-  showNanoSpray       = true,
   sightDistance       = 375,
 --  sonarDistance       = 400,
   trackOffset         = 0,

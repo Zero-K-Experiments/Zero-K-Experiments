@@ -63,7 +63,6 @@ unitDef = {
   objectName                    = [[factoryjump.s3o]],
   script						= [[factoryjump.lua]],
   selfDestructAs                = [[LARGE_BUILDINGEX]],
-  showNanoSpray                 = true,
   side                          = [[CORE]],
   sightDistance                 = 273,
   smoothAnim                    = true,

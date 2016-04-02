@@ -65,7 +65,6 @@ unitDef = {
   objectName          = [[crane.s3o]],
   script              = [[armca.lua]],
   selfDestructAs      = [[GUNSHIPEX]],
-  showNanoSpray       = true,
   side                = [[ARM]],
   sightDistance       = 380,
   smoothAnim          = true,

@@ -64,7 +64,6 @@ unitDef = {
   radarEmitHeight        = 100,
   script                 = [[arm_spider.lua]],
   selfDestructAs         = [[BIG_UNITEX]],
-  showNanoSpray          = true,
   sightDistance          = 380,
   trackOffset            = 0,
   trackStrength          = 10,

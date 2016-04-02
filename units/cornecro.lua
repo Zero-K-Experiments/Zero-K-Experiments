@@ -50,7 +50,6 @@ unitDef = {
   onoffable           = false,
   script			  = [[cornecro.lua]],
   selfDestructAs      = [[BIG_UNITEX]],
-  showNanoSpray       = true,
   sightDistance       = 375,
   trackOffset         = 0,
   trackStrength       = 8,

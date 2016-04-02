@@ -57,7 +57,6 @@ unitDef = {
   objectName                    = [[armsenan.s3o]],
   script                        = [[armnanotc.lua]],
   selfDestructAs                = [[NANOBOOM2]],
-  showNanoSpray                 = true,
   sightDistance                 = 380,
   turnRate                      = 1,
   upright                       = true,

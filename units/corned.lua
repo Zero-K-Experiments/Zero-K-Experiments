@@ -59,7 +59,6 @@ unitDef = {
   noChaseCategory        = [[TERRAFORM SATELLITE FIXEDWING GUNSHIP HOVER SHIP SWIM SUB LAND FLOAT SINK TURRET]],
   objectName             = [[corcv.s3o]],
   selfDestructAs         = [[BIG_UNITEX]],
-  showNanoSpray          = true,
   side                   = [[CORE]],
   sightDistance          = 255,
   smoothAnim             = true,

@@ -61,7 +61,6 @@ unitDef = {
       [[custom:shellshockflash]],
     },
   },
-  showNanoSpray          = true,
   sightDistance          = 1105,
   turninplace            = 0,
   turnRate               = 233,

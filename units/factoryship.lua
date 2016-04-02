@@ -57,7 +57,6 @@ unitDef = {
   objectName             = [[seafac.s3o]],
   script				 = [[factoryship.lua]],
   selfDestructAs         = [[LARGE_BUILDINGEX]],
-  showNanoSpray          = true,
   side                   = [[CORE]],
   sightDistance          = 273,
   TEDClass               = [[PLANT]],

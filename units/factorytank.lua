@@ -57,7 +57,6 @@ unitDef = {
   objectName                    = [[coravp2.s3o]],
   script                        = [[factorytank.lua]],
   selfDestructAs                = [[LARGE_BUILDINGEX]],
-  showNanoSpray                 = true,
   side                          = [[CORE]],
   sightDistance                 = 273,
   smoothAnim                    = true,

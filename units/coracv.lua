@@ -66,7 +66,6 @@ unitDef = {
 
   },
 
-  showNanoSpray          = true,
   side                   = [[CORE]],
   sightDistance          = 280,
   smoothAnim             = true,

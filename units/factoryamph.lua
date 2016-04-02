@@ -56,7 +56,6 @@ unitDef = {
   objectName       = [[factory2.s3o]],
   script           = "factoryamph.lua",
   selfDestructAs   = [[LARGE_BUILDINGEX]],
-  showNanoSpray    = true,
   sightDistance    = 273,
   workerTime       = 10,
   yardMap          = [[ooooooo ooooooo ooooooo occccco occccco occccco ccccccc]],

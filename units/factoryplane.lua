@@ -60,7 +60,6 @@ unitDef = {
   objectName                    = [[CORAP.s3o]],
   script                        = [[factoryplane.lua]],
   selfDestructAs                = [[LARGE_BUILDINGEX]],
-  showNanoSpray                 = true,
   side                          = [[CORE]],
   sightDistance                 = 273,
   TEDClass                      = [[PLANT]],

@@ -48,7 +48,6 @@ unitDef = {
   objectName                    = [[missilesilo.s3o]],
   script                        = [[missilesilo.lua]],
   selfDestructAs                = [[LARGE_BUILDINGEX]],
-  showNanoSpray                 = true,
   sightDistance                 = 273,
   useBuildingGroundDecal        = true,
   workerTime                    = 10,

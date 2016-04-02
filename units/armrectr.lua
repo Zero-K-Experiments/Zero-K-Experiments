@@ -61,7 +61,6 @@ unitDef = {
   objectName             = [[spherecon.s3o]],
   radarDistanceJam       = 256,
   selfDestructAs         = [[BIG_UNITEX]],
-  showNanoSpray          = true,
   sightDistance          = 375,
   trackOffset            = 0,
   trackStrength          = 8,

@@ -61,7 +61,6 @@ unitDef = {
   noAutoFire                    = false,
   objectName                    = [[CORPLAS.s3o]],
   selfDestructAs                = [[LARGE_BUILDINGEX]],
-  showNanoSpray                 = true,
   side                          = [[CORE]],
   sightDistance                 = 273,
   smoothAnim                    = true,

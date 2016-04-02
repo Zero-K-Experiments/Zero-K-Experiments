@@ -86,7 +86,6 @@ unitDef = {
   radarDistanceJam    = 300,
   script              = [[armcsa.lua]],
   selfDestructAs      = [[GUNSHIPEX]],
-  showNanoSpray       = true,
   side                = [[ARM]],
   sightDistance       = 380,
   smoothAnim          = true,

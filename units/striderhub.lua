@@ -73,7 +73,6 @@ unitDef = {
   objectName                    = [[striderhub.s3o]],
   script                        = [[striderhub.lua]],
   selfDestructAs                = [[ESTOR_BUILDINGEX]],
-  showNanoSpray                 = true,
   side                          = [[ARM]],
   sightDistance                 = 380,
   smoothAnim                    = true,

@@ -63,7 +63,6 @@ unitDef = {
   noAutoFire                    = false,
   objectName                    = [[factory3.s3o]],
   selfDestructAs                = [[LARGE_BUILDINGEX]],
-  showNanoSpray                 = true,
   script                        = [[factoryspider.lua]],
   sightDistance                 = 273,
   smoothAnim                    = true,

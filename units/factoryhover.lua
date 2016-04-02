@@ -54,7 +54,6 @@ unitDef = {
   noAutoFire       = false,
   objectName       = [[ARMFHP.s3o]],
   selfDestructAs   = [[LARGE_BUILDINGEX]],
-  showNanoSpray    = true,
   side             = [[ARM]],
   sightDistance    = 273,
   smoothAnim       = true,

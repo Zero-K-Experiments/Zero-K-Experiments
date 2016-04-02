@@ -53,7 +53,6 @@ unitDef = {
   radarDistance          = 1200,
   radarEmitHeight        = 100,
   selfDestructAs         = [[ATOMIC_BLASTSML]],
-  showNanoSpray          = true,
   sightDistance          = 1105,
   turninplace            = 0,
   turnRate               = 233,

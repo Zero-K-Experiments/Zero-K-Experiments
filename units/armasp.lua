@@ -48,7 +48,6 @@ unitDef = {
   objectName          = [[airpad.s3o]],
   script			  = [[armasp.lua]],
   selfDestructAs      = [[LARGE_BUILDINGEX]],
-  showNanoSpray       = true,
   side                = [[ARM]],
   sightDistance       = 273,
   turnRate            = 0,

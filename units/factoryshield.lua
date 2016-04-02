@@ -64,7 +64,6 @@ unitDef = {
   objectName                    = [[factory.s3o]],
   script                        = "factoryshield.lua",
   selfDestructAs                = [[LARGE_BUILDINGEX]],
-  showNanoSpray                 = true,
   side                          = [[ARM]],
   sightDistance                 = 273,
   smoothAnim                    = true,
