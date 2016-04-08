@@ -170,13 +170,14 @@ function script.FireWeapon1()
 	EmitSfx(flare, 1025)
 end
 
-
+--[[
 local ud = UnitDefNames["jumpblackhole"]
 local wDefId = ud.weapons[1].weaponDef
 
 function script.BlockShot1(targetID)
 	return GG.OverkillPrevention_CheckBlockBlackHole(unitID, wDefId, 30)
 end
+]]--
 
 
 function preJump(turn, distance)
