@@ -3331,7 +3331,7 @@ function gadget:Explosion(weaponID, x, y, z, owner)
 				end
 			end 
 			
-			local posY = makeTerraChangedPointsPyramidAroundStructures(posX,posY,posZ,posCount)
+			--local posY = makeTerraChangedPointsPyramidAroundStructures(posX,posY,posZ,posCount)
 			
 			spSetHeightMapFunc(
 				function(x,z,h)
