@@ -291,6 +291,13 @@ for name, ud in pairs (UnitDefs) do
 	else
 		if not ud.seismicsignature then ud.seismicsignature = SEISMICSIG end		
 	end
+	
+	--[[
+	if (ud.isBuilding == true or ud.maxAcc == 0) and (not ud.customParams.mobilebuilding) then --looks like a building
+		ud.levelGround = false -- or true
+	end
+	]]--
+	
 end
 
 --------------------------------------------------------------------------------
