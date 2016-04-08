@@ -3147,12 +3147,13 @@ function gadget:GameFrame(n)
 		end
 	end
 	
+	--[[
 	--check structures for terrain deformation
 	local struc = structureCheckFrame[n % structureCheckLoopFrames]
 	if struc then
 		local i = 1
 		while i <= struc.count do
-			local unit = structure[struc.unit[i]]
+			local unit = structure[ struc.unit[i] ]
 			if unit then
 				local height = spGetGroundHeight(unit.x, unit.z)
 				if height ~= unit.h then
@@ -3164,6 +3165,7 @@ function gadget:GameFrame(n)
 			i = i + 1
 		end
 	end	
+	]]--
 	
 	-- give orders to the contructors, workaround for order location bug.
 	if unitOrderList.count ~= 0 then
