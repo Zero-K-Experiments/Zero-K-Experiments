@@ -5,8 +5,10 @@ function widget:GetInfo()
     author    = "ivand",
     date      = "2016",
     license   = "GNU GPL, v2 or later",
-    layer     = 0,
-    enabled   = true  --  loaded by default?
+    layer     = -2, -- puts us before unit_initial_queue.lua
+    enabled   = true,  --  loaded by default?
+	alwaysStart = true,
+	handler = true,
   };
 end
 
@@ -74,9 +76,14 @@ function widget:Initialize()
 	GetGuardedAreas()
 end
 
+function widget:Shutdown()
+
+end
+
+
 function widget:CommandNotify(cmdID, cmdParams, cmdOptions)
 	if cmdID and cmdID < 0 then
-		return (selBuildData~=nil)
+		return selBuildData~=nil
 	end
 end
 
