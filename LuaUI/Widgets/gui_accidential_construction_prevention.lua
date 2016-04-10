@@ -68,15 +68,17 @@ local function GetGuardedAreas()
 	end
 end
 
+local selBuildData = nil
+
 function widget:Initialize()
 	GetGuardedAreas()
 end
 
 function widget:CommandNotify(cmdID, cmdParams, cmdOptions)
-	TableEcho({cmdID=cmdID, cmdParams=cmdParams, cmdOptions=cmdOptions}, "CommandNotify")
+	if cmdID and cmdID < 0 then
+		return (selBuildData~=nil)
+	end
 end
-
-local selBuildData = nil
 
 local function MouseHandler()
 	local mx, my = Spring.GetMouseState()
