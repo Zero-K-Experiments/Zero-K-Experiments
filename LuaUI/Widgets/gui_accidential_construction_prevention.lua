@@ -7,8 +7,8 @@ function widget:GetInfo()
     license   = "GNU GPL, v2 or later",
     layer     = -2, -- puts us before unit_initial_queue.lua
     enabled   = true,  --  loaded by default?
-	alwaysStart = true,
-	handler = true,
+--	alwaysStart = true,
+--	handler = true,
   };
 end
 
@@ -47,7 +47,8 @@ end
 local function GetGuardedAreas()
 
 	local mexUDId = UnitDefNames["cormex"].id
-	local geoUDId = UnitDefNames["geo"].id	
+	local geoUDId = UnitDefNames["geo"].id
+	local fakeUDId = UnitDefNames["fakeunit"].id
 	
 	local bx, bz
 	local spot
@@ -64,7 +65,7 @@ local function GetGuardedAreas()
 			fDefId = Spring.GetFeatureDefID(fId)
 			if FeatureDefs[fDefId].geoThermal then
 				bx, _, bz = Spring.GetFeaturePosition(fId)
-				guardedAreas[#guardedAreas+1] = { geoUDId, bx, 0, bz, 0 }
+				guardedAreas[#guardedAreas+1] = { fakeUDId, bx, 0, bz, 0 }
 			end
 		end
 	end
@@ -82,9 +83,20 @@ end
 
 
 function widget:CommandNotify(cmdID, cmdParams, cmdOptions)
-	if cmdID and cmdID < 0 then
-		return selBuildData~=nil
+	if cmdID and cmdID < 0 and (not guardedItems[cmdID]) then
+		--return selBuildData~=nil
+		local buildFacing = Spring.GetBuildFacing()
+		local bx, by, bz = cmdParams[1], cmdParams[2], cmdParams[3]
+		
+		tmpBuildData = {-cmdID, bx, by, bz, buildFacing}
+		
+		for _, guardedData in ipairs(guardedAreas) do
+			if DoBuildingsClash(tmpBuildData, guardedData) then
+				return true
+			end
+		end
 	end
+	return false
 end
 
 local function MouseHandler()
@@ -155,7 +167,7 @@ local function MouseHandler()
 					vertices[#vertices + 1] = {v = {gx + gw, by + height, gz + gh}}
 					vertices[#vertices + 1] = {v = {gx + gw, by, gz + gh}}						
 					
-					--break
+					break
 				end
 			end
 			
@@ -205,15 +217,13 @@ local function DrawWorldFunc()
 	end
 	
 	gl.LineWidth(1.49)
-	--DrawBuilding(selBuildData, borderNormalColor, buildingQueuedAlpha, myTeamID, true)
-	DrawBuilding(selBuildData, myTeamID)
-	
+	DrawBuilding(selBuildData, myTeamID)	
 	gl.Color(1.0, 1.0, 1.0, 1.0)
 	gl.LineWidth(1.0)	
 end
 
 local frequency = 1/60
-local dtCum = -1
+local dtCum = 2*frequency
 
 function widget:Update(dt)
 	if dtCum >= frequency then --pace to frequency
