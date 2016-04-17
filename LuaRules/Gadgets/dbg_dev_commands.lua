@@ -338,22 +338,72 @@ local spIsCheatingEnabled = Spring.IsCheatingEnabled
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
 
-function GG.TableEcho(data, name, indent)
-	indent = indent or ""
-	name = name or "TableEcho"
-	Spring.Echo(indent .. name .. " = {")
-	for name, v in pairs(data) do
-		local ty =  type(v)
-		if ty == "table" then
-			GG.TableEcho(v, name, indent .. "    ")
-		elseif ty == "boolean" then
-			Spring.Echo(indent .. name .. " = " .. (v and "true" or "false"))
+local function _TableEcho(data, indent)	
+	for k, v in pairs(data) do
+		if type(v) == "table" then
+			Spring.Echo(indent.." = {")
+			_TableEcho(v, indent.."  ")
+			Spring.Echo(indent.."}")
 		else
-			Spring.Echo(indent .. name .. " = " .. v)
+			Spring.Echo(indent..k.." = "..tostring(v))
 		end
 	end
-	Spring.Echo(indent .. "}")
 end
+
+local function TableEcho(data, name, indent)
+	indent = indent or ""
+	name = name or "TableEcho"
+	Spring.Echo(indent..name.." = {")
+	if data==nil then
+		Spring.Echo("nil")
+	else
+		if type(data) == "table" then
+			_TableEcho(data, indent.."  ")			
+		else
+			Echo(tostring(data))
+		end
+	end
+	Spring.Echo(indent.."}")
+end
+GG.TableEcho = TableEcho
+
+
+local function PrintCommand(cmd)
+	if cmd.id>=0 then
+		Spring.Echo( "id: "..tostring(cmd.id).." - "..(CMD[cmd.id] or "CMD_UNDEFINED") )
+	else
+		Spring.Echo( "id: BUILD "..UnitDefs[-cmd.id].name )
+	end	
+	if cmd.tag then Spring.Echo("tag: "..cmd.tag) end
+	TableEcho(cmd.params, "Params")
+	TableEcho(cmd.options, "Options")
+end
+GG.PrintCommand = PrintCommand
+
+
+local function PrintCommandQueue(commandQueueTable)
+	for _, cmd in pairs(commandQueueTable) do
+		PrintCommand(cmd)
+	end
+end
+GG.PrintCommandQueue = PrintCommandQueue
+
+
+local function PrintUnitDef(unitDef)
+	for name, param in unitDef:pairs() do
+		TableEcho(param, name)
+	end
+end
+GG.PrintUnitDef = PrintUnitDef
+
+
+local function PrintWeaponDef(weaponDef)
+	for name,param in weaponDef:pairs() do
+		TableEcho(param, name)
+	end
+end
+GG.PrintWeaponDef = PrintWeaponDef
+
 
 function GG.UnitEcho(unitID, st)
 	st = st or unitID
