@@ -13,7 +13,7 @@ unitDef = {
   buildingGroundDecalSizeY      = 6,
   buildingGroundDecalType       = [[antinuke_decal.dds]],
   buildPic                      = [[ARMAMD.png]],
-  category                      = [[SINK]],
+  category                      = [[FLOAT]],
   collisionVolumeOffsets        = [[0 0 0]],
   collisionVolumeScales         = [[70 70 110]],
   collisionVolumeTest           = 1,
@@ -33,6 +33,7 @@ unitDef = {
   },
 
   explodeAs                     = [[LARGE_BUILDINGEX]],
+  floater                       = true,
   footprintX                    = 5,
   footprintZ                    = 8,
   iconType                      = [[antinuke]],
@@ -41,7 +42,6 @@ unitDef = {
   maxDamage                     = 3300,
   maxSlope                      = 18,
   maxVelocity                   = 0,
-  maxWaterDepth                 = 0,
   minCloakDistance              = 150,
   objectName                    = [[antinuke.s3o]],
   radarDistance                 = 2500,
@@ -54,7 +54,9 @@ unitDef = {
   TEDClass                      = [[FORT]],
   turnRate                      = 0,
   useBuildingGroundDecal        = true,
+  waterline                     = 13,
   workerTime                    = 0,
+  yardmap                       = "oooooooooooooooooooooooooooooooooooooooo",
 
   weapons                       = {
 
