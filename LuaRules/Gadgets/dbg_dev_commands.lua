@@ -360,7 +360,7 @@ local function TableEcho(data, name, indent)
 		if type(data) == "table" then
 			_TableEcho(data, indent.."  ")			
 		else
-			Echo(tostring(data))
+			Spring.Echo(tostring(data))
 		end
 	end
 	Spring.Echo(indent.."}")
