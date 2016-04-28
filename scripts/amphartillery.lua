@@ -38,9 +38,9 @@ local torpRange
 local grenRange
 
 for num, wd in ipairs(UnitDefs[unitDefID].weapons) do
-	if WeaponDefs[wd.weaponDef].name == "amphartillery_fake_grenade" then		
+	if WeaponDefs[wd.weaponDef].name == "amphartillery_fake_grenade" then
 		fakeNum = num
-	elseif WeaponDefs[wd.weaponDef].name == "amphartillery_torpedo" then		
+	elseif WeaponDefs[wd.weaponDef].name == "amphartillery_torpedo" then
 		torpNum = num
 		torpRange = WeaponDefs[wd.weaponDef].range
 	elseif WeaponDefs[wd.weaponDef].name == "amphartillery_grenade" then
@@ -88,7 +88,7 @@ local torpTargetLeeway = 30
 
 
 local function GetIntoTorpedoRange()
-	while true do		
+	while true do
 		--local tx, ty, tz = GetUnitWeaponTargetPos(unitID, torpNum)
 		local queue = Spring.GetUnitCommands(unitID, 1)
 		if queue and #queue == 1 and queue[1].id == CMD.ATTACK then
@@ -107,10 +107,10 @@ local function GetIntoTorpedoRange()
 				
 				if goalDist < 0  then
 					-- move towards target
-					local lineAngle = math.atan2( (mz - tz), (mx - tx) )			
+					local lineAngle = math.atan2( (mz - tz), (mx - tx) )
 					
 					local gx = mx + math.cos(lineAngle) * goalDist
-					local gz = mz + math.sin(lineAngle) * goalDist			
+					local gz = mz + math.sin(lineAngle) * goalDist
 					
 					--Spring.MarkerAddLine(mx, 0, mz, gx, 0, gz)
 					gx, gz = ClampPosition(gx, gz)
@@ -128,7 +128,7 @@ function script.Create()
 --	StartThread(WeaponRangeUpdate)
 --	StartThread(SetUnitMaxRange)
 	StartThread(GetIntoTorpedoRange)
-	StartThread(SmokeUnit, smokePiece)	
+	StartThread(SmokeUnit, smokePiece)
 end
 
 --------------------------------------------------------------------------------------
