@@ -69,8 +69,65 @@ local function WeaponRangeUpdate()
 	end
 end
 
+local function SetUnitMaxRange()
+	while true do
+		local height = select(2, Spring.GetUnitPosition(unitID))
+		if height < -32 then
+			Spring.SetUnitMaxRange(unitID, torpRange)
+		else
+			Spring.SetUnitMaxRange(unitID, grenRange)
+		end
+		Sleep(200)
+	end
+end
+
+local ClampPosition = Spring.Utilities.ClampPosition
+local GetUnitWeaponTargetPos = Spring.Utilities.GetUnitWeaponTargetPos
+
+local torpTargetLeeway = 30
+
+
+local function GetIntoTorpedoRange()
+	while true do		
+		--local tx, ty, tz = GetUnitWeaponTargetPos(unitID, torpNum)
+		local queue = Spring.GetUnitCommands(unitID, 1)
+		if queue and #queue == 1 and queue[1].id == CMD.ATTACK then
+			local cmd = queue[1]
+			local tx, ty, tz
+			if #cmd.params == 1 then
+				tx, ty, tz = Spring.GetUnitPosition(cmd.params[1])
+			elseif #cmd.params == 3 then
+				tx, ty, tz = cmd.params[1], cmd.params[2], cmd.params[3]
+			end
+			if ty and ty <= 0 then --target is in water
+				local mx, my, mz = Spring.GetUnitPosition(unitID)
+				local D2d = math.sqrt( (tx - mx)^2 + (tz - mz)^2 )
+				
+				local goalDist = torpRange - D2d - torpTargetLeeway
+				
+				if goalDist < 0  then
+					-- move towards target
+					local lineAngle = math.atan2( (mz - tz), (mx - tx) )			
+					
+					local gx = mx + math.cos(lineAngle) * goalDist
+					local gz = mz + math.sin(lineAngle) * goalDist			
+					
+					--Spring.MarkerAddLine(mx, 0, mz, gx, 0, gz)
+					gx, gz = ClampPosition(gx, gz)
+					Spring.SetUnitMoveGoal(unitID, gx, 0, gz, 0)
+				end
+			end
+		end
+		Sleep(200)
+		end
+end
+
+
+
 function script.Create()
 --	StartThread(WeaponRangeUpdate)
+--	StartThread(SetUnitMaxRange)
+	StartThread(GetIntoTorpedoRange)
 	StartThread(SmokeUnit, smokePiece)	
 end
 
@@ -205,14 +262,14 @@ local function RestoreAfterDelay()
 	Turn(gun2, z_axis, 0, 2)
 end
 
-local function IsUnitInWater(unitID)
-	local uy = select(2, Spring.GetUnitPosition(unitID))
+local function IsUnitInWater(uId)
+	local uy = select(2, Spring.GetUnitPosition(uId))
 	return uy <= 0
 end
 
 function script.AimWeapon(num, heading, pitch)
 --	Spring.Echo("AimWeapon num = "..num)
-	local res, _, val = Spring.GetUnitWeaponTarget(unitID, num)	
+	local res, _, val = Spring.GetUnitWeaponTarget(unitID, num)
 	local tID, tx, ty, tz
 	if res == 1 then --unit
 		tID = val
@@ -220,6 +277,8 @@ function script.AimWeapon(num, heading, pitch)
 	elseif res == 2 then --groundPos
 		tx, ty, tz = val[1], val[2], val[3]
 	end	
+	
+	--Spring.Echo("ty="..ty)
 	
 	if ty >= 0 then -- target is in water or above
 		if IsUnitInWater(unitID) then
