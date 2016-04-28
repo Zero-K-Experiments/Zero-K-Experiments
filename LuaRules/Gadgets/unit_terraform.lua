@@ -16,8 +16,12 @@ end
 
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
-if (not gadgetHandler:IsSyncedCode()) then return end
--------------------------------------------------------------------------------------
+if gadgetHandler:IsSyncedCode() then
+
+--------------------------------------------------------------------------------
+-- SYNCED
+--------------------------------------------------------------------------------
+
 -------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
@@ -3602,7 +3606,11 @@ function gadget:UnitCreated(unitID, unitDefID)
 		return
 	end
 	
-	if unitDefID == terraunitDefID then		
+	if unitDefID == terraunitDefID then
+		--Spring.SetUnitNoDraw(unitID, true)
+		--Spring.SetUnitNoSelect(unitID, true)
+		--Spring.SetUnitNoMinimap(unitID, true)
+		
 		if terraTagInfo then
 			setupTerraTag(unitID, terraTagInfo.terraTag, terraTagInfo.segment, terraTagInfo.segmentsCount)
 			terraTagInfo = nil
@@ -3737,4 +3745,40 @@ function gadget:Initialize()
 		local teamID = spGetUnitTeam(unitID)
 		gadget:UnitCreated(unitID, unitDefID, teamID)
 	end
+end
+
+--------------------------------------------------------------------------------
+-- SYNCED
+--------------------------------------------------------------------------------
+
+else
+
+--------------------------------------------------------------------------------
+-- UNSYNCED
+--------------------------------------------------------------------------------
+
+local terraunitDefID = UnitDefNames["terraunit"].id
+
+local terraUnits = {}
+
+function gadget:UnitCreated(unitID, unitDefID)
+	if unitDefID == terraunitDefID then
+		Spring.UnitRendering.SetUnitLuaDraw(unitID, true)
+		terraUnits[unitID] = true
+	end
+end
+
+function gadget:UnitDestroyed(unitID, unitDefID)
+	terraUnits[unitID] = nil
+end
+
+function gadget:DrawUnit(unitID, drawMode)
+	if terraUnits[unitID] then
+		return true --supress engine drawing
+	end
+end
+
+--------------------------------------------------------------------------------
+-- UNSYNCED
+--------------------------------------------------------------------------------
 end
