@@ -3370,34 +3370,32 @@ function gadget:Explosion(weaponID, x, y, z, owner)
 				local hitUnitID = units[i]				
 				GG.DetatchFromGround(hitUnitID)
 				if quakeimpulse > 0 then
+					quakeimpulse = 2400
 					local ux, uy, uz  = spGetUnitPosition(hitUnitID)
-					--GG.TableEcho({uy=uy, y = y})
-					if uy - y <= 5 then --assume unit is almost on the ground (after it's been detached)
-						local unitDist = math.sqrt( (ux - x)^2 + (uz - z)^2 + (uy - y)^2 )
-						
-						local hitUnitDefID = Spring.GetUnitDefID(hitUnitID)
-						local hitUnitMass = Spring.GetUnitRulesParam(hitUnitID, "massOverride") or UnitDefs[hitUnitDefID].mass
-						
-						local velocity = quakeimpulse * (1 - unitDist / detachmentradius) / hitUnitMass
-						--GG.TableEcho({velocity_raw=velocity, quakevelmax = quakevelmax})
-						if quakevelmax then
-							if velocity >  quakevelmax then velocity =  math.abs(quakevelmax) end
-							if velocity < -quakevelmax then velocity = -math.abs(quakevelmax) end
-						end
-						
-						--GG.TableEcho({velocity=velocity, quakeimpulse=quakeimpulse})
-						
-						local xi, zi = 0.10 * (ux - x) / detachmentradius, 0.10 * (uz - z) / detachmentradius
-						local yi = 0.8
-						
-						local vecTotal = math.sqrt(xi^2 + yi^2 + zi^2)
-						xi, yi, zi = xi / vecTotal, yi / vecTotal, zi /vecTotal
-						xi, yi, zi = xi * velocity, yi * velocity, zi * velocity
-						
-						--GG.TableEcho({vx=xi, vy=yi, vz=zi})						
-						
-						Spring.AddUnitImpulse(hitUnitID, xi, yi , zi)
+					local unitDist = math.sqrt( (ux - x)^2 + (uz - z)^2 + (uy - y)^2 )
+					
+					local hitUnitDefID = Spring.GetUnitDefID(hitUnitID)
+					local hitUnitMass = Spring.GetUnitRulesParam(hitUnitID, "massOverride") or UnitDefs[hitUnitDefID].mass
+					
+					local velocity = quakeimpulse * (1 - unitDist / detachmentradius) / hitUnitMass
+					--GG.TableEcho({velocity_raw=velocity, quakevelmax = quakevelmax})
+					if quakevelmax then
+						if velocity >  quakevelmax then velocity =  math.abs(quakevelmax) end
+						if velocity < -quakevelmax then velocity = -math.abs(quakevelmax) end
 					end
+					
+					--GG.TableEcho({velocity=velocity, quakeimpulse=quakeimpulse})
+					
+					local xi, zi = 0.35 * (ux - x) / detachmentradius, 0.35 * (uz - z) / detachmentradius
+					local yi = 0.30
+					
+					local vecTotal = math.sqrt(xi^2 + yi^2 + zi^2)
+					xi, yi, zi = xi / vecTotal, yi / vecTotal, zi /vecTotal
+					xi, yi, zi = xi * velocity, yi * velocity, zi * velocity
+					
+					--GG.TableEcho({vx=xi, vy=yi, vz=zi})						
+					Spring.AddUnitImpulse(hitUnitID, 0, 10 * Game.gravity / (30 * 30) , 0) --XX frames of flying for any unit
+					Spring.AddUnitImpulse(hitUnitID, xi, yi , zi)
 				end
 			end
 		end

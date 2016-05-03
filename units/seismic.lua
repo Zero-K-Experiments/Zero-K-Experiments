@@ -76,7 +76,7 @@ unitDef = {
         smoothradius = [[256]],
         detachmentradius = [[256]],
         smoothmult   = [[1]],
-		quakeimpulse = [[6000]],
+		quakeimpulse = [[2400]],
 		quakevelmax = [[15]],
 
 		stats_hide_dps = 1, -- one use
@@ -87,7 +87,7 @@ unitDef = {
       },
 	  
       damage                  = {
-        default = 0,        
+        default = 0.00001,        
       },
 
       edgeEffectiveness       = 0.0,
