@@ -72,10 +72,12 @@ unitDef = {
       craterMult              = 1,
 
       customParams            = {
-        gatherradius = [[416]],
+        gatherradius = [[512]],
         smoothradius = [[256]],
         detachmentradius = [[256]],
         smoothmult   = [[1]],
+		quakeimpulse = [[6000]],
+		quakevelmax = [[15]],
 
 		stats_hide_dps = 1, -- one use
 		stats_hide_reload = 1,
@@ -85,11 +87,10 @@ unitDef = {
       },
 	  
       damage                  = {
-        default = 20,
-        subs    = 1,
+        default = 0,        
       },
 
-      edgeEffectiveness       = 0.4,
+      edgeEffectiveness       = 0.0,
       explosionGenerator      = [[custom:bull_fade]],
       fireStarter             = 0,
       flightTime              = 100,

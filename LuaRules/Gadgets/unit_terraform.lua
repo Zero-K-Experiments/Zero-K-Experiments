@@ -212,6 +212,8 @@ local exceptionArray = {
 	[UnitDefNames["reef"].id] = true,
 }
 
+local gravityFactor = 130 / Game.gravity --130 is standard gravity. gravityFactor is an impulse adjustment factor
+
 --------------------------------------------------------------------------------
 -- Custom Commands
 --------------------------------------------------------------------------------
@@ -3220,10 +3222,12 @@ for i=1,#WeaponDefs do
 		wantedList[#wantedList + 1] = wd.id
 		Script.SetWatchWeapon(wd.id,true)
 		SeismicWeapon[wd.id] = {
-			smooth = wd.customParams.smoothmult or DEFAULT_SMOOTH,
-			smoothradius = wd.customParams.smoothradius or wd.craterAreaOfEffect*0.5,
-			gatherradius = wd.customParams.gatherradius or wd.craterAreaOfEffect*0.75,
-			detachmentradius = wd.customParams.detachmentradius
+			smooth = tonumber(wd.customParams.smoothmult) or DEFAULT_SMOOTH,
+			smoothradius = tonumber(wd.customParams.smoothradius) or wd.craterAreaOfEffect*0.5,
+			gatherradius = tonumber(wd.customParams.gatherradius) or wd.craterAreaOfEffect*0.75,
+			detachmentradius = tonumber(wd.customParams.detachmentradius),
+			quakeimpulse = tonumber(wd.customParams.quakeimpulse) or 0,
+			quakevelmax = tonumber(wd.customParams.quakevelmax) or nil,
 		}
 	end
 end
@@ -3272,8 +3276,19 @@ function gadget:Explosion(weaponID, x, y, z, owner)
 		
 		local smoothradius = SeismicWeapon[weaponID].smoothradius
 		local gatherradius = SeismicWeapon[weaponID].gatherradius
-		local detachmentradius = SeismicWeapon[weaponID].detachmentradius	
+		local detachmentradius = SeismicWeapon[weaponID].detachmentradius
 		local maxSmooth = SeismicWeapon[weaponID].smooth
+
+		local quakeimpulse = SeismicWeapon[weaponID].quakeimpulse
+		if quakeimpulse > 0 then
+			quakeimpulse = quakeimpulse * gravityFactor
+		end
+		
+		local quakevelmax = SeismicWeapon[weaponID].quakevelmax
+		if quakevelmax then
+			quakevelmax = quakevelmax * gravityFactor
+		end
+		
 		if y > height + HEIGHT_FUDGE_FACTOR then
 			local factor = 1 - ((y - height - HEIGHT_FUDGE_FACTOR)/smoothradius*HEIGHT_RAD_MULT)^2
 			if factor > 0 then
@@ -3352,8 +3367,38 @@ function gadget:Explosion(weaponID, x, y, z, owner)
 		if detachmentradius then
 			local units = Spring.GetUnitsInCylinder(sx,sz,detachmentradius)
 			for i = 1, #units do
-				local hitUnitID = units[i]
+				local hitUnitID = units[i]				
 				GG.DetatchFromGround(hitUnitID)
+				if quakeimpulse > 0 then
+					local ux, uy, uz  = spGetUnitPosition(hitUnitID)
+					--GG.TableEcho({uy=uy, y = y})
+					if uy - y <= 5 then --assume unit is almost on the ground (after it's been detached)
+						local unitDist = math.sqrt( (ux - x)^2 + (uz - z)^2 + (uy - y)^2 )
+						
+						local hitUnitDefID = Spring.GetUnitDefID(hitUnitID)
+						local hitUnitMass = Spring.GetUnitRulesParam(hitUnitID, "massOverride") or UnitDefs[hitUnitDefID].mass
+						
+						local velocity = quakeimpulse * (1 - unitDist / detachmentradius) / hitUnitMass
+						--GG.TableEcho({velocity_raw=velocity, quakevelmax = quakevelmax})
+						if quakevelmax then
+							if velocity >  quakevelmax then velocity =  math.abs(quakevelmax) end
+							if velocity < -quakevelmax then velocity = -math.abs(quakevelmax) end
+						end
+						
+						--GG.TableEcho({velocity=velocity, quakeimpulse=quakeimpulse})
+						
+						local xi, zi = 0.10 * (ux - x) / detachmentradius, 0.10 * (uz - z) / detachmentradius
+						local yi = 0.8
+						
+						local vecTotal = math.sqrt(xi^2 + yi^2 + zi^2)
+						xi, yi, zi = xi / vecTotal, yi / vecTotal, zi /vecTotal
+						xi, yi, zi = xi * velocity, yi * velocity, zi * velocity
+						
+						--GG.TableEcho({vx=xi, vy=yi, vz=zi})						
+						
+						Spring.AddUnitImpulse(hitUnitID, xi, yi , zi)
+					end
+				end
 			end
 		end
 	end
