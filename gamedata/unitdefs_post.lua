@@ -294,7 +294,9 @@ for name, ud in pairs (UnitDefs) do
 	
 	--[[
 	if (ud.isBuilding == true or ud.maxAcc == 0) and (not ud.customParams.mobilebuilding) then --looks like a building
-		ud.levelGround = false -- or true
+		if ud.levelGround == nil then
+			ud.levelGround = false -- or true
+		end
 	end
 	]]--
 	
@@ -715,8 +717,8 @@ end
 -- 
 for name, ud in pairs(UnitDefs) do
 	if ud.customparams.is_drone then
-		ud.customparams.real_buildtime = ud.buildtime
-		ud.buildtime = ud.buildtime*1000000000
+		ud.customparams.real_buildtime = (ud.buildtime or 0)
+		ud.buildtime = 1000000000
 	end
 end
 
