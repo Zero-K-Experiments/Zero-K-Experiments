@@ -36,6 +36,7 @@ local TransferUnit      = Spring.TransferUnit
 local spGetUnitRulesParam = Spring.GetUnitRulesParam
 local random            = math.random
 local CMD_ATTACK		= CMD.ATTACK
+local CMD_REPAIR		= CMD.REPAIR
 
 local emptyTable = {}
 
@@ -419,13 +420,17 @@ local function UpdateCarrierTarget(carrierID)
 	local droneSendDistance = nil
 	local px, py, pz
 	local target
-	if cQueueC and cQueueC[1] and cQueueC[1].id == CMD_ATTACK then
+	local attack = true
+	if cQueueC and cQueueC[1] and (cQueueC[1].id == CMD_ATTACK or cQueueC[1].id == CMD_REPAIR) then
+		if cQueueC[1].id == CMD_REPAIR then
+			attack = false
+		end
 		local ox, oy, oz = GetUnitPosition(carrierID)
 		local params = cQueueC[1].params
 		if #params == 1 then
 			target = {params[1]}
 			px, py, pz = GetUnitPosition(params[1])
-		else
+		else --3 or 4
 			px, py, pz = cQueueC[1].params[1], cQueueC[1].params[2], cQueueC[1].params[3]
 		end
 		if px then
@@ -445,7 +450,11 @@ local function UpdateCarrierTarget(carrierID)
 				tempCONTAINER = droneList[droneID]
 				droneList[droneID] = nil -- to keep AllowCommand from blocking the order
 				if target then
-					GiveOrderToUnit(droneID, CMD.ATTACK, target, 0)
+					if attack then
+						GiveOrderToUnit(droneID, CMD.ATTACK, target, 0)
+					else
+						GiveOrderToUnit(droneID, CMD.REPAIR, target, 0)
+					end
 				else
 					GiveClampedOrderToUnit(droneID, CMD.FIGHT, {(px + (random(0, 300) - 150)), (py+120), (pz + (random(0, 300) - 150))} , 0)
 				end

@@ -9,6 +9,8 @@ local gunL, gunR, flareL, flareR, aimpoint = piece('gunl', 'gunr', 'flarel', 'fl
 local shieldArm, shield, eye, eyeflare = piece('shield_arm', 'shield', 'eye', 'eyeflare')
 local emitl, emitr = piece('emitl', 'emitr')
 
+local nanoPieces = {[0] = gunL, [1] = gunR}
+
 -- note reversed sides from piece names!
 local br = piece 'thigh_bacl'	-- back right
 local mr = piece 'thigh_midl' 	-- middle right
@@ -65,8 +67,9 @@ local function RestoreLegs()
 end
 
 function script.Create()
-	Hide (gunL)
-	Hide (gunR)
+	--Spring.SetUnitNanoPieces(unitID, nanoPieces)
+	--Hide (gunL)
+	--Hide (gunR)
 	Move (aimpoint, z_axis, 9)
 	Move (aimpoint, y_axis, 4)
 	StartThread(SmokeUnit, smokePiece)
@@ -88,14 +91,14 @@ function script.StopMoving ()
 	StartThread (RestoreLegs)
 end
 
-function script.QueryWeapon (num)
-	return aimpoint
+function script.StartBuilding()
+	SetUnitValue(COB.INBUILDSTANCE, 1)
 end
 
-function script.AimWeapon (num)
-	if num == 1 then return false -- fake targeter
-	else return true end
+function script.StopBuilding()
+	SetUnitValue(COB.INBUILDSTANCE, 0)
 end
+
 
 function script.Killed (recentDamage, maxHealth)
 	local severity = recentDamage/maxHealth

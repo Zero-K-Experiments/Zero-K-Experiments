@@ -36,6 +36,7 @@ local carrierDefNames = {
 			-- offsets = {0,0,0,colvolMidX=0, colvolMidY=0,colvolMidZ=0,aimX=0,aimY=0,aimZ=0}},
 	funnelweb = {
 		spawnPieces = {"emitl", "emitr"},
+		--[[
 		{
 			drone = UnitDefNames.attackdrone.id, 
 			reloadTime = 15, 
@@ -45,7 +46,7 @@ local carrierDefNames = {
 			buildTime = 6, 
 			maxBuild = 1,
 			offsets = {0, 35, 0, colvolMidX = 0, colvolMidY = 0, colvolMidZ = 0, aimX = 0, aimY = 0, aimZ = 0}
-		},
+		},		
 		{
 			drone = UnitDefNames.battledrone.id,
 			reloadTime = 25, 
@@ -56,6 +57,17 @@ local carrierDefNames = {
 			maxBuild = 1,
 			offsets = {0, 35, 0, colvolMidX = 0, colvolMidY = 0, colvolMidZ = 0, aimX = 0, aimY = 0, aimZ = 0}
 		},
+		]]--
+		{
+			drone = UnitDefNames.medicdrone.id, 
+			reloadTime = 15, 
+			maxDrones = 8, 
+			spawnSize = 2, 
+			range = 800, 
+			buildTime = 6, 
+			maxBuild = 1,
+			offsets = {0, 35, 0, colvolMidX = 0, colvolMidY = 0, colvolMidZ = 0, aimX = 0, aimY = 0, aimZ = 0}
+		},		
 	},
 	nebula = {
 		spawnPieces = {"pad1", "pad2", "pad3", "pad4"},
@@ -146,7 +158,8 @@ local thingsWhichAreDrones = {
 	[UnitDefNames.carrydrone.id] = true,
 	[UnitDefNames.attackdrone.id] = true,
 	[UnitDefNames.battledrone.id] = true,
-	[UnitDefNames.fighterdrone.id] = true
+	[UnitDefNames.fighterdrone.id] = true,
+	[UnitDefNames.medicdrone.id] = true,
 }
 
 local function ProcessCarrierDef(carrierData)

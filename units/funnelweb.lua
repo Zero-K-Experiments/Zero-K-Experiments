@@ -5,19 +5,27 @@ unitDef = {
   acceleration           = 0.0552,
   activateWhenBuilt      = true,
   brakeRate              = 0.1375,
+  builder                = true,  
   buildCostMetal         = 4500,
+  buildDistance          = 800,
   buildPic               = [[funnelweb.png]],
-  canAttack              = true,
-  canGuard               = true,
+  buildRange3D           = false,
+  canAttack              = false,
+  canAssist              = false,  
+  --canBeAssisted          = false,
+  canFight               = true,
+  canGuard               = true,  
   canMove                = true,
   canPatrol              = true,
-  category               = [[LAND]],
+  canRepair              = true,
+  canReclaim             = false,    
+  category               = [[LAND UNARMED]],
   corpse                 = [[DEAD]],
 
   customParams           = {
-    description_pl = [[Ciezki pajak wsparcia]],
-    helptext       = [[The slow all-terrain Funnelweb features an area shield and a powerful drone complement.]],
-    helptext_pl    = [[Funnelweb to ciezki pajak wsparcia. Posiada tarcze obszarowa oraz produkuje zestaw dronow.]],
+    description_pl = [[]],
+    helptext       = [[]],
+    helptext_pl    = [[]],
 	priority_misc  = 1, -- Medium
   },
 
@@ -37,7 +45,7 @@ unitDef = {
   noAutoFire             = false,
   noChaseCategory        = [[TERRAFORM FIXEDWING SATELLITE SUB]],
   objectName             = [[funnelweb.s3o]],
-  onoffable              = true,
+  onoffable              = true,  
   selfDestructAs         = [[ESTOR_BUILDING]],
 
   sfxtypes               = {
@@ -56,71 +64,16 @@ unitDef = {
   trackType              = [[ChickenTrackPointy]],
   trackWidth             = 85,
   turnRate               = 240,
-  workerTime             = 0,
+  workerTime             = 10,
 
   weapons                = {
-
-    {
-      def                = "BOGUS_FAKE_TARGETER",
-      badTargetCategory  = "FIXEDWING",
-      onlyTargetCategory = "FIXEDWING LAND SINK TURRET SHIP SWIM FLOAT GUNSHIP HOVER",
-    },
-
     {
       def                = [[SHIELD]],
     },
-
   },
 
 
-  weaponDefs             = {
-
-    BOGUS_FAKE_TARGETER = {
-      name                    = [[Bogus Fake Targeter]],
-      alphaDecay              = 0.1,
-      areaOfEffect            = 8,
-      avoidGround             = false, -- avoid nothing, else attempts to move out to clear line of fine
-      avoidFriendly           = false,
-      avoidFeature            = false,
-      avoidNeutral            = false,
-      burst                   = 3,
-      burstrate               = 0.1,
-      colormap                = [[1 0.95 0.4 1   1 0.95 0.4 1    0 0 0 0.01    1 0.7 0.2 1]],
-      craterBoost             = 0,
-      craterMult              = 0,
-
-      damage                  = {
-        default = 11.34,
-        planes  = 11.34,
-        subs    = 0.567,
-      },
-
-      explosionGenerator      = [[custom:FLASHPLOSION]],
-      flightTime              = 1,
-      impactOnly              = true,
-      impulseBoost            = 0,
-      impulseFactor           = 0.4,
-      intensity               = 0.7,
-      interceptedByShieldType = 1,
-      noGap                   = false,
-      noSelfDamage            = true,
-      projectiles             = 2,
-      range                   = 800,
-      reloadtime              = 0.31,
-      rgbColor                = [[1 0.95 0.4]],
-      separation              = 1.5,
-      size                    = 1.75,
-      sizeDecay               = 0,
-      soundStart              = [[weapon/emg]],
-      soundStartVolume        = 4,
-      sprayAngle              = 1180,
-      stages                  = 10,
-      tolerance               = 5000,
-      turret                  = true,
-      weaponType              = [[StarburstLauncher]],
-      weaponVelocity          = 500,
-    },
-	
+  weaponDefs             = {	
     SHIELD = {
       name                    = [[Energy Shield]],
 
@@ -144,8 +97,7 @@ unitDef = {
       visibleShieldHitFrames  = 4,
       visibleShieldRepulse    = true,
       weaponType              = [[Shield]],
-    },
-	
+    },	
   },
 
 
