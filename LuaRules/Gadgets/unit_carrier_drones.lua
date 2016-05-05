@@ -485,8 +485,10 @@ local function UpdateCarrierTarget(carrierID)
 									end
 								end
 								
-								droneSendDistance = GetDistance(ox, px, oz, pz)
-								if droneSendDistance >= set.config.range then --REMOVING out of range command and command drones to return to carrier									
+								if px then
+									droneSendDistance = GetDistance(ox, px, oz, pz)
+								end
+								if droneSendDistance and droneSendDistance >= set.config.range then --REMOVING out of range command and command drones to return to carrier									
 									tempCONTAINER = droneList[droneID]
 									droneList[droneID] = nil -- to keep AllowCommand from blocking the order
 									GiveOrderToUnit(droneID, CMD.REMOVE, {prevCommand.tag}, {} )
