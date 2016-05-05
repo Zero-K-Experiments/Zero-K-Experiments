@@ -416,7 +416,8 @@ local function GetDistance(x1, x2, y1, y2)
 end
 
 local function UpdateCarrierTarget(carrierID)
-	local cQueueC = GetCommandQueue(carrierID, 1)
+	local cQueueC = GetCommandQueue(carrierID, 1)	
+	local ox, oy, oz = GetUnitPosition(carrierID)
 	local droneSendDistance = nil
 	local px, py, pz
 	local target
@@ -425,7 +426,7 @@ local function UpdateCarrierTarget(carrierID)
 		if cQueueC[1].id == CMD_REPAIR then
 			attack = false
 		end
-		local ox, oy, oz = GetUnitPosition(carrierID)
+		
 		local params = cQueueC[1].params
 		if #params == 1 then
 			target = {params[1]}
@@ -442,7 +443,7 @@ local function UpdateCarrierTarget(carrierID)
 	local states = Spring.GetUnitStates(carrierID) or emptyTable
 	local holdfire = states.firestate == 0
 	
-	for i = 1, #carrierList[carrierID].droneSets do
+	for i = 1, #carrierList[carrierID].droneSets do --carrier set target within range
 		local set = carrierList[carrierID].droneSets[i]
 		if droneSendDistance and droneSendDistance < set.config.range then
 			local tempCONTAINER --temporarily keep table when "droneList[]" is emptied and restored.
@@ -461,22 +462,46 @@ local function UpdateCarrierTarget(carrierID)
 				--GiveOrderToUnit(droneID, CMD.GUARD, {carrierID} , {"shift"})
 				droneList[droneID] = tempCONTAINER --restore original table
 			end
-		else
+		else --carrier DID NOT set target within range
 			for droneID in pairs(set.drones) do
 				local cQueue = GetCommandQueue(droneID, -1)
 				local engaged = false
-				for i=1, (cQueue and #cQueue or 0) do
+				local cQueueLen = cQueue and #cQueue or 0
+				for i=1, cQueueLen do
 					if cQueue[i].id == CMD.FIGHT then
-						engaged = true
+						engaged = true						
+						if i - 1 >= 1 then --inspect previous command							
+							local prevCommand = cQueue[i - 1]
+							if prevCommand.options.internal and (prevCommand.id == CMD.REPAIR or prevCommand.id == CMD.ATTACK) then
+								
+								local nextCommandParams = prevCommand.params
+								if prevCommand.id == CMD.REPAIR then
+									px, py, pz = GetUnitPosition(nextCommandParams[1])
+								else --CMD.ATTACK
+									if #prevCommand.params == 1 then
+										px, py, pz = GetUnitPosition(nextCommandParams[1])
+									else
+										px, py, pz = nextCommandParams[1], nextCommandParams[2], nextCommandParams[3]
+									end
+								end
+								
+								droneSendDistance = GetDistance(ox, px, oz, pz)
+								if droneSendDistance >= set.config.range then --REMOVING out of range command and command drones to return to carrier									
+									tempCONTAINER = droneList[droneID]
+									droneList[droneID] = nil -- to keep AllowCommand from blocking the order
+									GiveOrderToUnit(droneID, CMD.REMOVE, {prevCommand.tag}, {} )
+									GiveClampedOrderToUnit(droneID, CMD.INSERT, {0, CMD.MOVE, CMD.OPT_INTERNAL, ox + random(-100, 100), (oy+120), oz + random(-100, 100)}, {"alt"} )									
+									droneList[droneID] = tempCONTAINER --restore original table
+								end
+							end
+						end
 						break
 					end
 				end
-				if not engaged then
-					px, py, pz = GetUnitPosition(carrierID)
-					
+				if not engaged then					
 					local temp = droneList[droneID]
-					droneList[droneID] = nil	-- to keep AllowCommand from blocking the order
-					GiveClampedOrderToUnit(droneID, holdfire and CMD.MOVE or CMD.FIGHT, {px + random(-100, 100), (py+120), pz + random(-100, 100)} , 0)
+					droneList[droneID] = nil	-- to keep AllowCommand from blocking the order					
+					GiveClampedOrderToUnit(droneID, holdfire and CMD.MOVE or CMD.FIGHT, {ox + random(-100, 100), (oy+120), oz + random(-100, 100)} , 0)
 					GiveOrderToUnit(droneID, CMD.GUARD, {carrierID} , {"shift"})
 					droneList[droneID] = temp
 				end
