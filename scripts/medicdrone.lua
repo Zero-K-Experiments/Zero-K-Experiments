@@ -18,7 +18,7 @@ local SIG_Aim = 1
 ----------------------------------------------------------
 
 function script.Create()
-	Spring.SetUnitNanoPieces(unitID, {barrel})
+	Spring.SetUnitNanoPieces(unitID, {fan})
 	for i=1,#blades do
 		Turn(blades[i], y_axis, math.rad((i-1)*60))
 	end
@@ -31,7 +31,7 @@ end
 function script.StopMoving()
 end
 
-function script.StartBuilding()
+function script.StartBuilding(heading, pitch)
 	SetUnitValue(COB.INBUILDSTANCE, 1)
 end
 
