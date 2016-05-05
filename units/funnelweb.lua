@@ -7,7 +7,7 @@ unitDef = {
   brakeRate              = 0.1375,
   builder                = true,  
   buildCostMetal         = 4500,
-  buildDistance          = 500,
+  buildDistance          = 440, --slight leeway vs 500
   buildPic               = [[funnelweb.png]],
   buildRange3D           = false,
   canAttack              = false,
@@ -64,7 +64,7 @@ unitDef = {
   trackType              = [[ChickenTrackPointy]],
   trackWidth             = 85,
   turnRate               = 240,
-  workerTime             = 10,
+  workerTime             = 0.001,
 
   weapons                = {
     {

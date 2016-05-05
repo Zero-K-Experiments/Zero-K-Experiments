@@ -91,7 +91,7 @@ function script.StopMoving ()
 	StartThread (RestoreLegs)
 end
 
-function script.StartBuilding()
+function script.StartBuilding(heading, pitch)
 	SetUnitValue(COB.INBUILDSTANCE, 1)
 end
 
