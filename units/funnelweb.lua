@@ -20,6 +20,9 @@ unitDef = {
   canRepair              = true,
   canReclaim             = false,    
   category               = [[LAND UNARMED]],
+  collisionVolumeScales  = [[84 84 84]],
+  collisionVolumeOffsets = [[0 0 -5]],
+  collisionVolumeType    = [[CylZ]],
   corpse                 = [[DEAD]],
 
   customParams           = {
