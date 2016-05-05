@@ -66,6 +66,7 @@ unitDef = {
       name                    = [[Seismic Missile]],
       areaOfEffect            = 512,
       avoidFriendly           = false,
+	  cameraShake             = 2400,
       cegTag                  = [[seismictrail]],
       collideFriendly         = false,
       craterBoost             = 32,
