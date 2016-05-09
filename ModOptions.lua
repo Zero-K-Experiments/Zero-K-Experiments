@@ -212,7 +212,7 @@ local options = {
     desc   = "Shuffles start boxes.",
     type   = "list",
     section= 'startconds',
-    def    = "shuffle",
+    def    = "auto",
     items  = {
       {
         key  = "off",
@@ -228,6 +228,11 @@ local options = {
         key  = "allshuffle",
         name = "All Shuffle",
         desc = "Shuffle all present boxes.",
+      },
+      {
+        key  = "auto",
+        name = "Auto",
+        desc = "Shuffle if FFA.",
       },
     },
   },
@@ -358,6 +363,17 @@ local options = {
     min    = 0,
     max    = 1000,
     step   = 0.01,
+  },
+  {
+    key    = 'hpmult',
+    name   = 'Unit Health Multiplier',
+    desc   = 'Multiplies all unit HPs.',
+    type   = 'number',
+    section= 'experimental',
+    def    = 1,
+    min    = 0.000001,
+    max    = 10000,
+    step   = 0.05,
   },
   {
     key    = 'defeatmode',

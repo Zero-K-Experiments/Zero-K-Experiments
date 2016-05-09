@@ -5,6 +5,7 @@ confdata.default_source_file = 'zk_keys.lua' --the file in ZIP archive where def
 confdata.mission_keybinds_file = 'zk_keys.lua' --the filename to be used for Mission mod. set this to NIL if want to use mission's name as filename.
 -- confdata.regular_keybind_file = LUAUI_DIRNAME .. 'Configs/zk_keys.lua' --for Multiplayer this is automatically set according to modName in epicmenu.lua
 --FIXME: find modname instead of using hardcoded mission_keybinds_file name
+confdata.description = 'Zero-K is a free real time strategy (RTS), that aims to be the best open source multi-platform strategy game available :-) \n\n www.zero-k.info'
 local color = {
 	white = {1,1,1,1},
 	yellow = {1,1,0,1},
@@ -104,7 +105,7 @@ end
 
 
 --ShortHand for adding radiobuttons
-local function ShRadio(path, caption, items,defValue, action2, advanced) 
+local function ShRadio(path, caption, items,defValue, action2, advanced, nhk) 
 	AddOption(path,
 	{
 		type='radioButton', 
@@ -115,6 +116,7 @@ local function ShRadio(path, caption, items,defValue, action2, advanced)
 		action = (type(action2) == 'string' and action2 or nil),
 		OnChange = (type(action2) ~= 'string' and action2 or nil),
 		advanced = advanced,
+		noHotkey = nhk,
 	})
 end
 
@@ -291,13 +293,13 @@ local HUDSkinPath = 'Settings/Extras/HUD Panels/HUD Skin'
 --- Interface --- anything that's an interface but not a HUD Panel
 local pathInterface = 'Settings/Interface'
 local pathMouse = 'Settings/Interface/Mouse Cursor'
-	ShButton(pathInterface, 'Toggle DPS Display', function() spSendCommands{"luaui togglewidget Display DPS"} end, 'Shows RPG-style damage')
 	ShButton(pathMouse, 'Toggle Grab Input', function() spSendCommands{"grabinput"} end, 'Mouse cursor won\'t be able to leave the window.')
 	AddOption(pathMouse,
 	{ 	
 		name = 'Hardware Cursor',
 		type = 'bool',
 		springsetting = 'HardwareCursor',
+		noHotkey = true,
 		OnChange=function(self) spSendCommands{"hardwarecursor " .. (self.value and 1 or 0) } end, 
 	})	
 	
@@ -324,6 +326,7 @@ local pathMisc = 'Settings/Misc'
 		desc = 'Does opening the menu pause the game (and closing unpause it) in single player?',
 		type = 'bool',
 		value = true,
+		noHotkey = true,
 	})
 	AddOption(pathMisc,
 	{
@@ -331,6 +334,7 @@ local pathMisc = 'Settings/Misc'
 		desc = 'NOT RECOMMENDED! Enable this to use the engine\'s keybind file. This can break existing functionality. Requires restart.',
 		type = 'bool',
 		advanced = true,
+		noHotkey = true,
 		value = false,
 	})
 	AddOption(pathMisc,
@@ -341,6 +345,7 @@ local pathMisc = 'Settings/Misc'
 				'\n(type "/luaui reload" to apply settings)',
 		type = 'bool',
 		value = false,
+		noHotkey = true,
 		OnChange = function (self)
 			local value = (self.value and 1) or 0 --true = 1, false = 0
 			if self.value then
@@ -354,8 +359,8 @@ local pathMisc = 'Settings/Misc'
 
 
 local pathMiscScreenshots = 'Settings/Misc/Screenshots'	
-	ShButton(pathMiscScreenshots, 'Save Screenshot (PNG)', 'screenshot', 'Find your screenshots under Spring/screenshots') 
-	ShButton(pathMiscScreenshots, 'Save Screenshot (JPG)', 'screenshot jpg', 'Find your screenshots under Spring/screenshots')
+	ShButton(pathMiscScreenshots, 'Save Screenshot (PNG)', 'screenshot png', 'Find your screenshots under Spring/screenshots') 
+	ShButton(pathMiscScreenshots, 'Save Screenshot (JPG)', 'screenshot', 'Find your screenshots under Spring/screenshots')
 	ShButton(pathMiscScreenshots, 
 			'Create Video (risky)', 'createvideo', 'Capture video directly from Spring without sound. Gets saved in the Spring folder. '
 			..'Creates a smooth video framerate without ingame stutter. '
@@ -365,75 +370,52 @@ local pathMiscScreenshots = 'Settings/Misc/Screenshots'
 	
 --- GRAPHICS --- We might define section as containing anything graphical that has a significant impact on performance and isn't necessary for gameplay
 local pathGraphicsMap = 'Settings/Graphics/Map Detail'
-	ShLabel(pathGraphicsMap, 'Terrain Detail')
 	
-	ShButton(pathGraphicsMap, 'Increase Terrain Detail', "increaseviewradius")
-	ShButton(pathGraphicsMap, 'Decrease Terrain Detail', "decreaseviewradius")
+	ShRadio( pathGraphicsMap,
+		'Water rendering', {
+			{name = 'Basic',key='0', desc='A simple plane.'},
+			{name = 'Reflective',key='1', desc='Reflects the world.'},
+			{name = 'Dynamic',key='2', desc='Has waves and wakes when units move and projectiles explode.'},
+			{name = 'Reflective / Refractive',key='3', desc='Reflects the world and has distortions.'},
+			{name = 'Bumpmapped',key='4', desc='Fast and good-looking.'},
+		},'4',
+		function(self)
+			spSendCommands{"water " .. self.value}
+		end,
+		false,
+		true
+	)
 
-
-	ShLabel(pathGraphicsMap, 'Trees')
-	ShButton(pathGraphicsMap, 'Toggle Trees', 'drawtrees', nil, nil, imgPath..'epicmenu/tree_1.png')
-	ShButton(pathGraphicsMap, 'See More Trees', 'moretrees', nil, nil, imgPath..'epicmenu/tree_1.png')
-	ShButton(pathGraphicsMap, 'See Less Trees', 'lesstrees', nil, nil, imgPath..'epicmenu/tree_1.png')
-	--{'Toggle Dynamic Sky', function(self) spSendCommands{'dynamicsky'} end },
-	
-	ShLabel(pathGraphicsMap, 'Water Settings')
-	ShButton(pathGraphicsMap, 'Basic', function() spSendCommands{"water 0"} end, nil, nil, imgPath..'epicmenu/water.png')
-	ShButton(pathGraphicsMap, 'Reflective', function() spSendCommands{"water 1"} end, nil, nil, imgPath..'epicmenu/water.png')
-	ShButton(pathGraphicsMap, 'Reflective and Refractive', function() spSendCommands{"water 3"} end, nil, nil, imgPath..'epicmenu/water.png')
-	ShButton(pathGraphicsMap, 'Dynamic', function() spSendCommands{"water 2"} end, nil, nil, imgPath..'epicmenu/water.png')
-	ShButton(pathGraphicsMap, 'Bumpmapped', function() spSendCommands{"water 4"} end, nil, nil, imgPath..'epicmenu/water.png')
-
-	ShLabel(pathGraphicsMap, 'Shadow Settings')
-	
+	ShRadio( pathGraphicsMap,
+		'Shadows cast by', {
+			{name = 'Nothing',key='0', desc='Shadows disabled.'},
+			{name = 'Units',key='2', desc='Only units cast shadows.'},
+			{name = 'Units and terrain',key='1', desc='Terrain can cast shadows onto lower terrain. Units also cast shadows.'},
+		},'1',
+		function(self)
+			spSendCommands{"Shadows " .. self.value}
+		end,
+		false,
+		true
+	)
 	AddOption(pathGraphicsMap, 
 	{
-		name = 'Shadow Detail (Slide left for off)',
+		name = 'Shadow detail level',
+		desc = 'How detailed shadows are.',
 		type = 'number',
 		valuelist = {512, 1024, 2048, 4096},
 		springsetting = 'ShadowMapSize',
 		OnChange=function(self)
 			local curShadow = Spring.GetConfigInt("Shadows") or 0
-			if curShadow == 0 then
-				return
-			end
-			curShadow=math.max(1,curShadow)
 			spSendCommands{"Shadows " .. curShadow .. ' ' .. self.value}
 		end, 
 	})
-	
-	ShButton(pathGraphicsMap, 
-	'Toggle Shadows',
-		function()
-			local curShadow = Spring.GetConfigInt("Shadows") or 0
-			if curShadow == 0 then
-				spSendCommands{"Shadows 1"}
-			elseif curShadow > 0 then
-				spSendCommands{"Shadows 0"}
-			elseif curShadow == -1 then
-				Spring.Echo("Shadows cannot be toggled ingame with Shadows = -1 in springsettings")
-			end
-		end
-	)
 
-	ShButton(pathGraphicsMap, 'Toggle Terrain Shadows',
-		function()
-			local curShadow=Spring.GetConfigInt("Shadows") or 0
-			if curShadow == 0 then
-				Spring.Echo 'Shadows are turned off, you must first enable them.'
-				return
-			end
-			if (curShadow<2) then 
-				curShadow=2 
-			else 
-				curShadow=1 
-			end
-			spSendCommands{"Shadows "..curShadow}
-		end
-	)
+	ShLabel(pathGraphicsMap, 'Miscellaneous')
 	AddOption(pathGraphicsMap, 
 	{
 		name = 'Map Brightness',
+		desc = 'How bright the terrain appears.',
 		type = 'number',
 		min = 0, 
 		max = 1, 
@@ -442,14 +424,27 @@ local pathGraphicsMap = 'Settings/Graphics/Map Detail'
 		icon = imgPath..'epicmenu/stock_brightness.png',
 		OnChange = function(self) Spring.SendCommands{"luaui enablewidget Darkening", "luaui darkening " .. 1-self.value} end, 
 	} )
-	
-	
+
 	AddOption(pathGraphicsMap, 
-	{ 	
+	{
+		name = 'Terrain geometry detail',
+		desc = 'How detailed the terrain geometry is.',
+		type = 'number',
+		min = 32, 
+		max = 256, 
+		step = 8,
+		value = 128,
+		OnChange = function(self) Spring.SendCommands{"GroundDetail " .. self.value} end, 
+	})
+
+	AddOption(pathGraphicsMap, 
+	{
 		name = 'Ground Decals',
+		desc = 'Whether explosions leave scars on the ground.',
 		type = 'bool',
 		springsetting = 'GroundDecals',
-		OnChange=function(self) spSendCommands{"grounddecals " .. (self.value and 1 or 0) } end, 
+		OnChange=function(self) spSendCommands{"grounddecals " .. (self.value and 1 or 0) } end,
+		noHotkey = true,
 	} )
 	
 	--ShButton(pathGraphicsMap, 'Toggle ROAM Rendering', function() spSendCommands{"roam"} end, "Toggle between legacy map rendering and (the new) ROAM map rendering." )
@@ -457,9 +452,13 @@ local pathGraphicsMap = 'Settings/Graphics/Map Detail'
 local pathGraphicsExtras = 'Settings/Graphics/Effects'
 	AddOption(pathGraphicsExtras, 
 	{
-		name = 'Maximum Particles (100 - 20,000)',
+		name = 'Particle density',
+		desc = 'How many visual effects can exist at the same time.',
 		type = 'number',
-		valuelist = {100,500,1000,2000,5000,10000,20000},
+		min = 250, 
+		max = 20000, 
+		step = 250,
+		value = 10000,
 		springsetting = 'MaxParticles',
 		OnChange=function(self) Spring.SendCommands{"maxparticles " .. self.value } end, 
 	} )

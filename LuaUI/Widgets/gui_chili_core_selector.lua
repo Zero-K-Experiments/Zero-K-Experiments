@@ -127,7 +127,7 @@ function widget:PlayerChanged()
 end
 
 options_path = 'Settings/HUD Panels/Quick Selection Bar'
-options_order = { 'showCoreSelector', 'maxbuttons', 'monitoridlecomms', 'leftMouseCenter', 'monitoridlenano', 'selectprecbomber', 'lblSelection', 'selectcomm'}
+options_order = { 'showCoreSelector', 'maxbuttons', 'monitoridlecomms','monitoridlenano', 'monitorInbuiltCons', 'leftMouseCenter', 'selectprecbomber', 'selectidlecon', 'selectidlecon_all', 'lblSelection', 'selectcomm'}
 options = {
 	showCoreSelector = {
 		name = 'Selection Bar Visibility',
@@ -139,6 +139,7 @@ options = {
 			{key ='never',  name='Always disabled'},
 		},
 		OnChange = CheckHide,
+		noHotkey = true,
 	},
 	maxbuttons = {
 		name = 'Maximum number of buttons (3-16)',
@@ -155,12 +156,21 @@ options = {
 		name = 'Track idle comms',
 		type = 'bool',
 		value = true,
+		noHotkey = true,
 		OnChange = function() RefreshConsList() end,		
 	},
 	monitoridlenano = {
 		name = 'Track idle nanotowers',
 		type = 'bool',
 		value = true,
+		noHotkey = true,
+		OnChange = function() RefreshConsList() end,		
+	},
+	monitorInbuiltCons = {
+		name = 'Track constructors being built',
+		type = 'bool',
+		value = false,
+		noHotkey = true,
 		OnChange = function() RefreshConsList() end,		
 	},
 	leftMouseCenter = {
@@ -168,10 +178,25 @@ options = {
 		desc = 'When enabled left click a commander or factory to center the camera on it. When disabled right click centers.',
 		type = 'bool',
 		value = false,		
+		noHotkey = true,
 	},
 	selectprecbomber = { type = 'button',
-		name = 'Individual precision bombers',
+		name = 'Select precision bomber',
+		desc = 'Selects an idle, armed precision bomber. Use multiple times to select more. Deselects any units which are not idle, armed precision bombers.',
 		action = 'selectprecbomber',
+		path = 'Game/Selection Hotkeys',
+		dontRegisterAction = true,
+	},
+	selectidlecon = { type = 'button',
+		name = 'Select idle constructor',
+		desc = 'Selects an idle constructor. Use multiple times to select more. Deselects any units which are not idle constructors.',
+		action = 'selectidlecon',
+		path = 'Game/Selection Hotkeys',
+		dontRegisterAction = true,
+	},
+	selectidlecon_all = { type = 'button',
+		name = 'Select all idle constructors',
+		action = 'selectidlecon_all',
 		path = 'Game/Selection Hotkeys',
 		dontRegisterAction = true,
 	},
@@ -232,20 +257,6 @@ end
 
 -------------------------------------------------------------------------------
 -- helper funcs
-
-local function SetCount(set, numOnly)
-	local count = 0
-	if numOnly then
-		for i=1,#set do
-			count = count + 1
-		end
-	else
-		for k in pairs(set) do
-			count = count + 1
-		end	
-	end
-	return count
-end
 
 local function CountButtons(set)
 	local count = 0
@@ -315,7 +326,7 @@ local function UpdateFac(unitID, index)
 		end
 	end
 
-	local tooltip = WG.Translate("common", "factory") .. ": ".. Spring.Utilities.GetHumanName(UnitDefs[facs[index].facDefID]) .. "\n" .. WG.Translate("interface", "x_units_in_queue", {x = count})
+	local tooltip = WG.Translate("common", "factory") .. ": ".. Spring.Utilities.GetHumanName(UnitDefs[facs[index].facDefID]) .. "\n" .. WG.Translate("interface", "x_units_in_queue", {count = count})
 	if rep then
 		tooltip = tooltip .. "\255\0\255\255 (" .. WG.Translate("common", "repeating") .. ")\008"
 	end
@@ -360,8 +371,14 @@ local function GenerateButton(array, i, unitID, unitDefID, hotkey)
 		width = (100/options.maxbuttons.value).."%",
 		height = "100%",
 		caption = '',
-		OnClick = {	function (self, x, y, mouse) 
-				local shift = select(4, GetModKeyState())
+		OnClick = {	function (self, x, y, mouse)
+				local _, _, meta, shift = Spring.GetModKeyState()
+				if meta then
+					WG.crude.OpenPath(options_path)
+					WG.crude.ShowMenu()
+					return true
+				end
+
 				SelectUnitArray({unitID}, shift)
 				if mouse == ((options.leftMouseCenter.value and 1) or 3) then
 					local x, y, z = Spring.GetUnitPosition(unitID)
@@ -589,93 +606,31 @@ local function RemoveComm(unitID)
 	ShiftFacRow()
 end
 
---[[
-local function CycleComm()
-	if SetCount(commsByID) == 0 then
-		return
-	end
-	local newComm
-	local savedPos = 1
-	local commsOrdered = {}
-	
-	-- ipairs breaks for some inane reason
-	-- thankfully pairs preserves a constant order as long as the table remains constant, so we can use it
-	for unitID in pairs(commsByID) do	
-		local i = #commsOrdered+1
-		commsOrdered[i] = unitID
-		if unitID == currentComm then
-			savedPos = i
-		end
-	end
-	if #commsOrdered == savedPos then
-		newComm = commsOrdered[1]
-	else
-		newComm = commsOrdered[savedPos+1]
-	end
-	--clear warning if needed
-	if newComm ~= currentComm then
-		commWarningTimeLeft = -1
-	end
-	
-	currentComm = newComm
-end
-]]--
-
 local function UpdateConsButton()
-	-- get con type with highest number of idlers (as well as number of types total)
+
 	local prevTotal = idleCons.count or 0
 	idleCons.count = nil
-	--local maxDefID = idleBuilderDefID
-	local maxCount, total = 0, 0
-	local types = {}
+	local total = 0
 	for unitID in pairs(idleCons) do
-		local def = GetUnitDefID(unitID)
-		if def then	-- because GetUnitDefID can never be trusted to work
-			types[def] = (types[def] or 0) + 1
-		end
 		total = total + 1
 	end
-	local numTypes = SetCount(types)
-	
-	-- this deprecated stuff is for making the button image change to reflect which con unit type has the most idlers
-	--[[
-	for defID, num in pairs(types) do
-		if num > maxCount then
-			maxDefID = defID
-			maxCount = num
-		end
-	end
-	]]--
-	
-	--if (idleBuilderDefID ~= maxDefID or total == 0 or prevTotal == 0) then
-	if (total == 0 or prevTotal == 0) then
-		--conButton.image.file = '#'..maxDefID
+
+	conButton.button.tooltip = WG.Translate("interface", "idle_cons", {count = total}) ..
+								"\n\255\0\255\0" .. WG.Translate("common", "lmb") .. ": " .. WG.Translate("common", "select") ..
+								"\n" .. WG.Translate("common", "rmb") .. ": " .. WG.Translate("common", "select_all") .. "\008"
+
+	if ((total > 0 and prevTotal == 0) or (total == 0 and prevTotal > 0)) then
 		conButton.image.file = (total > 0 and buildIcon) or buildIcon_bw
 		conButton.image.color = (total == 0 and imageColorDisabled) or nil
 		conButton.image:Invalidate()
 		conButton.button.backgroundColor = (total == 0 and buttonColorDisabled) or buttonColor
 		conButton.button:Invalidate()
-		--idleBuilderDefID = maxDefID
 	end
-	conButton.button.tooltip = WG.Translate("interface", "idle_cons_different_types", {cons = total, types = numTypes}) ..
-								"\n\255\0\255\0" .. WG.Translate("common", "lmb") .. ": " .. WG.Translate("common", "select") ..
-								"\n" .. WG.Translate("common", "rmb") .. ": " .. WG.Translate("common", "select_all") .. "\008"
-	idleCons.count = total
-	total = (total > 0 and tostring(total)) or ''
+
 	if conButton.countLabel then
-		conButton.countLabel:Dispose()
+		conButton.countLabel:SetCaption(tostring(total))
 	end
-	conButton.countLabel = Label:New {
-		parent = conButton.image,
-		autosize=false;
-		width="100%";
-		height="100%";
-		align="right";
-		valign="bottom";
-		caption = total;
-		fontSize = 16;
-		fontShadow = true;
-	}
+	idleCons.count = total
 end
 
 RefreshConsList = function()
@@ -774,6 +729,7 @@ local function SelectComm()
 	end
 end
 
+local mapMiddle = {Game.mapSizeX / 2, 0, Game.mapSizeZ / 2}
 local function SelectPrecBomber()
 
 	-- Check to see if anything other than a ready bomber is selected
@@ -794,11 +750,10 @@ local function SelectPrecBomber()
 	end
 	
 	local mx,my = GetMouseState()
-	local _,pos = TraceScreenRay(mx,my,true)     
+	local pos = select(2, TraceScreenRay(mx,my,true)) or mapMiddle
 	local mindist = math.huge
 	local muid = nil
-	if (pos == nil) then return end
-	
+
 	for uid, v in pairs(readyUntaskedBombers) do
 		if (Spring.IsUnitSelected(uid)) then
 			table.insert(toBeSelected,uid)
@@ -815,6 +770,54 @@ local function SelectPrecBomber()
 		table.insert(toBeSelected,muid)
 	end
 	Spring.SelectUnitArray(toBeSelected)
+end
+
+local function SelectIdleCon_all()
+	Spring.SelectUnitMap(idleCons, select(4, Spring.GetModKeyState()))
+end
+
+local conIndex = 1
+local function SelectIdleCon()
+	local shift = select(4, Spring.GetModKeyState())
+	if shift then
+		local mx,my = GetMouseState()
+		local pos = select(2, TraceScreenRay(mx,my,true)) or mapMiddle
+		local mindist = math.huge
+		local muid = nil
+
+		for uid, v in pairs(idleCons) do
+			if uid ~= "count" then
+				if (not Spring.IsUnitSelected(uid)) then
+					local x,_,z = GetUnitPosition(uid)
+					dist = (pos[1]-x)*(pos[1]-x) + (pos[3]-z)*(pos[3]-z)
+					if (dist < mindist) then
+						mindist = dist
+						muid = uid
+					end
+				end
+			end
+		end
+
+		Spring.SelectUnitArray({muid}, true)
+	else
+		if idleCons.count == 0 then
+			Spring.SelectUnitArray({})
+		else
+			conIndex = (conIndex % idleCons.count) + 1
+			local i = 1
+			for uid, v in pairs(idleCons) do
+				if uid ~= "count" then
+					if i == conIndex then
+						Spring.SelectUnitArray({uid})
+						SetCameraTarget(Spring.GetUnitPosition(uid))
+						return
+					else
+						i = i + 1
+					end
+				end
+			end
+		end
+	end
 end
 
 -------------------------------------------------------------------------------
@@ -867,11 +870,17 @@ function widget:UnitCreated(unitID, unitDefID, unitTeam)
 	if (not myTeamID or unitTeam ~= myTeamID) then
 		return
 	end
-
-	if UnitDefs[unitDefID].isFactory and (not exceptionArray[unitDefID]) then
+	local ud = UnitDefs[unitDefID]
+	
+	if ud.isFactory and (not exceptionArray[unitDefID]) then
 		AddFac(unitID, unitDefID)
-	elseif UnitDefs[unitDefID].customParams.level then
+	elseif ud.customParams.level then
 		AddComm(unitID, unitDefID)
+	elseif options.monitorInbuiltCons.value and ((ud.buildSpeed > 0) and (not exceptionArray[unitDefID]) and (not ud.isFactory)
+	and (options.monitoridlecomms.value or not ud.customParams.dynamic_comm)
+	and (options.monitoridlenano.value or ud.canMove)) then
+		idleCons[unitID] = true
+		wantUpdateCons = true
 	end
 end
 
@@ -933,7 +942,7 @@ function widget:UnitIdle(unitID, unitDefID, unitTeam)
 	end
 	local ud = UnitDefs[unitDefID]
 	if (ud.buildSpeed > 0) and (not exceptionArray[unitDefID]) and (not UnitDefs[unitDefID].isFactory)
-	and (options.monitoridlecomms.value or not UnitDefs[unitDefID].customParams.level)
+	and (options.monitoridlecomms.value or not UnitDefs[unitDefID].customParams.dynamic_comm)
 	and (options.monitoridlenano.value or UnitDefs[unitDefID].canMove) then
 		idleCons[unitID] = true
 		wantUpdateCons = true
@@ -981,16 +990,19 @@ function widget:Update(dt)
 		ClearData(false)
 		InitializeUnits()
 	end
+	
 	if wantUpdateCons then
 		UpdateConsButton()
 		wantUpdateCons = false
 	end
-	
+
 	timer = timer + dt
 	if timer < UPDATE_FREQUENCY then
 		return
 	end
-	
+
+	wantUpdateCons = true
+
 	for i=1,#facs do
 		UpdateFac(facs[i].facID, i)
 	end
@@ -1031,6 +1043,8 @@ function widget:Initialize()
 	
 	widgetHandler:AddAction("selectcomm", SelectComm, nil, 'tp')
 	widgetHandler:AddAction("selectprecbomber", SelectPrecBomber, nil, 'tp')
+	widgetHandler:AddAction("selectidlecon", SelectIdleCon, nil, 'tp')
+	widgetHandler:AddAction("selectidlecon_all", SelectIdleCon_all, nil, 'tp')
 
 	-- setup Chili
 	Chili = WG.Chili
@@ -1126,6 +1140,12 @@ function widget:Initialize()
 	}	
 	UpdateCommButton()
 	]]--
+
+	if WG.crude.GetHotkey("selectidlecon"):upper() and WG.crude.GetHotkey("selectidlecon_all"):upper() then
+		hotkeyCaption = "\255\0\255\0" .. WG.crude.GetHotkey("selectidlecon"):upper() .. "\n" .. WG.crude.GetHotkey("selectidlecon_all"):upper()
+	else
+		hotkeyCaption = "\255\0\255\0" .. (WG.crude.GetHotkey("selectidlecon"):upper() or WG.crude.GetHotkey("selectidlecon_all"):upper() or '')
+	end
 	
 	conButton.button = Button:New{
 		parent = stack_main;
@@ -1134,20 +1154,17 @@ function widget:Initialize()
 		y = 0,
 		width = (100/options.maxbuttons.value).."%",
 		height = "100%",
-		OnClick = {	function (self, x, y, mouse) 
+		OnClick = {	function (self, x, y, mouse)
+				local meta = select(3, Spring.GetModKeyState())
+				if meta then
+					WG.crude.OpenPath(options_path)
+					WG.crude.ShowMenu()
+					return true
+				end
 				if mouse == 1 then
-					-- FIXME: commanders will still be selected even if not monitored! (category detection donut work)
-					if options.monitoridlecomms.value and options.monitoridlenano.value then
-						Spring.SendCommands({"select AllMap+_Builder_Not_Building_Idle+_ClearSelection_SelectOne+"})
-					elseif options.monitoridlenano.value then
-						Spring.SendCommands({"select AllMap+_Builder_Not_Category_Commander_Not_Building_Idle+_ClearSelection_SelectOne+"})
-					elseif options.monitoridlecomms.value then
-						Spring.SendCommands({"select AllMap+_Builder_Not_Building_Not_NameContain_" .. nano_name .. "_Idle+_ClearSelection_SelectOne+"})
-					else
-						Spring.SendCommands({"select AllMap+_Builder_Not_Category_Commander_Not_Building_Not_NameContain_" .. nano_name .. "_Idle+_ClearSelection_SelectOne+"})
-					end
+					SelectIdleCon()
 				elseif mouse == 3 and idleCons.count > 0 then
-					Spring.SelectUnitMap(idleCons, false)
+					SelectIdleCon_all()
 				end
 			end},
 		padding = {1,1,1,1},
@@ -1160,7 +1177,7 @@ function widget:Initialize()
 				y=3,
 				align="left";
 				valign="top";
-				caption = '\255\0\255\0'..WG.crude.GetHotkey("select AllMap+_Builder_Not_Building_Idle+_ClearSelection_SelectOne+"):upper() or '',
+				caption = hotkeyCaption,
 				fontSize = 11;
 				fontShadow = true;
 				parent = button;
@@ -1178,6 +1195,17 @@ function widget:Initialize()
 		--file2 = "bitmaps/icons/frame_cons.png",
 		keepAspect = false,
 		color = (total == 0 and imageColorDisabled) or nil,
+	}
+	conButton.countLabel = Label:New {
+		parent = conButton.image,
+		autosize=false;
+		width="100%";
+		height="100%";
+		align="right";
+		valign="bottom";
+		caption = "0";
+		fontSize = 16;
+		fontShadow = true;
 	}
 	buttonColor = conButton.button.color
 	UpdateConsButton()

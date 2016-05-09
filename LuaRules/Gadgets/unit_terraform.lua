@@ -3344,7 +3344,7 @@ function gadget:Explosion(weaponID, x, y, z, owner)
 						end
 						posCount = posCount + 1
 						posX[posCount] = i
-						posY[posCount] = (groundHeight - origHeight[i][j]) * maxSmooth * (1-disSQ/smoothradiusSQ)
+						posY[posCount] = (groundHeight - origHeight[i][j]) * maxSmooth * (1 - disSQ/smoothradiusSQ)^2
 						posZ[posCount] = j
 					end
 				end
@@ -3649,11 +3649,7 @@ function gadget:UnitCreated(unitID, unitDefID)
 		return
 	end
 	
-	if unitDefID == terraunitDefID then
-		--Spring.SetUnitNoDraw(unitID, true)
-		--Spring.SetUnitNoSelect(unitID, true)
-		--Spring.SetUnitNoMinimap(unitID, true)
-		
+	if unitDefID == terraunitDefID then		
 		if terraTagInfo then
 			setupTerraTag(unitID, terraTagInfo.terraTag, terraTagInfo.segment, terraTagInfo.segmentsCount)
 			terraTagInfo = nil

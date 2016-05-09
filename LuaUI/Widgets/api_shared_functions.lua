@@ -161,9 +161,10 @@ end
 
 WG.WriteTable = WriteTable
 
-function WG.SaveTable(tab, fileName, tabName, params)
+function WG.SaveTable(tab, dir, fileName, tabName, params)
+	Spring.CreateDir(dir)
 	params = params or {}
-	local file,err = io.open(fileName, "w")
+	local file,err = io.open(dir .. fileName, "w")
 	if (err) then
 		Spring.Log(widget:GetInfo().name, LOG.WARNING, err)
 		return
@@ -221,9 +222,10 @@ end
 
 WG.WritePythonDict = WritePythonDict
 
-function WG.SavePythonDict(fileName, dict, dictName, params)
+function WG.SavePythonDict(dir, fileName, dict, dictName, params)
+	Spring.CreateDir(dir)
 	params = params or {}
-	local file,err = io.open (fileName, "w")
+	local file,err = io.open (dir .. fileName, "w")
 	if (err) then
 		Spring.Log(widget:GetInfo().name, LOG.WARNING, err)
 		return
@@ -237,4 +239,27 @@ end
 --------------------------------------------------------------------------------
 function widget:Initialize()
   WG.GetBuildIconFrame = GetBuildIconFrame
+end
+
+local builderDefs = {}
+for udid, ud in ipairs(UnitDefs) do 
+	for i, option in ipairs(ud.buildOptions) do 
+		if UnitDefNames.cormex.id == option then
+			builderDefs[udid] = true
+		end
+	end
+end
+
+function widget:SelectionChanged(units)
+	if not units then
+		WG.selectionEntirelyCons = false
+		return
+	end
+	for i = 1, #units do
+		if not builderDefs[Spring.GetUnitDefID(units[i])] then
+			WG.selectionEntirelyCons = false
+			return
+		end
+	end
+	WG.selectionEntirelyCons = true
 end

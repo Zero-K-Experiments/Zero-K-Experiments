@@ -643,12 +643,6 @@ function widget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 				-- Spring.GiveOrderToUnit(unitID, CMD_WANT_CLOAK, {options[name .. "_personal_cloak_0"].value and 1 or 0}, {"shift"})
 				orderArray[#orderArray + 1] = {CMD_WANT_CLOAK, {options[name .. "_personal_cloak_0"].value and 1 or 0}, {"shift"}}
 			end
-			
-			if options[name .. "_activateWhenBuilt"] and options[name .. "_activateWhenBuilt"].value ~= nil then
-				if options[name .. "_activateWhenBuilt"].value ~= ud.activateWhenBuilt then
-					orderArray[#orderArray + 1] = {CMD.ONOFF, {options[name .. "_activateWhenBuilt"].value and 1 or 0}, {"shift"}}
-				end
-			end
         end
 		
 		if #orderArray>0 then
@@ -707,6 +701,11 @@ function widget:UnitFinished(unitID, unitDefID, unitTeam)
 				orderArray[#orderArray + 1] = {CMD_PRIORITY, {options[name .. "_constructor_buildpriority"].value}, {"shift"}}
 			end
 		end
+		if options[name .. "_activateWhenBuilt"] and options[name .. "_activateWhenBuilt"].value ~= nil then
+			if options[name .. "_activateWhenBuilt"].value ~= UnitDefs[unitDefID].activateWhenBuilt then
+				orderArray[#orderArray + 1] = {CMD.ONOFF, {options[name .. "_activateWhenBuilt"].value and 1 or 0}, {"shift"}}
+			end
+		end
 		
 		if #orderArray>0 then
 			Spring.GiveOrderArrayToUnitArray ({unitID,},orderArray) --give out all orders at once
@@ -727,6 +726,7 @@ function widget:GameFrame(n)
 		if units then
 			for i = 1, #units do
 				widget:UnitCreated(units[i], Spring.GetUnitDefID(units[i]), team, nil)
+				widget:UnitFinished(units[i], Spring.GetUnitDefID(units[i]), team)
 			end
 		end
 		widgetHandler:RemoveCallIn("GameFrame")

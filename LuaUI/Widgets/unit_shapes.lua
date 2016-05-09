@@ -129,6 +129,7 @@ options = {
 		OnChange = function(self) 
 			forceUpdate = true
 		end,
+		noHotkey = true,
 	},
 	showhover = {
 		name = 'Highlight Hovered Unit',
@@ -138,12 +139,14 @@ options = {
 		OnChange = function(self) 
 			hoveredUnit = {}
 		end,
+		noHotkey = true,
 	},
 	showinselectionbox = {
 		name = 'Highlight Units in Selection Box',
 		desc = 'Highlight the units in the selection box.', 
 		type = 'bool',
 		value = true,
+		noHotkey = true,
 	},
 	animatehover = {
 		name = 'Animate Hover Shape',
@@ -151,6 +154,7 @@ options = {
 		type = 'bool',
 		value = true,
 		advanced = true,
+		noHotkey = true,
 	},
 	animateselectionbox = {
 		name = 'Animate Shapes in Selection Box',
@@ -158,6 +162,7 @@ options = {
 		type = 'bool',
 		value = true,
 		advanced = true,
+		noHotkey = true,
 	}
 }
 
@@ -556,7 +561,10 @@ local function UpdateUnitListScale(unitList)
 end
 
 local function UpdateUnitListRotation(unitList)
-	for i=1, #unitList do
+	if not unitList then
+		return
+	end
+	for i = 1, #unitList do
 		local unitID = unitList[i].unitID
 		local udid = spGetUnitDefID(unitID)
 		if udid and unitConf[udid].noRotate then

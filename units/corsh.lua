@@ -44,6 +44,7 @@ unitDef = {
   noAutoFire          = false,
   noChaseCategory     = [[TERRAFORM FIXEDWING SUB]],
   objectName          = [[CORSH.s3o]],
+  script              = "corsh.lua",
   selfDestructAs      = [[SMALL_UNITEX]],
 
   sfxtypes            = {

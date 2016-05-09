@@ -156,6 +156,7 @@ local drawHotkeyBytesCount = 0
 local drawtoolKeyPressed
 
 WG.drawtoolKeyPressed = nil
+WG.customToolTip = {}
 
 local windTooltips = {
 	["armwin"] = true,
@@ -310,12 +311,14 @@ options = {
 		name = "Short Number Notation",
 		type = 'bool',
 		value = false,
+		noHotkey = true,
 		desc = 'Shows short number notation for HP and other values.',
 	},
 	featurehp = {
 		name = "Show HP on Features",
 		type = 'bool',
 		advanced = true,
+		noHotkey = true,
 		value = false,
 		desc = 'Shows healthbar for features.',
 		OnChange = function() 
@@ -337,12 +340,14 @@ options = {
 		name = "Show Tooltip for Units",
 		type = 'bool',
 		value = true,
+		noHotkey = true,
 		desc = 'Show the tooltip for units.',
 	},
 	show_for_wreckage = {
 		name = "Show Tooltip for Wreckage",
 		type = 'bool',
 		value = true,
+		noHotkey = true,
 		desc = 'Show the tooltip for wreckage and map features.',
 	},
 	show_for_unreclaimable = {
@@ -350,6 +355,7 @@ options = {
 		type = 'bool',
 		advanced = true,
 		value = false,
+		noHotkey = true,
 		desc = 'Show the tooltip for unreclaimable features.',
 	},
 	show_position = {
@@ -357,6 +363,7 @@ options = {
 		type = 'bool',
 		advanced = true,
 		value = true,
+		noHotkey = true,
 		desc = 'Show the position tooltip, even when showing extended tooltips.',
 	},
 	show_unit_text = {
@@ -364,12 +371,14 @@ options = {
 		type = 'bool',
 		advanced = true,
 		value = true,
+		noHotkey = true,
 		desc = 'Show the text-only tooltips for units selected but not pointed at, even when showing extended tooltips.',
 	},
 	showdrawtooltip = {
 		name = "Show Map-drawing Tooltip",
 		type = 'bool',
 		value = true,
+		noHotkey = true,
 		desc = 'Show map-drawing tooltip when holding down the tilde (~).',
 	},
 
@@ -377,6 +386,7 @@ options = {
 		name = "Show Terraform Tooltip",
 		type = 'bool',
 		value = true,
+		noHotkey = true,
 		desc = 'Show terraform tooltip when performing terraform commands.',
 	},
 	
@@ -384,6 +394,7 @@ options = {
 		name = "Show Drawing Tools When Drawing",
 		type = 'bool',
 		value = true,
+		noHotkey = true,
 		path = 'Settings/Interface/Mouse Cursor',
 		desc = 'Show pencil or eraser when drawing or erasing.',
 		OnChange = function(self)
@@ -414,6 +425,7 @@ options = {
 		name="Show Unit's Command",
 		type='bool',
 		value= false,
+		noHotkey = true,
 		desc = "Display current command on unit's icon (only for ungrouped unit selection)",
 		path = selPath,
 	},
@@ -433,6 +445,7 @@ options = {
 		name="Show Unit's Special Weapon Status",
 		type='bool',
 		value= true,
+		noHotkey = true,
 		desc = "Show reload progress for weapon that use manual trigger (only for ungrouped unit selection)",
 		path = selPath,
 		OnChange = option_Deselect,
@@ -441,6 +454,7 @@ options = {
 		name="Always Show Selection Window",
 		type='bool',
 		value= false,
+		noHotkey = true,
 		desc = "Always show the selection window even if nothing is selected.",
 		path = selPath,
 		OnChange = function(self)
@@ -2171,6 +2185,18 @@ local function MakeToolTip_Terra(cmdName)
 	BuildTooltip2('terra', tt_structure)
 end
 
+local function miscObjectTooltip()
+	if WG.mouseoverMexIncome and WG.mouseoverMexIncome ~= 0 then
+		MakeToolTip_Text(WG.Translate("common", "mexspot") .. "\n" .. WG.Translate("common", "income") .. " +" .. strFormat("%.2f", WG.mouseoverMexIncome))
+		return true
+	end
+
+	if WG.mouseAboveGeo then
+		MakeToolTip_Text(WG.Translate("common", "geospot"))
+		return true
+	end
+end
+
 local function MakeTooltip(dt)
 	if options.showdrawtooltip.value and drawtoolKeyPressed and not (drawing or erasing) then
 		MakeToolTip_Draw()
@@ -2188,12 +2214,14 @@ local function MakeTooltip(dt)
 	
 	----------
 	local groundTooltip
-	if WG.customToolTip then --find any custom ground tooltip placed on the ground
-		local _, pos = spTraceScreenRay(mx,my, true) --return coordinate of the ground.
-		for _, data in pairs(WG.customToolTip) do --iterate over WG.customToolTip
-			if data.box and pos and (pos[1]>= data.box.x1 and pos[1]<= data.box.x2) and (pos[3]>= data.box.z1 and pos[3]<= data.box.z2) then --check if within box side x & check if within box side z
-				groundTooltip = data.tooltip --copy tooltip
-				break
+	if WG.customToolTip then
+		local pos = select(2, spTraceScreenRay(mx,my, true))
+		if pos then
+			for _, data in pairs(WG.customToolTip) do
+				if data.box and (pos[1]>= data.box.x1 and pos[1]<= data.box.x2) and (pos[3]>= data.box.z1 and pos[3]<= data.box.z2) then
+					groundTooltip = data.tooltip
+					break
+				end
 			end
 		end
 	end
@@ -2286,12 +2314,8 @@ local function MakeTooltip(dt)
 		else
 			KillTooltip()
 		end
-		
-		if WG.mouseoverMexIncome and WG.mouseoverMexIncome ~= 0 then
-			MakeToolTip_Text(WG.Translate("common", "mexspot") .. ", " .. WG.Translate("common", "income") .. " +" .. strFormat("%.2f", WG.mouseoverMexIncome))
-			return
-		end
-		
+
+		miscObjectTooltip()
 		return
 	else
 		oldObjectID = 0
@@ -2305,12 +2329,11 @@ local function MakeTooltip(dt)
 		MakeToolTip_Text(tooltip)
 		return
 	end
-	
-	if WG.mouseoverMexIncome and WG.mouseoverMexIncome ~= 0 then
-		MakeToolTip_Text(WG.Translate("common", "mexspot") .. ", " .. WG.Translate("common", "income") .. " +" .. strFormat("%.2f", WG.mouseoverMexIncome))
+
+	if miscObjectTooltip() then
 		return
 	end
-	
+
 	KillTooltip()
 	return
 	

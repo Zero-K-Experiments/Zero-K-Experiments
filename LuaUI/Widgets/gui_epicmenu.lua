@@ -1,7 +1,7 @@
 function widget:GetInfo()
   return {
     name      = "EPIC Menu",
-    desc      = "v1.438 Extremely Powerful Ingame Chili Menu.",
+    desc      = "v1.439 Extremely Powerful Ingame Chili Menu.",
     author    = "CarRepairer",
     date      = "2009-06-02", --2014-05-3
     license   = "GNU GPL, v2 or later",
@@ -40,22 +40,23 @@ local echo = Spring.Echo
 local isMission = Game.modDesc:find("Mission Mutator")
 
 -- Config file data
-local keybind_file, defaultkeybinds, defaultkeybind_date, confdata
+local keybind_dir, keybind_file, defaultkeybinds, defaultkeybind_date, confdata
 do
 	--load config file:
 	local file = LUAUI_DIRNAME .. "Configs/epicmenu_conf.lua"
 	confdata = VFS.Include(file, nil, VFS.RAW_FIRST)
 	--assign keybind file:
-	keybind_file = LUAUI_DIRNAME .. 'Configs/' .. Game.modShortName:lower() .. '_keys.lua' --example: zk_keys.lua
+	keybind_dir = LUAUI_DIRNAME .. 'Configs/'
+	keybind_file = Game.modShortName:lower() .. '_keys.lua' --example: zk_keys.lua
 	if isMission then
 		--FIXME: find modname instead of using hardcoded mission_keybinds_file name
-		keybind_file = (confdata.mission_keybinds_file and LUAUI_DIRNAME .. 'Configs/' .. confdata.mission_keybinds_file) or keybind_file --example: singleplayer_keys.lua
+		keybind_file = (confdata.mission_keybinds_file and confdata.mission_keybinds_file) or keybind_file --example: singleplayer_keys.lua
 	end
 	--check for validity, backup or delete
-	CheckLUAFileAndBackup(keybind_file,'') --this utility create backup file in user's Spring folder OR delete them if they are not LUA content (such as corrupted or wrong syntax). included in "utility_two.lua"
+	CheckLUAFileAndBackup(keybind_dir .. keybind_file,'') --this utility create backup file in user's Spring folder OR delete them if they are not LUA content (such as corrupted or wrong syntax). included in "utility_two.lua"
 	--load default keybinds:
 	--FIXME: make it automatically use same name for mission, multiplayer, and default keybinding file
-	local default_keybind_file = LUAUI_DIRNAME .. 'Configs/' .. confdata.default_source_file
+	local default_keybind_file = keybind_dir .. confdata.default_source_file
 	local file_return = VFS.FileExists(default_keybind_file, VFS.ZIP) and VFS.Include(default_keybind_file, nil, VFS.ZIP) or {keybinds={},date=0}
 	defaultkeybinds = file_return.keybinds
 	defaultkeybind_date = file_return.date
@@ -125,6 +126,24 @@ local pathoptions = {}
 local actionToOption = {}
 
 local exitWindowVisible = false
+
+local br = '\n'
+local showTidal = false
+if not confdata.description then confdata.description = '' end
+local gameInfoText = ''
+	..Game.modName ..br..br
+	..'Spring Engine version: '..Game.version..br..br	
+	..'Map: ' ..Game.mapName ..br
+		
+	..'    Size: '..Game.mapX..' x '..Game.mapY..br        
+	..'    Gravity: '..math.round(Game.gravity)..br
+	.. (showTidal and ('    Tidal Power: '..Game.tidal..br) or '')
+	..'    Water Damage: '..Game.waterDamage..br
+	..'    '.. Game.mapDescription..br
+	..br..br
+	..confdata.description 
+	
+
 --------------------------------------------------------------------------------
 -- Key bindings
 -- KEY BINDINGS AND YOU:
@@ -393,13 +412,13 @@ end
 local function SaveKeybinds()
 	local keybindfile_table = { keybinds = keybounditems, date=keybind_date } 
 	--table.save( keybindfile_table, keybind_file )
-	WG.SaveTable(keybindfile_table, keybind_file, nil, {concise = true, prefixReturn = true, endOfFile = true})
+	WG.SaveTable(keybindfile_table, keybind_dir, keybind_file, nil, {concise = true, prefixReturn = true, endOfFile = true})
 end
 
 local function LoadKeybinds()
 	local loaded = false
-	if VFS.FileExists(keybind_file, VFS.RAW) then
-		local file_return = VFS.Include(keybind_file, nil, VFS.RAW)
+	if VFS.FileExists(keybind_dir .. keybind_file, VFS.RAW) then
+		local file_return = VFS.Include(keybind_dir .. keybind_file, nil, VFS.RAW)
 		if file_return then
 			keybounditems, keybind_date = file_return.keybinds, file_return.date
 			if keybounditems and keybind_date then
@@ -1740,7 +1759,8 @@ MakeSubWindow = function(path, pause)
 				textColor = color.sub_fg, 
 				tooltip   = option.desc,
 			}
-			tree_children[#tree_children+1] = MakeHotkeyedControl(chbox,  path, option)
+			option.epic_reference = chbox
+			tree_children[#tree_children+1] = MakeHotkeyedControl(chbox,  path, option, icon, option.noHotkey)
 			
 		elseif option.type == 'number' then	
 			settings_height = settings_height + B_HEIGHT
@@ -1815,7 +1835,7 @@ MakeSubWindow = function(path, pause)
 					tooltip = item.desc, --tooltip
 				}
 				local icon = option.items[i].icon
-				tree_children[#tree_children+1] = MakeHotkeyedControl( cb, path, item, icon)
+				tree_children[#tree_children+1] = MakeHotkeyedControl( cb, path, item, icon, option.noHotkey)
 					
 			end
 			tree_children[#tree_children+1] = Label:New{ caption = '', }
@@ -2181,7 +2201,10 @@ local function MakeMenuBar()
 								width=70,
 								trackColor = color.main_fg,
 								value = spGetConfigInt("snd_volmaster", 50),
-								OnChange = { function(self)	spSendCommands{"set snd_volmaster " .. self.value} end	},
+								OnChange = { function(self)
+									spSendCommands{"set snd_volmaster " .. self.value}
+									if WG.ttsNotify then WG.ttsNotify() end
+								end	},
 							},
 							
 							Image:New{ tooltip = 'Music', file=LUAUI_DIRNAME .. 'Images/epicmenu/vol_music.png', width= 18,height= 18, },
@@ -2321,7 +2344,7 @@ local function MakeQuitButtons()
 	})
 	AddOption('',{
 		type='button',
-		name='Resign',
+		name='Resign...',
 		desc = "Abandon team and become spectator",
 		OnChange = function()
 				if not (isMission or Spring.GetSpectatingState()) then
@@ -2341,7 +2364,7 @@ local function MakeQuitButtons()
 	})
 	AddOption('',{
 		type='button',
-		name='Exit to Desktop',
+		name='Exit to Desktop...',
 		desc = "Exit game completely",
 		OnChange = function() 
 			MakeExitConfirmWindow("Are you sure you want to quit the game?", function()
@@ -2460,6 +2483,15 @@ function widget:Initialize()
 	end
 	
 	MakeQuitButtons()
+	
+	AddOption('',{ type='label',name='',value = '',key='',})
+	AddOption('Game',{
+		type='text',
+		name='About...',
+		value=gameInfoText,
+		--desc = "about game",
+		key='About',
+	})
 	
 	-- Clears all saved settings of custom widgets stored in crudemenu's config
 	WG.crude.ResetSettings = function()
