@@ -13,7 +13,6 @@ unitDef = {
     [[nsaclash]],
     [[hoverassault]],
 	[[hoverdepthcharge]],
-	--[[hoverriot]],
 	[[hoverriot2]],
     [[armmanni]],
     [[hoveraa]],
