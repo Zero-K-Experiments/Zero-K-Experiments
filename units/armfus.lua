@@ -11,7 +11,6 @@ unitDef = {
   BuildingGroundDecalType       = [[arm_fusion_ground.dds]],
   buildPic                      = [[ARMFUS.png]],
   category                      = [[SINK UNARMED]],
-  collisionVolumeTest           = 1,
   corpse                        = [[DEAD]],
 
   customParams                  = {

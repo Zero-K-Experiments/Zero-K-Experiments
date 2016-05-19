@@ -16,7 +16,6 @@ unitDef = {
   category               = [[SHIP]],
   collisionVolumeOffsets = [[0 0 3]],
   collisionVolumeScales  = [[32 46 102]],
-  collisionVolumeTest    = 1,
   collisionVolumeType    = [[box]],
   corpse                 = [[DEAD]],
 
@@ -157,7 +156,6 @@ unitDef = {
     DEAD  = {
 	  collisionVolumeOffsets = [[0 0 3]],
 	  collisionVolumeScales  = [[32 46 102]],
-	  collisionVolumeTest    = 1,
 	  collisionVolumeType    = [[box]],	  
       featureDead      = [[HEAP]],
       footprintX       = 5,

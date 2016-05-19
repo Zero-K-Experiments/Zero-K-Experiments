@@ -17,7 +17,6 @@ unitDef = {
   category               = [[LAND]],
   collisionVolumeOffsets = [[0 10 0]],
   collisionVolumeScales  = [[80 120 80]],
-  collisionVolumeTest    = 1,
   collisionVolumeType    = [[cylY]],
   corpse                 = [[DEAD]],
 

@@ -18,7 +18,6 @@ unitDef = {
   collide             = true,
   collisionVolumeOffsets = [[0 0 0]],
   collisionVolumeScales  = [[50 15 50]],
-  collisionVolumeTest    = 1,
   collisionVolumeType    = [[cylY]],
   corpse              = [[DEAD]],
   cruiseAlt           = 150,
@@ -129,7 +128,6 @@ unitDef = {
 
     DEAD  = {
 	  collisionVolumeScales  = [[65 20 65]],
-	  collisionVolumeTest	 = 1,
 	  collisionVolumeType    = [[CylY]],
       featureDead      = [[HEAP]],
       footprintX       = 2,

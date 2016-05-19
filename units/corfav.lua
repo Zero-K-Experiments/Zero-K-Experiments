@@ -15,7 +15,6 @@ unitDef = {
   category               = [[LAND TOOFAST]],
   collisionVolumeOffsets = [[0 0 2]],
   collisionVolumeScales  = [[14 14 40]],
-  collisionVolumeTest    = 1,
   collisionVolumeType    = [[cylZ]],
   corpse                 = [[DEAD]],
 

@@ -16,7 +16,6 @@ unitDef = {
   collide             = false,
   collisionVolumeOffsets = [[0 0 0]],
   collisionVolumeScales  = [[80 10 30]],
-  collisionVolumeTest    = 1,
   collisionVolumeType    = [[ellipsoid]],
   corpse              = [[DEAD]],
   cruiseAlt           = 160,

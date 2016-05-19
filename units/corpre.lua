@@ -12,7 +12,6 @@ unitDef = {
   canAttack                     = true,
   canstop                       = [[1]],
   category                      = [[FLOAT]],
-  collisionVolumeTest           = 1,
   corpse                        = [[DEAD]],
 
   customParams                  = {

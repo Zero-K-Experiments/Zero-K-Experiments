@@ -15,7 +15,6 @@ unitDef = {
   category               = [[LAND]],
   collisionVolumeOffsets = [[0 0 0]],
   collisionVolumeScales  = [[18 20 40]],
-  collisionVolumeTest    = 1,
   collisionVolumeType    = [[box]],
   corpse                 = [[DEAD]],
 
@@ -137,7 +136,6 @@ unitDef = {
     DEAD  = {
       collisionVolumeOffsets = [[0 0 0]],
       collisionVolumeScales  = [[32 40 52]],
-      collisionVolumeTest    = 1,
       collisionVolumeType    = [[box]],      
       featureDead      = [[HEAP]],
       footprintX       = 2,

@@ -15,7 +15,6 @@ unitDef = {
   category                      = [[FLOAT UNARMED STUPIDTARGET]],
   collisionVolumeOffsets        = [[0 0 0]],
   collisionVolumeScales         = [[50 36 50]],
-  collisionVolumeTest	        = 1,
   collisionVolumeType	        = [[CylY]],
   corpse                        = [[DEAD]],
 

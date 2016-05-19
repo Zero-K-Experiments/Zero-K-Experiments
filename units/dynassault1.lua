@@ -22,7 +22,6 @@ unitDef = {
   commander           = true,
   collisionVolumeOffsets = [[0 0 0]],
   collisionVolumeScales  = [[45 54 45]],
-  collisionVolumeTest    = 1,
   collisionVolumeType    = [[CylY]],  
   corpse              = [[DEAD]],
 

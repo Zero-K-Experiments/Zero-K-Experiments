@@ -14,7 +14,6 @@ unitDef = {
   category                      = [[FLOAT TURRET]],
   collisionVolumeOffsets        = [[0 0 0]],
   collisionVolumeScales         = [[45 45 45]],
-  collisionVolumeTest           = 1,
   collisionVolumeType           = [[ellipsoid]],
   corpse                        = [[DEAD]],
 
