@@ -77,7 +77,7 @@ unitDef = {
       footprintX       = 2,
       footprintZ       = 2,
       height           = [[40]],
-      object           = [[crane_d.dae]],
+      object           = [[crane_d.s3o]],
     },
 
 

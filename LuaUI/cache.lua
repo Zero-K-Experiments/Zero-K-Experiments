@@ -13,6 +13,18 @@ local SetTeamColor = Spring.SetTeamColor
 local GetVisibleUnits = Spring.GetVisibleUnits
 local MarkerAddPoint = Spring.MarkerAddPoint
 
+-- Block line drawing widgets
+--local MarkerAddLine = Spring.MarkerAddLine
+--function Spring.MarkerAddLine(a,b,c,d,e,f,g)
+--	MarkerAddLine(a,b,c,d,e,f,true)
+--end
+
+-- Cutscenes apply F5
+local IsGUIHidden = Spring.IsGUIHidden
+function Spring.IsGUIHidden()
+	return IsGUIHidden() or (WG.Cutscene and WG.Cutscene.IsInCutscene())
+end
+
 function Spring.GetTeamColor(teamid)
   if teamColor[teamid] then
   else

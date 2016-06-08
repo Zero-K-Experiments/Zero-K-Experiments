@@ -148,6 +148,27 @@ local captureWeaponDefs = {
 	[WeaponDefNames["capturecar_captureray"].id] = true
 }
 
+local gravityWeaponDefs = {
+	[WeaponDefNames["corgrav_gravity_neg"].id] = true,
+	[WeaponDefNames["corgrav_gravity_pos"].id] = true,
+	[WeaponDefNames["corsumo_gravity_neg"].id] = true,
+	[WeaponDefNames["corsumo_gravity_pos"].id] = true,
+}
+
+local radarWobblePenalty = {
+	[WeaponDefNames["armmerl_cortruck_rocket"].id] = 8,
+	[WeaponDefNames["armsnipe_shockrifle"].id] = 6,
+	[WeaponDefNames["armanni_ata"].id] = 6,
+	[WeaponDefNames["armmanni_ata"].id] = 4,
+}
+
+local proximityWeaponDefs = {}
+for wdid = 1, #WeaponDefs do
+	if WeaponDefs[wdid].customParams.dyndamageexp then
+		proximityWeaponDefs[wdid] = true
+	end
+end
+
 for i=1, #UnitDefs do
 	local ud = UnitDefs[i]
 	if unitIsBadAgainstFastStuff[i] then
@@ -228,7 +249,16 @@ for uid = 1, #UnitDefs do
 		else
 			targetTable[uid][wid] = unitHealthRatio[uid]
 		end
+		
+		-- Autogenerate some wobble penalties.
+		if not radarWobblePenalty[wid] then
+			local wd = WeaponDefs[wid]
+			local weaponType = wd.type
+			if weaponType == "BeamLaser" or weaponType == "LaserCannon" or weaponType == "LightningCannon" then
+				radarWobblePenalty[wid] = 2
+			end
+		end
 	end
 end
 
-return targetTable, captureWeaponDefs, transportMult
+return targetTable, radarWobblePenalty, captureWeaponDefs, gravityWeaponDefs, proximityWeaponDefs, transportMult

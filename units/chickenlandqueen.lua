@@ -268,6 +268,11 @@ unitDef = {
       burst                   = 8,
       burstrate               = 0.01,
       cegTag                  = [[queen_trail_fire]],
+      
+      customParams            = {
+	light_radius = 500,
+      },
+      
       craterBoost             = 0,
       craterMult              = 0,
 
@@ -377,6 +382,10 @@ unitDef = {
       collideFriendly         = false,
       craterBoost             = 0,
       craterMult              = 0,
+      
+      customParams            = {
+        light_radius = 0,
+      },
 
       damage                  = {
         default = 75,

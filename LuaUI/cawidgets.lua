@@ -28,6 +28,7 @@ function includeZIPFirst(filename, envTable)
   return VFS.Include(LUAUI_DIRNAME .. filename, envTable, VFS.ZIP_FIRST)
 end
 
+WG = {}
 Spring.Utilities = {}
 VFS.Include("LuaRules/Utilities/tablefunctions.lua")
 VFS.Include("LuaRules/Utilities/versionCompare.lua")
@@ -139,7 +140,7 @@ widgetHandler = {
 
   actionHandler = include("actions.lua"),
   
-  WG = {}, -- shared table for widgets
+  WG = WG, -- shared table for widgets
 
   globals = {}, -- global vars/funcs
 
@@ -1334,7 +1335,7 @@ function widgetHandler:AddConsoleLine(msg, priority)
 		end
 		local playerID_msg = newMsg.player and newMsg.player.id --retrieve playerID from message.
 		local customkeys = select(10, Spring.GetPlayerInfo(playerID_msg))
-		if customkeys and customkeys.muted then
+		if customkeys and (customkeys.muted or (newMsg.msgtype == 'spec_to_everyone' and ((customkeys.can_spec_chat or '1') == '0'))) then
 			local myPlayerID = Spring.GetLocalPlayerID()
 			if myPlayerID == playerID_msg then --if I am the muted, then:
 				newMsg.argument = "<your message was blocked by mute>"	--remind myself that I am muted.		

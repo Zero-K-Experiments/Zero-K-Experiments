@@ -3,7 +3,7 @@
 function widget:GetInfo()
   return {
     name      = "Chili Selections & CursorTip",
-    desc      = "v0.097 Chili Selection Window and Cursor Tooltip.",
+    desc      = "v0.098 Chili Selection Window and Cursor Tooltip.",
     author    = "CarRepairer, jK",
     date      = "2009-06-02", --22 December 2013
     license   = "GNU GPL, v2 or later",
@@ -113,6 +113,10 @@ local stack_main, stack_leftbar
 local globalitems = {} --remember reference to various chili element that need to be accessed/updated globally.
 
 local ttFontSize = 10
+local leftbar_width = 96
+local mainsection_width = 230
+local buildpic_size = 55
+local morph_text_width = 25
 
 local green = '\255\1\255\1'
 local red = '\255\255\1\1'
@@ -257,7 +261,9 @@ local label_unitInfo
 options_path = 'Settings/HUD Panels/Tooltip'
 options_order = {
 	--tooltip
-	'tooltip_delay', 'independant_world_tooltip_delay', 'hpshort', 'featurehp', 
+	
+	'tooltip_delay', 'independant_world_tooltip_delay',
+	'large','hpshort', 'featurehp', 
 	'show_for_units', 'show_for_wreckage', 'show_for_unreclaimable', 'show_position', 'show_unit_text', 'showdrawtooltip','showterratooltip',
 	
 	--mouse
@@ -281,8 +287,81 @@ end
 
 local function Show(param) end
 
+local function clearControls()
+	--[[
+	for k,controls_cur in pairs(controls) do
+		for _,controls in pairs(controls_cur) do
+			controls:Dispose();
+		end
+	end
+	--]]
+	
+	for _,tt in ipairs({ 'unit2', 'feature2', 'corpse2', 'drawing2', 'terra', 'morph2', 'ud2',
+		'selunit2', 'tt_text2'	,
+		}) do
+		if controls[tt] then
+			for _,controls in pairs(controls[tt]) do
+				controls:Dispose();
+			end
+		end
+		controls[tt]=nil
+	end
+	
+	for _,gi in ipairs({ 'buildpic_unit', 'buildpic_feature', 'buildpic_selunit', 'buildpic_morph', 'buildpic_ud', 'morphs' }) do
+		
+		if globalitems[gi] then
+			globalitems[gi]:Dispose()
+		end
+		globalitems[gi] = nil
+	end
+end
+
+local function CreateHpBar() end
+local function CreateBpBar() end
+local function CreateShieldBar() end
+
+
 local selPath = 'Settings/HUD Panels/Selected Units Panel'
 options = {
+	large = {
+		name = 'Large Tooltip',
+		desc = 'For high-resolution screens',
+		type = 'bool',
+		value = false,
+		noHotkey = true,
+		OnChange = function(self)
+			option_Deselect()
+			if self.value then
+				ttFontSize 			= 16 
+				leftbar_width 		= 130
+				mainsection_width 	= 300
+				buildpic_size 		= 90
+				morph_text_width	= 40
+				icon_size			= 30
+				unitIcon_size		= 70
+			else
+				ttFontSize 			= 10
+				leftbar_width 		= 96
+				mainsection_width 	= 230
+				buildpic_size 		= 55
+				morph_text_width 	= 25
+				icon_size			= 20
+				unitIcon_size		= 50
+			end
+			clearControls()
+			
+			CreateHpBar('hp_unit')
+			CreateHpBar('hp_selunit')
+			CreateHpBar('hp_feature')
+			CreateHpBar('hp_corpse')
+			
+			CreateBpBar('bp_selunit')
+		
+			CreateShieldBar('shield_unit')
+			CreateShieldBar('shield_selunit')
+	--]]
+		end,
+	},
 	tooltip_delay = {
 		name = 'Tooltip display delay (0 - 4s)',
 		desc = 'Determines how long you can leave the mouse idle until the tooltip is displayed.',
@@ -716,35 +795,35 @@ local function WriteGroupInfo()
 			if reloadFraction < 0.99 then
 				remainingTime = math.floor(remainingTime)
 				if remainingTime > 1000 then
-					remainingTime = WG.Translate("common", "never")
+					remainingTime = WG.Translate("interface", "never")
 				else
 					remainingTime = remainingTime .. "s"
 				end
-				dgunStatus = "\n" .. WG.Translate("common", "special") .. "\255\255\90\90 " .. WG.Translate("common", "reloading") .. "\255\255\255\255 (" .. remainingTime .. ")"  --red and white
+				dgunStatus = "\n" .. WG.Translate("interface", "special") .. "\255\255\90\90 " .. WG.Translate("interface", "reloading") .. "\255\255\255\255 (" .. remainingTime .. ")"  --red and white
 			else
-				dgunStatus = "\n" .. WG.Translate("common", "special") .. "\255\90\255\90 " .. WG.Translate("common", "ready") .. "\255\255\255\255"
+				dgunStatus = "\n" .. WG.Translate("interface", "special") .. "\255\90\255\90 " .. WG.Translate("interface", "ready") .. "\255\255\255\255"
 			end
 		end
 	end
-	local metal = (tonumber(unitInfoSum.metalincome)>0 or tonumber(unitInfoSum.metaldrain)>0) and ("\n" .. WG.Translate("common", "metal") .. " \255\0\255\0" .. numformat(unitInfoSum.metalincome, true) .. "\255\255\255\255 / \255\255\0\0" ..  numformat(-unitInfoSum.metaldrain, true)  .. "\255\255\255\255") or '' --have metal or ''
-	local energy = (tonumber(unitInfoSum.energyincome)>0 or tonumber(unitInfoSum.energydrain)>0) and ("\n" .. WG.Translate("common", "energy") .. " \255\0\255\0" .. numformat(unitInfoSum.energyincome, true) .. "\255\255\255\255 / \255\255\0\0" .. numformat(-unitInfoSum.energydrain, true) .. "\255\255\255\255") or '' --have energy or ''
-	local buildpower = (tonumber(unitInfoSum.totalbp)>0) and ("\n" .. WG.Translate("common", "buildpower") .. " " .. numformat(unitInfoSum.usedbp) .. " / " ..  numformat(unitInfoSum.totalbp)) or ''  --have buildpower or ''
+	local metal = (tonumber(unitInfoSum.metalincome)>0 or tonumber(unitInfoSum.metaldrain)>0) and ("\n" .. WG.Translate("interface", "metal") .. " \255\0\255\0" .. numformat(unitInfoSum.metalincome, true) .. "\255\255\255\255 / \255\255\0\0" ..  numformat(-unitInfoSum.metaldrain, true)  .. "\255\255\255\255") or '' --have metal or ''
+	local energy = (tonumber(unitInfoSum.energyincome)>0 or tonumber(unitInfoSum.energydrain)>0) and ("\n" .. WG.Translate("interface", "energy") .. " \255\0\255\0" .. numformat(unitInfoSum.energyincome, true) .. "\255\255\255\255 / \255\255\0\0" .. numformat(-unitInfoSum.energydrain, true) .. "\255\255\255\255") or '' --have energy or ''
+	local buildpower = (tonumber(unitInfoSum.totalbp)>0) and ("\n" .. WG.Translate("interface", "buildpower") .. " " .. numformat(unitInfoSum.usedbp) .. " / " ..  numformat(unitInfoSum.totalbp)) or ''  --have buildpower or ''
 	local unitInfoString = 
-		WG.Translate("common", "selected_units") .. ": " .. numformat(unitInfoSum.count) ..
-		"\n" .. WG.Translate("common", "health") .. ": " .. numformat(unitInfoSum.hp) .. " / " ..  numformat(unitInfoSum.maxhp) ..
-		"\n" .. WG.Translate("common", "value") .. ": " .. numformat(unitInfoSum.cost) .. " / " ..  numformat(unitInfoSum.finishedcost) ..
+		WG.Translate("interface", "selected_units") .. ": " .. numformat(unitInfoSum.count) ..
+		"\n" .. WG.Translate("interface", "health") .. ": " .. numformat(unitInfoSum.hp) .. " / " ..  numformat(unitInfoSum.maxhp) ..
+		"\n" .. WG.Translate("interface", "value") .. ": " .. numformat(unitInfoSum.cost) .. " / " ..  numformat(unitInfoSum.finishedcost) ..
 		metal .. energy ..	buildpower .. dgunStatus
 	
 	label_unitInfo = Label:New{ --recreate chili element (rather than just updating caption) to avoid color bug
 		parent = window_corner;
 		y=5,
 		right=5,
-		x=window_corner.width-150,
+		x=window_corner.width-150-(options.large.value and 30 or 0),
 		height  = '100%';
-		width = 120,
+		width = options.large.value and 150 or 120,
 		caption = unitInfoString;
 		valign  = 'top';
-		fontSize = 12;
+		fontSize = ttFontSize+2;
 		fontShadow = true;
 	}
 	
@@ -779,7 +858,7 @@ local function DisposeSelectionDisplay()
 end
 
 local function SelectionTooltips()
-	return "\n\255\0\255\0" .. WG.Translate("common", "lmb") .. ": " .. WG.Translate("common", "select") .. "\n" .. WG.Translate("common", "rmb") .. ": " .. WG.Translate("common", "deselect") .. "\n" .. WG.Translate("common", "shift") .. "+" .. WG.Translate("common", "lmb") .. ": " .. WG.Translate("common", "select_type") .. "\n" .. WG.Translate("common", "shift") .. "+" .. WG.Translate("common", "rmb") .. ": " .. WG.Translate("common", "deselect_type") .. "\n" .. WG.Translate("common", "mmb") .. ": " .. WG.Translate("common", "go_to")
+	return "\n\255\0\255\0" .. WG.Translate("interface", "lmb") .. ": " .. WG.Translate("interface", "select") .. "\n" .. WG.Translate("interface", "rmb") .. ": " .. WG.Translate("interface", "deselect") .. "\n" .. WG.Translate("interface", "shift") .. "+" .. WG.Translate("interface", "lmb") .. ": " .. WG.Translate("interface", "select_type") .. "\n" .. WG.Translate("interface", "shift") .. "+" .. WG.Translate("interface", "rmb") .. ": " .. WG.Translate("interface", "deselect_type") .. "\n" .. WG.Translate("interface", "mmb") .. ": " .. WG.Translate("interface", "go_to")
 end
 
 local function AddSelectionIcon(index,unitid,defid,unitids,counts)
@@ -1428,11 +1507,11 @@ local function UpdateMorphControl(morph_data)
 	
 	local cyan = {0,1,1,1}
 	
-	morph_controls[#morph_controls + 1] = Label:New{ caption = 'Morph: ', height= icon_size, valign='center', textColor=cyan , autosize=false, width=45, fontSize=ttFontSize,}
+	morph_controls[#morph_controls + 1] = Label:New{ caption = 'Morph: ', height= icon_size, valign='center', textColor=cyan , autosize=false, width=morph_text_width+20, fontSize=ttFontSize,}
 	morph_controls[#morph_controls + 1] = Image:New{file='LuaUI/images/clock.png',height= icon_size,width= icon_size, fontSize=ttFontSize,}
-	morph_controls[#morph_controls + 1] = Label:New{ name='time', caption = morph_time, valign='center', textColor=cyan , autosize=false, width=25, fontSize=ttFontSize,}
+	morph_controls[#morph_controls + 1] = Label:New{ name='time', caption = morph_time, valign='center', textColor=cyan , autosize=false, width=morph_text_width, fontSize=ttFontSize,}
 	morph_controls[#morph_controls + 1] = Image:New{file='LuaUI/images/cost.png',height= icon_size,width= icon_size, fontSize=ttFontSize,}
-	morph_controls[#morph_controls + 1] = Label:New{ name='cost', caption = morph_cost, valign='center', textColor=cyan , autosize=false, width=25, fontSize=ttFontSize,}
+	morph_controls[#morph_controls + 1] = Label:New{ name='cost', caption = morph_cost, valign='center', textColor=cyan , autosize=false, width=morph_text_width, fontSize=ttFontSize,}
 	
 	--if morph_prereq then
 		--morph_controls[#morph_controls + 1] = Label:New{ 'prereq' caption = 'Need Unit: '..morph_prereq, valign='center', textColor=cyan , autosize=false, width=180, fontSize=ttFontSize,}
@@ -1659,7 +1738,7 @@ local function BuildTooltip2(ttname, ttdata, sel)
 					itemMargin = {0,0,0,0},
 					resizeItems=false,
 					autosize=true,
-					width = 96,
+					width = leftbar_width,
 					children = children_leftbar,
 				}
 			leftside = true
@@ -1670,11 +1749,12 @@ local function BuildTooltip2(ttname, ttdata, sel)
 		stack_main_temp = StackPanel:New{
 			name = 'main',
 			autosize=true,
-			x = leftside and 60 or 0,
+			--x = leftside and 60 or 0,
+			x = leftside and (leftbar_width-36) or 0,
 			y = 0,
 			orientation='vertical',
 			centerItems = false,
-			width = 230,
+			width = mainsection_width,
 			padding = {0,0,0,0},
 			itemPadding = {0,0,0,0},
 			itemMargin = {0,0,0,0},
@@ -1725,10 +1805,10 @@ local function UpdateBuildpic( ud, globalitem_name, unitID )
 		globalitems[globalitem_name] = Image:New{
 			file = "#" .. ud.id,
 			file2 = (WG.GetBuildIconFrame)and(WG.GetBuildIconFrame(ud)),
-			tooltip = WG.Translate("common", "mmb") .. ": " .. WG.Translate("common", "go_to"),
+			tooltip = WG.Translate("interface", "mmb") .. ": " .. WG.Translate("interface", "go_to"),
 			keepAspect = false,
-			height  = 55*(4/5),
-			width   = 55,
+			height  = buildpic_size*(4/5),
+			width   = buildpic_size,
 			unitID = unitID,
 			
 		}
@@ -1767,12 +1847,12 @@ local function MakeToolTip_UD(tt_table)
 	
 	local extraText = ""
 	if mexDefID == tt_table.unitDef.id and WG.mouseoverMexIncome then
-		extraText = ", ".. WG.Translate("common", "income") .. " +" .. strFormat("%.2f", WG.mouseoverMexIncome)
+		extraText = ", ".. WG.Translate("interface", "income") .. " +" .. strFormat("%.2f", WG.mouseoverMexIncome)
 		if WG.mouseoverMexIncome > 0 then
 			local cost = metalStructureDefs[tt_table.unitDef.id].cost
-			extraText = extraText .. "\n" .. WG.Translate("common", "base_payback") .. ": " .. SecondsToMinutesSeconds(cost/WG.mouseoverMexIncome)
+			extraText = extraText .. "\n" .. WG.Translate("interface", "base_payback") .. ": " .. SecondsToMinutesSeconds(cost/WG.mouseoverMexIncome)
 		else
-			extraText = extraText .. "\n" .. WG.Translate("common", "base_payback") .. ": " .. WG.Translate("common", "never")
+			extraText = extraText .. "\n" .. WG.Translate("interface", "base_payback") .. ": " .. WG.Translate("interface", "never")
 		end
 	end
 
@@ -1788,12 +1868,12 @@ local function MakeToolTip_UD(tt_table)
 
 				if y then
 					if y <= windTidalThreashold then
-						extraText = ", " .. WG.Translate("common", "tidal_income") .. " +1.2"
+						extraText = ", " .. WG.Translate("interface", "tidal_income") .. " +1.2"
 						income = 1.2
 						health = 400
 					else
 						local minWindIncome = windMin+(windMax-windMin)*windGroundSlope*(y - windGroundMin)/windGroundExtreme
-						extraText = ", " .. WG.Translate("common", "wind_range") .. " " .. string.format("%.1f", minWindIncome ) .. " - " .. string.format("%.1f", windMax )
+						extraText = ", " .. WG.Translate("interface", "wind_range") .. " " .. string.format("%.1f", minWindIncome ) .. " - " .. string.format("%.1f", windMax )
 						income = (minWindIncome+2.5)/2
 					end
 				end
@@ -1847,9 +1927,9 @@ local function MakeToolTip_UD(tt_table)
 			--.. "\n extraMetal: " .. extraMetalza
 			--.. "\n unitformCasePayback: " .. unitformCasePayback 
 			--.. "\n worstCasePayback: " .. worstCasePayback 
-			extraText = extraText .. "\n" .. WG.Translate("common", "od_payback") .. ": " .. SecondsToMinutesSeconds(worstCasePayback)
+			extraText = extraText .. "\n" .. WG.Translate("interface", "od_payback") .. ": " .. SecondsToMinutesSeconds(worstCasePayback)
 		else
-			extraText = extraText .. "\n" .. WG.Translate("common", "od_payback") .. ": " ..  WG.Translate("common", "unknown")
+			extraText = extraText .. "\n" .. WG.Translate("interface", "od_payback") .. ": " ..  WG.Translate("interface", "unknown")
 		end
 	end
 
@@ -1931,7 +2011,7 @@ local function MakeToolTip_Unit(data)
 			{ name='uname', icon = iconPath, text = GetHumanName(tt_ud, tt_unitID), fontSize=4, },
 			{ name='utt', text = GetDescription(tt_ud, tt_unitID) .. '\n', wrap=true },
 			{ name='hp', directcontrol = 'hp_unit', },
-			{ name='ttplayer', text = WG.Translate("common", "player") .. ': ' .. teamColor .. playerName .. white ..'', fontSize=2, center=false },
+			{ name='ttplayer', text = WG.Translate("interface", "player") .. ': ' .. teamColor .. playerName .. white ..'', fontSize=2, center=false },
 			{ name='help', text = green .. WG.Translate("interface", "space_click_show_stats"), },
 		},
 	}
@@ -2007,9 +2087,9 @@ local function MakeToolTip_Feature(data)
 	
 	local desc = ''
 	if feature_name:find('dead2') or feature_name:find('heap') then
-		desc = ' (' .. WG.Translate("common", "debris") .. ')'
+		desc = ' (' .. WG.Translate("interface", "debris") .. ')'
 	elseif feature_name:find('dead') then
-		desc = ' (' .. WG.Translate("common", "wreckage") .. ')'
+		desc = ' (' .. WG.Translate("interface", "wreckage") .. ')'
 	end
 	tt_ud = UnitDefNames[live_name]
 	fullname = ((tt_ud and GetHumanName(tt_ud) .. desc) or tt_fd.tooltip or "")
@@ -2055,7 +2135,7 @@ local function MakeToolTip_Feature(data)
 					and { name='hp', directcontrol = (tt_ud and 'hp_corpse' or 'hp_feature'), } 
 					or {}),
 			
-			{ name='ttplayer', text = WG.Translate("common", "player") .. ': ' .. teamColor .. playerName .. white ..'', fontSize=2, center=false, },
+			{ name='ttplayer', text = WG.Translate("interface", "player") .. ': ' .. teamColor .. playerName .. white ..'', fontSize=2, center=false, },
 			{ name='help', text = tt_ud and (green .. WG.Translate("interface", "space_click_show_stats")) or '', },
 		},
 	}
@@ -2069,12 +2149,12 @@ local function MakeToolTip_Feature(data)
 	return true
 end
 
-local function CreateHpBar(name)
+CreateHpBar = function(name)
 	globalitems[name] = Panel:New {
 		orientation='horizontal',
 		name = name,
 		width = '100%',
-		height = icon_size+2,
+		height = icon_size*1.1,
 		itemMargin    = {0,0,0,0},
 		itemPadding   = {0,0,0,0},	
 		padding = {0,0,0,0},
@@ -2087,25 +2167,27 @@ local function CreateHpBar(name)
 				x=icon_size,
 				right=0,
 				--width = '100%',
-				height = icon_size+2,
+				height = icon_size*1.1,
 				itemMargin    = {0,0,0,0},
 				itemPadding   = {0,0,0,0},	
 				padding = {0,0,0,0},
 				color = {0,1,0,1},
 				max=1,
 				caption = '',
+				font= { size=ttFontSize + 3},
 			},
 		},
+		
 	}
 	
 end
 
-local function CreateBpBar(name)
+CreateBpBar = function(name)
 	globalitems[name] = Panel:New {
 		orientation='horizontal',
 		name = name,
 		width = '100%',
-		height = icon_size+2,
+		height = icon_size*1.1,
 		itemMargin    = {0,0,0,0},
 		itemPadding   = {0,0,0,0},	
 		padding = {0,0,0,0},
@@ -2118,24 +2200,25 @@ local function CreateBpBar(name)
 				x=icon_size,
 				right=0,
 				--width = '100%',
-				height = icon_size+2,
+				height = icon_size*1.1,
 				itemMargin    = {0,0,0,0},
 				itemPadding   = {0,0,0,0},	
 				padding = {0,0,0,0},
 				color = {0.8,0.8,0.2,1};
 				max=1,
 				caption = '',
+				font= { size=ttFontSize + 3},
 			},
 		},
 	}
 end
 
-local function CreateShieldBar(name)
+CreateShieldBar = function(name)
 	globalitems[name] = Panel:New {
 		orientation='horizontal',
 		name = name,
 		width = '100%',
-		height = icon_size+2,
+		height = icon_size*1.1,
 		itemMargin    = {0,0,0,0},
 		itemPadding   = {0,0,0,0},	
 		padding = {0,0,0,0},
@@ -2148,13 +2231,14 @@ local function CreateShieldBar(name)
 				x=icon_size,
 				right=0,
 				--width = '100%',
-				height = icon_size+2,
+				height = icon_size*1.1,
 				itemMargin    = {0,0,0,0},
 				itemPadding   = {0,0,0,0},	
 				padding = {0,0,0,0},
 				color = {0.3,0,0.9,1};
 				max=1,
 				caption = '',
+				font= { size=ttFontSize + 3},
 			},
 		},
 	}
@@ -2187,12 +2271,12 @@ end
 
 local function miscObjectTooltip()
 	if WG.mouseoverMexIncome and WG.mouseoverMexIncome ~= 0 then
-		MakeToolTip_Text(WG.Translate("common", "mexspot") .. "\n" .. WG.Translate("common", "income") .. " +" .. strFormat("%.2f", WG.mouseoverMexIncome))
+		MakeToolTip_Text(WG.Translate("interface", "mexspot") .. "\n" .. WG.Translate("interface", "income") .. " +" .. strFormat("%.2f", WG.mouseoverMexIncome))
 		return true
 	end
 
 	if WG.mouseAboveGeo then
-		MakeToolTip_Text(WG.Translate("common", "geospot"))
+		MakeToolTip_Text(WG.Translate("interface", "geospot"))
 		return true
 	end
 end
@@ -2473,7 +2557,7 @@ function widget:Update(dt)
 
 				shieldbar:SetValue(shieldCurrentPower / shieldPower,true)
 				if shieldEnabled then
-					shieldbar:SetCaption(math.floor(shieldCurrentPower) .. ' / ' .. shieldPower .. regen)
+					shieldbar:SetCaption( numformat(math.floor(shieldCurrentPower)) .. ' / ' .. numformat(shieldPower) .. regen)
 				else
 					shieldbar:SetCaption('Shield offline')
 				end

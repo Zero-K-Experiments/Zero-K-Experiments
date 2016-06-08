@@ -121,10 +121,11 @@ unitDef = {
       craterMult              = 0,
 
       customParams        = {
-		light_camera_height = 1200,
-		light_radius = 160,
+        combatrange = 100,
+        light_camera_height = 1200,
+        light_radius = 160,
       },
-	  
+      
       damage                  = {
         default = 10,
         subs    = 0.5,
@@ -139,7 +140,7 @@ unitDef = {
       impulseFactor           = 0.4,
       interceptedByShieldType = 1,
       noSelfDamage            = true,
-      range                   = 100,
+      range                   = 300,
       reloadtime              = 0.2,
       rgbColor                = [[1 0 0]],
       soundHit                = [[weapon/laser/lasercannon_hit]],
@@ -163,6 +164,10 @@ unitDef = {
       craterBoost             = 0,
       craterMult              = 0,
       cylinderTargeting      = 1,
+      
+      customParams        = {
+        combatrange = 100,
+      },
 
       damage                  = {
         default = 2,
@@ -177,7 +182,7 @@ unitDef = {
       interceptedByShieldType = 1,
       laserFlareSize          = 3.25,
       minIntensity            = 1,
-      range                   = 100,	-- gadget modifies to 450
+      range                   = 450,
       reloadtime              = 0.4,
       rgbColor                = [[0 1 1]],
       soundStart              = [[weapon/laser/rapid_laser]],

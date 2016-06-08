@@ -82,7 +82,7 @@ local gridLocation = {}
 ------------------------
 ------------------------
 options_path = 'Settings/HUD Panels/Command Panel'
-options_order = { 'background_opacity', 'disablesmartselect', 'hidetabs', 'unitstabhotkey', 'unitshotkeyrequiremeta', 'unitshotkeyaltaswell', 
+options_order = { 'background_opacity', 'disablesmartselect', 'hidetabs', 'unitstabhotkey', 'unitshotkeyrequiremeta', 'unitshotkeyaltaswell',  'hotkeysWithTabClick',
 					'tab_factory', 'tab_economy', 'tab_defence', 'tab_special','old_menu_at_shutdown','hide_when_spectating'}
 options = {
 	background_opacity = {
@@ -122,6 +122,13 @@ options = {
 	unitshotkeyaltaswell = {
 		name = 'Units tab can use Alt as Meta',
 		type = 'bool',
+		value = false,
+		noHotkey = true,
+	},
+	hotkeysWithTabClick = {
+		name = 'Enable hotkeys on tab click',
+		type = 'bool',
+		desc = "Clicking on a tab button enables hotkeys for that tab.",
 		value = false,
 		noHotkey = true,
 	},
@@ -176,9 +183,7 @@ local spGetSpectatingState = Spring.GetSpectatingState
 
 local push        = table.insert
 
-local CMD_PAGES = 60
-
-local common_commands, states_commands, factory_commands, econ_commands, defense_commands, special_commands, globalCommands, overrides, custom_cmd_actions = include("Configs/integral_menu_commands.lua")
+local common_commands, states_commands, factory_commands, econ_commands, defense_commands, special_commands, globalCommands, overrides, custom_cmd_actions, widgetSpaceHidden = include("Configs/integral_menu_commands.lua")
 
 local function CapCase(str)
 	local str = str:lower()
@@ -639,7 +644,7 @@ end
 
 --sorts commands into categories
 local function ProcessCommand(cmd) 
-	if not cmd.hidden and cmd.id ~= CMD_PAGES then 
+	if not cmd.hidden and not widgetSpaceHidden[cmd.id] then 
 		-- state icons 
 		if (cmd.type == CMDTYPE.ICON_MODE and cmd.params ~= nil and #cmd.params > 1) then 
 			n_states[#n_states+1] = cmd 
@@ -803,10 +808,12 @@ end
 local function UpdateFactoryBuildQueue() 
 	buildQueue = spGetFullBuildQueue(selectedFac)
 	buildQueueUnsorted = {}
-	for i=1, #buildQueue do
-		for udid, count in pairs(buildQueue[i]) do
-			buildQueueUnsorted[udid] = (buildQueueUnsorted[udid] or 0) + count
-			--Spring.Echo(udid .. "\t" .. buildQueueUnsorted[udid])
+	if buildQueue then
+		for i=1, #buildQueue do
+			for udid, count in pairs(buildQueue[i]) do
+				buildQueueUnsorted[udid] = (buildQueueUnsorted[udid] or 0) + count
+				--Spring.Echo(udid .. "\t" .. buildQueueUnsorted[udid])
+			end
 		end
 	end
 end
@@ -1072,8 +1079,11 @@ local function MakeMenuTab(i, alpha)
 		caption = hotkeyMode and menuChoices[i].name or menuChoices[i].hotkeyName,
 		OnClick = {
 			function()
+				hotkeyMode = options.hotkeysWithTabClick.value
 				menuChoice = i
-				if i >= 2 and i <= 5 then lastBuildChoice = i end
+				if i >= 2 and i <= 5 then 
+					lastBuildChoice = i 
+				end
 				Update(true)
 				ColorTabs(i)
 			end

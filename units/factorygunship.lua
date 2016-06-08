@@ -12,7 +12,7 @@ unitDef = {
   buildingGroundDecalType       = [[factorygunship_aoplane.dds]],
 
   buildoptions                  = {
-    [[armca]],
+    [[gunshipcon]],
     [[blastwing]],
     [[bladew]],
     [[armkam]],

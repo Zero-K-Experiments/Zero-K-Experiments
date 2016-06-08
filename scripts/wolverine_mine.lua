@@ -31,16 +31,22 @@ local function Remove ()
 		end
 	end
 
+	local x, _, z = Spring.GetUnitPosition(unitID)
+	
 	-- keep alive for a while (xp, stats etc)
 	Spring.SetUnitNoSelect(unitID, true)
 	Spring.SetUnitNoDraw(unitID, true)
 	Spring.SetUnitNoMinimap(unitID, true)
-	Spring.SetUnitHealth(unitID, {paralyze=99999999})
+	Spring.SetUnitHealth(unitID, {paralyze = 99999999})
 	Spring.SetUnitCloak(unitID, 4)
 	Spring.SetUnitStealth(unitID, true)	
 	Spring.SetUnitBlocking(unitID,false,false,false)
 	Spring.GiveOrderToUnit(unitID, CMD.STOP, {}, 0)
-	Spring.SetUnitPosition(unitID,-9001, -9001)
+	Spring.SetUnitSensorRadius(unitID, "los", 0)
+	Spring.SetUnitSensorRadius(unitID, "airLos", 0)
+	Spring.MoveCtrl.Enable(unitID, true)
+	Spring.MoveCtrl.SetNoBlocking(unitID, true)
+	Spring.MoveCtrl.SetPosition(unitID, x, Spring.GetGroundHeight(x, z) - 1000, z)
 
 	Sleep(5000)
 	Spring.DestroyUnit(unitID, false, true)

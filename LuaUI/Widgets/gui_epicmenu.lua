@@ -558,6 +558,9 @@ local function KillSubWindow(makingNew)
 	if window_sub_cur then
 		settings.sub_pos_x = window_sub_cur.x
 		settings.sub_pos_y = window_sub_cur.y
+		
+		settings.subwindow_height = window_sub_cur.height
+		
 		window_sub_cur:Dispose()
 		window_sub_cur = nil
 		curPath = ''
@@ -865,7 +868,9 @@ local function CreateOptionAction(path, option)
 		end
 	end
 	local actionName = GetActionName(path, option)
-	AddAction(actionName, kbfunc, nil, "t")
+	if (not option.dontRegisterAction) then
+		AddAction(actionName, kbfunc, nil, "t")
+	end
 	actionToOption[actionName] = option
 	
 	if option.hotkey then
@@ -1111,7 +1116,6 @@ local function AddOption(path, option, wname ) --Note: this is used when loading
 	
 	--Keybindings
 	if (option.type == 'button' and not option.isDirectoryButton) or option.type == 'bool' then
-		if (not option.dontRegisterAction) then
 		local actionName = GetActionName(path, option)
 		
 		--migrate from old logic, make sure this is done before setting orig_key
@@ -1126,7 +1130,6 @@ local function AddOption(path, option, wname ) --Note: this is used when loading
 		end
 		
 		CreateOptionAction(path, option)
-		end
 	--Keybinds for radiobuttons
 	elseif option.type == 'radioButton' then --if its a list of checkboxes:
 		for i=1, #option.items do --prepare keybinds for each of radioButton's checkbox
@@ -1712,11 +1715,13 @@ MakeSubWindow = function(path, pause)
 				local escapeSearch = searchedElement and option.desc and option.desc:find(currentPath) and option.isDirectoryButton --this type of button will open sub-level when pressed (defined in "AddOption(path, option, wname )")
 				local disabled = option.DisableFunc and option.DisableFunc()
 				local icon = option.icon
+				local button_height = root and 36 or 30
 				local button = Button:New{
 					name = option.wname .. " " .. option.name;
 					x=0,
-					minHeight = root and 36 or 30,
-					caption = option.name, 
+					minHeight = button_height,
+					--caption = option.name, 
+					caption = '', 
 					OnClick = escapeSearch and {function() filterUserInsertedTerm = ''; end,option.OnChange} or {option.OnChange},
 					backgroundColor = disabled and color.disabled_bg or {1, 1, 1, 1},
 					textColor = disabled and color.disabled_fg or color.sub_button_fg, 
@@ -1729,7 +1734,10 @@ MakeSubWindow = function(path, pause)
 					local width = root and 24 or 16
 					Image:New{ file= icon, width = width, height = width, parent = button, x=4,y=4,  }
 				end
-				tree_children[#tree_children+1] = MakeHotkeyedControl(button, path, option,nil,option.isDirectoryButton )
+				
+				Label:New{ parent = button, x=35,y=button_height*0.2,  caption=option.name}
+				
+				tree_children[#tree_children+1] = MakeHotkeyedControl(button, path, option,nil,option.isDirectoryButton or option.noHotkey)
 			end
 			
 		elseif option.type == 'label' then	
@@ -1972,7 +1980,8 @@ MakeSubWindow = function(path, pause)
 		x = settings.sub_pos_x,  
 		y = settings.sub_pos_y, 
 		clientWidth = window_width,
-		clientHeight = window_height+B_HEIGHT*4,
+		--clientHeight = window_height+B_HEIGHT*4,
+		height = settings.subwindow_height,
 		minWidth = 250,
 		minHeight = 350,		
 		--resizable = false,
@@ -2327,10 +2336,14 @@ local function MakeQuitButtons()
 		value = 'Quit game',
 		key='Quit game',
 	})
+	
+	local imgPath = LUAUI_DIRNAME  .. 'images/'
+
 	AddOption('',{
 		type='button',
 		name='Vote Resign',
 		desc = "Ask teammates to resign",
+		icon = imgPath..'epicmenu/whiteflag_check.png',
 		OnChange = function()
 				if not (Spring.GetSpectatingState() or PlayingButNoTeammate() or isMission) then
 					spSendCommands("say !voteresign")
@@ -2346,6 +2359,7 @@ local function MakeQuitButtons()
 		type='button',
 		name='Resign...',
 		desc = "Abandon team and become spectator",
+		icon = imgPath..'epicmenu/whiteflag.png',
 		OnChange = function()
 				if not (isMission or Spring.GetSpectatingState()) then
 					MakeExitConfirmWindow("Are you sure you want to resign?", function() 
@@ -2366,6 +2380,7 @@ local function MakeQuitButtons()
 		type='button',
 		name='Exit to Desktop...',
 		desc = "Exit game completely",
+		icon = imgPath..'epicmenu/exit.png',
 		OnChange = function() 
 			MakeExitConfirmWindow("Are you sure you want to quit the game?", function()
 				local paused = select(3, Spring.GetGameSpeed())
@@ -2435,9 +2450,12 @@ function widget:Initialize()
 	
 	-- Set default positions of windows on first run
 	local screenWidth, screenHeight = Spring.GetWindowGeometry()
+	if not settings.subwindow_height then
+		settings.subwindow_height = 550
+	end
 	if not settings.sub_pos_x then
 		settings.sub_pos_x = screenWidth/2 - 150
-		settings.sub_pos_y = screenHeight/2 - 200
+		settings.sub_pos_y = screenHeight/2 - settings.subwindow_height * 0.55
 	end
 	
 	if not keybounditems then
