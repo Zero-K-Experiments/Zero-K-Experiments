@@ -93,7 +93,8 @@ local checkCoord = {
 
 local invRoot2 = 1/sqrt(2)
 
-local terraUnitHP = 1000000 --hp of terraunit, must be the same as on unitdef
+local terraunitDefID = UnitDefNames["terraunit"].id
+local terraUnitHP = UnitDefs[terraunitDefID].health
 
 --------------------------------------------------------------------------------
 -- Configuration
@@ -201,8 +202,6 @@ local checkInterval 		= 0
 local unitOrderList 		= {count = 0, data = {}} 
 -- workaround: if order is given on the same frame as terraunit creation the order temporarilly
 -- points to the ground location
-
-local terraunitDefID = UnitDefNames["terraunit"].id
 
 local corclogDefID = UnitDefNames["corclog"].id
 --local novheavymineDefID = UnitDefNames["novheavymine"].id
