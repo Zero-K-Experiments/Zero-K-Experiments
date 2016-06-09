@@ -6,7 +6,6 @@ unitDef = {
   activateWhenBuilt      = true,
   amphibious             = [[1]],
   brakeRate              = 0.375,
-  buildCostEnergy        = 1200,
   buildCostMetal         = 1200,
   buildDistance          = 120,
   builder                = true,
@@ -15,7 +14,6 @@ unitDef = {
   },
 
   buildPic               = [[commstrike.png]],
-  buildTime              = 1200,
   canAttack              = true,
   canGuard               = true,
   canMove                = true,
@@ -50,7 +48,6 @@ unitDef = {
   idleTime               = 0,
   leaveTracks            = true,
   losEmitHeight          = 40,
-  mass                   = 411,
   maxDamage              = 2500,
   maxSlope               = 36,
   maxVelocity            = 1.35,
@@ -61,7 +58,6 @@ unitDef = {
   norestrict             = [[1]],
   objectName             = [[strikecom.dae]],
   script                 = [[commstrike.lua]],
-  seismicSignature       = 16,
   selfDestructAs         = [[ESTOR_BUILDINGEX]],
 
   sfxtypes               = {
@@ -73,15 +69,12 @@ unitDef = {
 
   },
 
-  showNanoSpray          = false,
   sightDistance          = 500,
-  sonarDistance          = 300,
   trackOffset            = 0,
   trackStrength          = 8,
   trackStretch           = 1,
   trackType              = [[ComTrack]],
   trackWidth             = 26,
-  terraformSpeed         = 600,
   turnRate               = 1148,
   upright                = true,
   workerTime             = 10,
@@ -190,30 +183,16 @@ unitDef = {
   featureDefs            = {
 
     DEAD      = {
-      description      = [[Wreckage - Strike Commander]],
-      blocking         = true,
-      damage           = 2500,
-      energy           = 0,
       featureDead      = [[HEAP]],
       footprintX       = 3,
       footprintZ       = 3,
-      metal            = 480,
       object           = [[strikecom_dead_1.dae]],
-      reclaimable      = true,
-      reclaimTime      = 480,
     },
 
     HEAP      = {
-      description      = [[Debris - Strike Commander]],
-      blocking         = false,
-      damage           = 2500,
-      energy           = 0,
       footprintX       = 2,
       footprintZ       = 2,
-      metal            = 240,
       object           = [[debris2x2c.s3o]],
-      reclaimable      = true,
-      reclaimTime      = 240,
     },
 
 
