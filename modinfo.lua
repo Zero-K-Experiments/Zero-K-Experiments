@@ -1,6 +1,6 @@
 return {
-  name='Zero-K Experiments',
-  description='Zero-K Experiments',
+  name='Zero-K-Experiments',
+  description='Zero-K-Experiments',
   shortname='ZKE',
   version='$VERSION',
   mutator='1',
