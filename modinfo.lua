@@ -1,7 +1,7 @@
 return {
-  name='Zero-K',
-  description='Zero-K',
-  shortname='ZK',
+  name='Zero-K Experiments',
+  description='Zero-K Experiments',
+  shortname='ZKE',
   version='$VERSION',
   mutator='1',
   game='',
