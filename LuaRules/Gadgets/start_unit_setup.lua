@@ -11,50 +11,8 @@ function gadget:GetInfo()
 end
 
 -- partially based on Spring's unit spawn gadget
-include "LuaRules/Configs/start_setup.lua"
-
-if VFS.FileExists("mission.lua") then -- this is a mission, we just want to set starting storage (and enable facplopping)
-	if not gadgetHandler:IsSyncedCode() then
-		return false -- no unsynced code
-	end
-
-	local ploppableDefs = {}
-
-	function gadget:Initialize()
-		for _, teamID in ipairs(Spring.GetTeamList()) do
-			Spring.SetTeamResource(teamID, "es", START_STORAGE + OVERDRIVE_BUFFER)
-			Spring.SetTeamResource(teamID, "ms", START_STORAGE + OVERDRIVE_BUFFER)
-		end
-		for i, v in pairs(ploppables) do
-			local name = UnitDefNames[v]
-			if name then
-				local ud = name.id
-				if ud then
-					ploppableDefs[ud] = true
-				end
-			end
-		end
-	end
-
-	function GG.SetStartLocation() 
-	end
-
-	function GG.GiveFacplop (unitID) -- deprecated, use rulesparam directly 
-		Spring.SetUnitRulesParam(unitID, "facplop", 1, {inlos = true})
-	end
-
-	function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
-		if ploppableDefs[unitDefID] and builderID and (Spring.GetUnitRulesParam(builderID, "facplop") == 1) then
-			Spring.SetUnitRulesParam(builderID,"facplop",0, {inlos = true})
-			local maxHealth = select(2,Spring.GetUnitHealth(unitID))
-			Spring.SetUnitHealth(unitID, {health = maxHealth, build = 1})
-			local x,y,z = Spring.GetUnitPosition(unitID)
-			Spring.SpawnCEG("gate", x, y, z)
-		end
-	end
-
-	return
-end
+include("LuaRules/Configs/start_setup.lua")
+include("LuaRules/Configs/constants.lua")
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -65,7 +23,7 @@ local spGetPlayerList		= Spring.GetPlayerList
 
 local modOptions = Spring.GetModOptions()
 
-local coop = false
+local coop = true
 local playerChickens = Spring.Utilities.tobool(Spring.GetModOption("playerchickens", false, false))
 
 local gaiateam = Spring.GetGaiaTeamID()
@@ -77,11 +35,58 @@ local SAVE_FILE = "Gadgets/start_unit_setup.lua"
 --------------------------------------------------------------------------------
 
 if (gadgetHandler:IsSyncedCode()) then
-  
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
 
-local ploppableDefs = {}
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-- Functions shared between missions and non-missions
+
+local function CheckFacplopUse(unitID, unitDefID, teamID, builderID)
+	if ploppableDefs[unitDefID] and (select(5, Spring.GetUnitHealth(unitID)) < 0.1) and (builderID and Spring.GetUnitRulesParam(builderID, "facplop") == 1) then
+		-- (select(5, Spring.GetUnitHealth(unitID)) < 0.1) to prevent ressurect from spending facplop.
+		Spring.SetUnitRulesParam(builderID,"facplop",0, {inlos = true})
+		local maxHealth = select(2,Spring.GetUnitHealth(unitID))
+		Spring.SetUnitHealth(unitID, {health = maxHealth, build = 1 })
+		local x,y,z = Spring.GetUnitPosition(unitID)
+		Spring.SpawnCEG("gate", x, y, z)
+		if GG.mod_stats_AddFactoryPlop then
+			GG.mod_stats_AddFactoryPlop(teamID, unitDefID)
+		end
+		-- Spring.PlaySoundFile("sounds/misc/teleport2.wav", 10, x, y, z) -- performance loss
+	end
+end
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-- Mission Handling
+
+if VFS.FileExists("mission.lua") then -- this is a mission, we just want to set starting storage (and enable facplopping)
+	if not gadgetHandler:IsSyncedCode() then
+		return false -- no unsynced code
+	end
+
+	function gadget:Initialize()
+		for _, teamID in ipairs(Spring.GetTeamList()) do
+			Spring.SetTeamResource(teamID, "es", START_STORAGE + HIDDEN_STORAGE)
+			Spring.SetTeamResource(teamID, "ms", START_STORAGE + HIDDEN_STORAGE)
+		end
+	end
+
+	function GG.SetStartLocation() 
+	end
+
+	function GG.GiveFacplop (unitID) -- deprecated, use rulesparam directly 
+		Spring.SetUnitRulesParam(unitID, "facplop", 1, {inlos = true})
+	end
+
+	function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
+		CheckFacplopUse(unitID, unitDefID, teamID, builderID)
+	end
+
+	return
+end
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local gamestart = false
 --local createBeforeGameStart = {}	-- no longer used
@@ -119,17 +124,7 @@ local loadGame = false	-- was this loaded from a savegame?
 --------------------------------------------------------------------------------
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
-	if ploppableDefs[unitDefID] and (select(5, Spring.GetUnitHealth(unitID)) < 0.1) and (builderID and Spring.GetUnitRulesParam(builderID, "facplop") == 1) then
-		Spring.SetUnitRulesParam(builderID,"facplop",0, {inlos = true})
-		local maxHealth = select(2,Spring.GetUnitHealth(unitID))
-		Spring.SetUnitHealth(unitID, {health = maxHealth, build = 1 })
-		local x,y,z = Spring.GetUnitPosition(unitID)
-		Spring.SpawnCEG("gate", x, y, z)
-		if GG.mod_stats_AddFactoryPlop then
-			GG.mod_stats_AddFactoryPlop(teamID, unitDefID)
-		end
-		-- Spring.PlaySoundFile("sounds/misc/teleport2.wav", 10, x, y, z) -- performance loss
-	end
+	CheckFacplopUse(unitID, unitDefID, teamID, builderID)
 end
 
 local function InitUnsafe()
@@ -138,17 +133,6 @@ end
 
 
 function gadget:Initialize()
--- self linking
-	for i, v in pairs(ploppables) do
-		local name = UnitDefNames[v]
-		if name then
-			local ud = name.id
-			if ud then
-				ploppableDefs[ud] = true
-			end
-		end
-	end
-
 	-- needed if you reload luarules
 	local frame = Spring.GetGameFrame()
 	if frame and frame > 0 then
@@ -307,13 +291,8 @@ local function SpawnStartUnit(teamID, playerID, isAI, bonusSpawn, notAtTheStartO
 		local metal, metalStore = Spring.GetTeamResources(teamID, "metal")
 		local energy, energyStore = Spring.GetTeamResources(teamID, "energy")
 
-		-- the adding of existing resources is necessary for handling /take and spawn
-		local bonus = (keys and tonumber(keys.bonusresources)) or 0
-
-		Spring.SetTeamResource(teamID, "es", START_STORAGE + energyStore  + bonus)
-		Spring.SetTeamResource(teamID, "ms", START_STORAGE + metalStore + bonus)
-		Spring.SetTeamResource(teamID, "energy", START_ENERGY + energy + bonus)
-		Spring.SetTeamResource(teamID, "metal", START_METAL + metal + bonus)
+		Spring.SetTeamResource(teamID, "energy", START_ENERGY + energy)
+		Spring.SetTeamResource(teamID, "metal", START_METAL + metal)
 
 		if (udef.customParams.level and udef.name ~= "chickenbroodqueen") then
 			Spring.SetUnitRulesParam(unitID, "facplop", 1, {inlos = true})
@@ -423,8 +402,8 @@ function gadget:GameStart()
 		-- clear resources
 		-- actual resources are set depending on spawned unit and setup
 		if not loadGame then
-			Spring.SetTeamResource(team, "es", 0 + OVERDRIVE_BUFFER)
-			Spring.SetTeamResource(team, "ms", 0 + OVERDRIVE_BUFFER)
+			Spring.SetTeamResource(team, "es", 0 + HIDDEN_STORAGE)
+			Spring.SetTeamResource(team, "ms", 0 + HIDDEN_STORAGE)
 			Spring.SetTeamResource(team, "energy", 0)
 			Spring.SetTeamResource(team, "metal", 0)
 		end

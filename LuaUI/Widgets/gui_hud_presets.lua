@@ -25,8 +25,8 @@ local consoleName, consolePath = "Chili Pro Console", "Settings/HUD Panels/Chat"
 local selName, selPath = "Chili Selections & CursorTip", "Settings/HUD Panels/Selected Units Panel"
 local globalName, globalPath = "Chili Global Commands", "Settings/HUD Panels/Global Commands"
 local econName, econPath = "Chili Economy Panel Default", "Settings/HUD Panels/Economy Panel"
-local specName, specPath = "Chili Spectator Panels", "Settings/HUD Panels/Extras/Spectating"
-local dockName, dockPath = "Chili Docking", "Settings/HUD Panels/Docking"
+local specName, specPath = "Chili Spectator Panels", "Settings/HUD Panels/Spectator Panels"
+local dockName, dockPath = "Chili Docking", "Settings/HUD Panels/Extras/Docking"
 
 local function Selections_SetOptions(group, showInfo, square, iconSize, showCommand, showDgun, alwaysShow)
 	local selName, selPath = "Chili Selections & CursorTip", "Settings/HUD Panels/Selected Units Panel"
@@ -52,10 +52,10 @@ local SKIN_FLUSH = {
 }
 
 local function SetFancySkin()
-	WG.SetWidgetOption(coreName, corePath, "fancySkinning", "panel_1100")
+	WG.SetWidgetOption(coreName, corePath, "fancySkinning", "panel_1100_small")
 	WG.SetWidgetOption(integralName, integralPath, "fancySkinning", true)
 	WG.SetWidgetOption(integralName, integralPath, "flushLeft", false)
-	WG.SetWidgetOption(minimapName, minimapPath, "fancySkinning", "panel_1100")
+	WG.SetWidgetOption(minimapName, minimapPath, "fancySkinning", "panel_1100_large")
 	WG.SetWidgetOption(selName, selPath, "fancySkinning", "panel_0120")
 	WG.SetWidgetOption(globalName, globalPath, "fancySkinning", fancySkinOverride.global or "panel_1001_small")
 	WG.SetWidgetOption(econName, econPath, "fancySkinning", fancySkinOverride.econ or "panel_2021")
@@ -68,7 +68,7 @@ local function SetFancySkinBottomLeft()
 	WG.SetWidgetOption(coreName, corePath, "fancySkinning", "panel_0110")
 	WG.SetWidgetOption(integralName, integralPath, "fancySkinning", true)
 	WG.SetWidgetOption(integralName, integralPath, "flushLeft", true)
-	WG.SetWidgetOption(minimapName, minimapPath, "fancySkinning", "panel_1100")
+	WG.SetWidgetOption(minimapName, minimapPath, "fancySkinning", "panel_1100_large")
 	WG.SetWidgetOption(selName, selPath, "fancySkinning", "panel_2100")
 	WG.SetWidgetOption(globalName, globalPath, "fancySkinning", fancySkinOverride.global or "panel_1001_small")
 	WG.SetWidgetOption(econName, econPath, "fancySkinning", fancySkinOverride.econ or "panel_2011")
@@ -78,10 +78,10 @@ local function SetFancySkinBottomLeft()
 end
 
 local function SetFancySkinBottomRight()
-	WG.SetWidgetOption(coreName, corePath, "fancySkinning", "panel_1100")
+	WG.SetWidgetOption(coreName, corePath, "fancySkinning", "panel_1100_small")
 	WG.SetWidgetOption(integralName, integralPath, "fancySkinning", true)
 	WG.SetWidgetOption(integralName, integralPath, "flushLeft", false)
-	WG.SetWidgetOption(minimapName, minimapPath, "fancySkinning", "panel_0110")
+	WG.SetWidgetOption(minimapName, minimapPath, "fancySkinning", "panel_0110_large")
 	WG.SetWidgetOption(selName, selPath, "fancySkinning", "panel_0120")
 	WG.SetWidgetOption(globalName, globalPath, "fancySkinning", fancySkinOverride.global or "panel_1001_small")
 	WG.SetWidgetOption(econName, econPath, "fancySkinning", fancySkinOverride.econ or "panel_2011")
@@ -91,7 +91,7 @@ local function SetFancySkinBottomRight()
 end
 
 local function SetNewOptions()
-	WG.SetWidgetOption(coreName, corePath, "background_opacity", 0.8)
+	WG.SetWidgetOption(coreName, corePath, "background_opacity", 1)
 	WG.SetWidgetOption(coreName, corePath, "buttonSpacing", 0.75)
 	WG.SetWidgetOption(coreName, corePath, "horPaddingLeft", 5)
 	WG.SetWidgetOption(coreName, corePath, "horPaddingRight", 6)
@@ -102,6 +102,7 @@ local function SetNewOptions()
 	WG.SetWidgetOption(coreName, corePath, "vertPadding", 6.25)
 	WG.SetWidgetOption(coreName, corePath, "vertical", true)
 	
+	WG.SetWidgetOption(integralName, integralPath, "background_opacity", 1)
 	WG.SetWidgetOption(integralName, integralPath, "hide_when_spectating", false)
 	WG.SetWidgetOption(integralName, integralPath, "leftPadding", 8)
 	WG.SetWidgetOption(integralName, integralPath, "rightPadding", 10)
@@ -116,6 +117,7 @@ local function SetNewOptions()
 	WG.SetWidgetOption(consoleName, consolePath, "backlogHideNotChat", true)
 	WG.SetWidgetOption(consoleName, consolePath, "backlogShowWithChatEntry", true)
 	
+	WG.SetWidgetOption(selName, selPath, "selection_opacity", 1)
 	WG.SetWidgetOption(selName, selPath, "leftPadding", 7)
 	
 	WG.SetWidgetOption(econName, econPath, "opacity", 0.95)
@@ -267,9 +269,6 @@ local function SetupDefaultPreset()
 	-- Disable
 	widgetHandler:DisableWidget("Chili Chat 2.2")
 	widgetHandler:DisableWidget("Chili Deluxe Player List - Alpha 2.02")
-	widgetHandler:DisableWidget("Chili FactoryBar")
-	widgetHandler:DisableWidget("Chili FactoryPanel")
-	widgetHandler:DisableWidget("Chili Gesture Menu")
 	widgetHandler:DisableWidget("Chili Chat Bubbles")
 	widgetHandler:DisableWidget("Chili Keyboard Menu")
 	widgetHandler:DisableWidget("Chili Radial Build Menu")
@@ -405,7 +404,6 @@ end
 local function SetupNewPreset()
 	-- Disable
 	widgetHandler:DisableWidget("Chili Chat 2.2")
-	widgetHandler:DisableWidget("Chili Gesture Menu")
 	widgetHandler:DisableWidget("Chili Chat Bubbles")
 	widgetHandler:DisableWidget("Chili Keyboard Menu")
 	widgetHandler:DisableWidget("Chili Radial Build Menu")
@@ -438,12 +436,12 @@ local function SetupNewPreset()
 	-- Bottom of the UI
 	
 	-- Minimap
-	local minimapSize = math.floor(screenWidth*2.1/11)
-	if minimapSize < 1650*2.1/11 then
+	local minimapSize = math.floor(screenWidth*options.minimapScreenSpace.value)
+	if minimapSize < 1650*options.minimapScreenSpace.value then
 		if screenWidth > 1340 then
-			minimapSize = 1650*2.1/11
+			minimapSize = 1650*options.minimapScreenSpace.value
 		else
-			minimapSize = screenWidth*2.1/11
+			minimapSize = screenWidth*options.minimapScreenSpace.value
 		end
 	end
 	WG.SetWindowPosAndSize("Minimap Window", 
@@ -613,12 +611,16 @@ end
 local function SetupNewUITop()
 	local screenWidth, screenHeight = Spring.GetWindowGeometry()
 	
-	local sideHeight = 32
+	local sideHeight = 38
 	local flushTop = (screenWidth <= 1650)
 	
 	-- Resource Bar
 	local resourceBarWidth = math.max(580, math.min(screenWidth - 700, 660))
-	local resourceBarHeight = 100
+	local resourceBarHeight = 110
+	
+	-- Chicken
+	local chickenWidth = 189
+	local chickenHeight = 270
 	
 	-- Menu
 	local menuWidth, globalWidth
@@ -627,12 +629,12 @@ local function SetupNewUITop()
 		globalWidth = screenWidth - resourceBarWidth - menuWidth
 	else
 		menuWidth = math.floor((screenWidth - resourceBarWidth)/2)
-		if menuWidth > 440 then
-			menuWidth = 440
-		elseif menuWidth > 380 then
-			menuWidth = 380
+		if menuWidth > 445 then
+			menuWidth = 445
+		elseif menuWidth > 377 then
+			menuWidth = 377
 		else
-			menuWidth = 350
+			menuWidth = 347
 		end
 		globalWidth = menuWidth
 	end
@@ -651,14 +653,22 @@ local function SetupNewUITop()
 		resourceBarX,
 		0,
 		resourceBarWidth,
-		50
+		55
 	)
 	
+	-- Right Side
 	WG.SetWindowPosAndSize("epicmenubar",
-		screenWidth - menuWidth - 1,
+		screenWidth - menuWidth - 3,
 		0,
-		menuWidth,
+		menuWidth + 3,
 		sideHeight
+	)
+	
+	WG.SetWindowPosAndSize("chickenpanel",
+		screenWidth - chickenWidth - 1,
+		resourceBarHeight,
+		chickenWidth,
+		chickenHeight
 	)
 	
 	-- Left Side
@@ -672,7 +682,7 @@ local function SetupNewUITop()
 	WG.SetWindowPosAndSize("globalCommandsWindow",
 		0,
 		0,
-		globalWidth,
+		globalWidth + 3,
 		sideHeight
 	)
 	
@@ -690,7 +700,6 @@ end
 local function SetupMinimapLeftPreset()
 	-- Disable
 	widgetHandler:DisableWidget("Chili Chat 2.2")
-	widgetHandler:DisableWidget("Chili Gesture Menu")
 	widgetHandler:DisableWidget("Chili Chat Bubbles")
 	widgetHandler:DisableWidget("Chili Keyboard Menu")
 	widgetHandler:DisableWidget("Chili Radial Build Menu")
@@ -747,13 +756,13 @@ local function SetupMinimapLeftPreset()
 	integralWidth = math.floor(integralWidth)
 	
 	-- Core Selector
-	local coreSelectorHeight = screenHeight/2
-	local coreSelectorWidth = math.ceil(integralHeight/3)
+	local coreSelectorHeight = math.floor(screenHeight/2)
+	local coreSelectorWidth = math.ceil(integralHeight/3) + 3
 	
-	local hPad = math.ceil(screenWidth/300)
-	WG.SetWidgetOption(coreName, corePath, "horPaddingLeft", hPad + 3)
-	WG.SetWidgetOption(coreName, corePath, "horPaddingRight", hPad - 2)
-	WG.SetWidgetOption(coreName, corePath, "vertPadding", math.floor(1.5*hPad))
+	local hPad = math.ceil(screenWidth/300) + 2
+	WG.SetWidgetOption(coreName, corePath, "horPaddingLeft", hPad + 5)
+	WG.SetWidgetOption(coreName, corePath, "horPaddingRight", hPad - 5)
+	WG.SetWidgetOption(coreName, corePath, "vertPadding", math.floor(hPad))
 	WG.SetWidgetOption(coreName, corePath, "buttonSpacing", math.floor(hPad/2))
 	WG.SetWidgetOption(coreName, corePath, "buttonSizeLong", coreSelectorWidth - 2*hPad - 1)
 	
@@ -764,11 +773,16 @@ local function SetupMinimapLeftPreset()
 	
 	local minimapWidth, minimapHeight
 	if mapRatio > 1 then
-		minimapWidth = math.floor(screenWidth*2.1/11)
+		minimapWidth = math.floor(screenWidth*options.minimapScreenSpace.value)
 		minimapHeight = (minimapWidth/mapRatio)
 	else
-		minimapHeight = math.floor(screenWidth*2.1/11)
+		minimapHeight = math.floor(screenWidth*options.minimapScreenSpace.value)
 		minimapWidth = math.floor(minimapHeight*mapRatio)
+	end
+	
+	minimapWidth = minimapWidth + 4 -- padding differences
+	if minimapWidth < 160 then
+		minimapWidth = 160
 	end
 	
 	if minimapHeight < coreMinHeight then
@@ -824,15 +838,15 @@ local function SetupMinimapLeftPreset()
 		minimapHeight
 	)
 	WG.SetWindowPosAndSize("selections",
-		minimapWidth,
+		minimapWidth - 3,
 		screenHeight - selectionsHeight,
-		selectionsWidth,
+		selectionsWidth + 3,
 		selectionsHeight
 	)
 	WG.SetWindowPosAndSize("integralwindow",
 		minimapWidth + selectionsWidth,
 		screenHeight - integralHeight,
-		integralWidth,
+		integralWidth + 3,
 		integralHeight
 	)
 	WG.SetWindowPosAndSize("selector_window", 
@@ -870,7 +884,6 @@ end
 local function SetupMinimapRightPreset()
 	-- Disable
 	widgetHandler:DisableWidget("Chili Chat 2.2")
-	widgetHandler:DisableWidget("Chili Gesture Menu")
 	widgetHandler:DisableWidget("Chili Chat Bubbles")
 	widgetHandler:DisableWidget("Chili Keyboard Menu")
 	widgetHandler:DisableWidget("Chili Radial Build Menu")
@@ -927,13 +940,13 @@ local function SetupMinimapRightPreset()
 	integralWidth = math.floor(integralWidth)
 	
 	-- Core Selector
-	local coreSelectorHeight = screenHeight/2
-	local coreSelectorWidth = math.ceil(integralHeight/3)
+	local coreSelectorHeight = math.floor(screenHeight/2)
+	local coreSelectorWidth = math.ceil(integralHeight/3) + 3
 	
-	local hPad = math.ceil(screenWidth/300)
-	WG.SetWidgetOption(coreName, corePath, "horPaddingLeft", hPad - 2)
-	WG.SetWidgetOption(coreName, corePath, "horPaddingRight", hPad + 3)
-	WG.SetWidgetOption(coreName, corePath, "vertPadding", math.floor(1.5*hPad))
+	local hPad = math.ceil(screenWidth/300) + 2
+	WG.SetWidgetOption(coreName, corePath, "horPaddingLeft", hPad - 5)
+	WG.SetWidgetOption(coreName, corePath, "horPaddingRight", hPad + 5)
+	WG.SetWidgetOption(coreName, corePath, "vertPadding", math.floor(hPad))
 	WG.SetWidgetOption(coreName, corePath, "buttonSpacing", math.floor(hPad/2))
 	WG.SetWidgetOption(coreName, corePath, "buttonSizeLong", coreSelectorWidth - 2*hPad - 1)
 	
@@ -944,11 +957,16 @@ local function SetupMinimapRightPreset()
 	
 	local minimapWidth, minimapHeight
 	if mapRatio > 1 then
-		minimapWidth = math.floor(screenWidth*2.1/11)
+		minimapWidth = math.floor(screenWidth*options.minimapScreenSpace.value)
 		minimapHeight = (minimapWidth/mapRatio)
 	else
-		minimapHeight = math.floor(screenWidth*2.1/11)
+		minimapHeight = math.floor(screenWidth*options.minimapScreenSpace.value)
 		minimapWidth = math.floor(minimapHeight*mapRatio)
+	end
+	
+	minimapWidth = minimapWidth + 4 -- padding differences
+	if minimapWidth < 160 then
+		minimapWidth = 160
 	end
 	
 	if minimapHeight < coreMinHeight then
@@ -1006,13 +1024,13 @@ local function SetupMinimapRightPreset()
 	WG.SetWindowPosAndSize("selections",
 		coreSelectorWidth + integralWidth,
 		screenHeight - selectionsHeight,
-		selectionsWidth,
+		selectionsWidth + 3,
 		selectionsHeight
 	)
 	WG.SetWindowPosAndSize("integralwindow",
-		coreSelectorWidth,
+		coreSelectorWidth - 3,
 		screenHeight - integralHeight,
-		integralWidth,
+		integralWidth + 3,
 		integralHeight
 	)
 	WG.SetWindowPosAndSize("selector_window", 
@@ -1051,9 +1069,6 @@ local function SetupCraftyPreset()
 	-- Disable
 	widgetHandler:DisableWidget("Chili Chat 2.2")
 	widgetHandler:DisableWidget("Chili Deluxe Player List - Alpha 2.02")
-	widgetHandler:DisableWidget("Chili FactoryBar")
-	widgetHandler:DisableWidget("Chili FactoryPanel")
-	widgetHandler:DisableWidget("Chili Gesture Menu")
 	widgetHandler:DisableWidget("Chili Chat Bubbles")
 	widgetHandler:DisableWidget("Chili Keyboard Menu")
 	widgetHandler:DisableWidget("Chili Radial Build Menu")
@@ -1183,9 +1198,6 @@ local function SetupEnsemblePreset()
 	-- Disable
 	widgetHandler:DisableWidget("Chili Chat 2.2")
 	widgetHandler:DisableWidget("Chili Deluxe Player List - Alpha 2.02")
-	widgetHandler:DisableWidget("Chili FactoryBar")
-	widgetHandler:DisableWidget("Chili FactoryPanel")
-	widgetHandler:DisableWidget("Chili Gesture Menu")
 	widgetHandler:DisableWidget("Chili Chat Bubbles")
 	widgetHandler:DisableWidget("Chili Keyboard Menu")
 	widgetHandler:DisableWidget("Chili Radial Build Menu")
@@ -1314,9 +1326,6 @@ local function SetupWestwoodPreset()
 	-- Disable
 	widgetHandler:DisableWidget("Chili Chat 2.2")
 	widgetHandler:DisableWidget("Chili Deluxe Player List - Alpha 2.02")
-	widgetHandler:DisableWidget("Chili FactoryBar")
-	widgetHandler:DisableWidget("Chili FactoryPanel")
-	widgetHandler:DisableWidget("Chili Gesture Menu")
 	widgetHandler:DisableWidget("Chili Chat Bubbles")
 	widgetHandler:DisableWidget("Chili Keyboard Menu")
 	widgetHandler:DisableWidget("Chili Radial Build Menu")
@@ -1470,7 +1479,7 @@ end
 -- Options
 ----------------------------------------------------
 options_path = 'Settings/HUD Presets'
-options_order = {'updateNewDefaults', 'setToDefault', 'maintainDefaultUI', 'interfacePreset'}
+options_order = {'updateNewDefaults', 'setToDefault', 'maintainDefaultUI', 'minimapScreenSpace', 'interfacePreset'}
 options = {
 	updateNewDefaults = {
 		name  = "Stay up to date",
@@ -1494,10 +1503,19 @@ options = {
 		desc = "Resets the UI when screen resolution changes. Disable if you plan to customise your UI.",
 		noHotkey = true,
 	},
+	minimapScreenSpace = {
+		name = "Minimap Size",
+		type = "number",
+		value = 0.19, min = 0.05, max = 0.4, step = 0.01,
+		--desc = "Controls minimap size for the New UI presets.", -- supresses value tooltip
+		OnChange = function(self)
+			UpdateInterfacePreset(options.interfacePreset)
+		end,
+	},
 	interfacePreset = {
 		name = 'UI Preset',
 		type = 'radioButton',
-		value = 'minimapRight',
+		value = 'default',
 		items = {
 			{key = 'default2', name = 'Default', desc = "The default UI.",},
 			{key = 'new', name = 'New UI', desc = "The WIP new interface. NOTE: '/luaui reload' might be required to switch the skinning.",},

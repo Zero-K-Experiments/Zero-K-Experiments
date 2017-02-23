@@ -6,379 +6,394 @@ function gadget:GetInfo()
 		date	 = "6-23-2016",
 		license	 = "Do whatever you want with it, just give credit",
 		layer	 = 0,
-		enabled	 = false,
+		enabled	 = true,
 	}
 end
 
-local function ProccessCommand(str)
-	local strtbl = {}
-	for w in string.gmatch(str, "%S+") do
-	strtbl[#strtbl+1] = w
-	end
-	return strtbl
+-- Remove unsync and remove if off --
+
+if gadgetHandler:IsSyncedCode() == false then
+	return
 end
 
-local function tobool(var)
-	Spring.Echo("tobool: " .. tostring(var))
-	if tonumber(var) == 1 or tostring(var) == "true" then
+--------------------------------------------------------
+-- Speedups
+
+local strGmatch = string.gmatch
+local strGsub = string.gsub
+local strFind = string.find
+local strLower = string.lower
+
+-- Spring API --
+local spEcho = Spring.Echo
+local spSetPlayerRulesParam = Spring.SetPlayerRulesParam
+local spGetPlayerInfo = Spring.GetPlayerInfo
+local spGetTeamInfo = Spring.GetTeamInfo
+local spGetPlayerList = Spring.GetPlayerList
+local spAssignPlayerToTeam = Spring.AssignPlayerToTeam
+local spTransferUnit = Spring.TransferUnit
+local spShareTeamResource = Spring.ShareTeamResource
+local spValidUnitID = Spring.ValidUnitID
+local spAreTeamsAllied = Spring.AreTeamsAllied
+local spSetTeamRulesParam = Spring.SetTeamRulesParam
+local spGetTeamList = Spring.GetTeamList
+local spGetTeamResources = Spring.GetTeamResources
+local spGetUnitTeam = Spring.GetUnitTeam
+local spGetTeamUnits = Spring.GetTeamUnits
+local spGetAllyTeamList = Spring.GetAllyTeamList
+local spGetGameFrame = Spring.GetGameFrame
+
+-- Other --
+local public = {public = true}
+local GaiaID = Spring.GetGaiaTeamID()
+
+--------------------------------------------------------
+-- Configuration
+
+local function GetConfig()
+	local modOptions = Spring.GetModOptions()
+	return {
+		mergeEnabled = modOptions.sharemode ~= "none",
+		permanentMerge = modOptions.sharemode == "all",
+		mintime   = 5, -- GET RID OF ME EVENTUALLY!
+	}
+end
+local config = GetConfig()
+
+if not config.mergeEnabled then
+	spEcho("[Commshare] Commshare is off. Shutting down.")
+	return
+end
+
+--------------------------------------------------------
+-- Variables
+local invites = {}
+local controlledPlayers = {} -- table containing which team a playerID should be under.
+local controlledTeams = {} -- contains which team a team of players should be under.
+local originalTeamID = {} -- takes playerID as the key, gives the team as the value.
+local originalUnits = {} -- contains which units are owned by a team that has commshared.
+
+local firstMintime = true -- Partial initialize in gameframe after the game starts
+
+--------------------------------------------------------
+-- Utilities
+
+local function GetTeamID(playerID)
+	return select(4, spGetPlayerInfo(playerID))
+end
+
+local function GetTeamLeader(teamID)
+	return select(2, spGetTeamInfo(teamID))
+end
+
+local function IsTeamLeader(playerID)
+	local teamID = GetTeamID(playerID)
+	local teamleaderid = select(2, spGetTeamInfo(teamID))
+	if playerID == teamleaderid then
 		return true
-	elseif var ~= nil then
-		return false
 	else
-		return nil
-	end
-end
-
-local modOptions = {}
-if (Spring.GetModOptions) then
-	modOptions = Spring.GetModOptions()
-end
-
-if modOptions.sharemode == "off" then
-	gadgetHandler:RemoveGadget()
-end
-
-local validmodes = {};validmodes["all"] = true;validmodes["none"] = true;validmodes["invite"] = true
-
-local config = {
-	default = "invite",
-	mergetype = modOptions.sharemode,
-	unmerging = false,
-	mintime	 = 5,
-}
--- check config --
-if config.mergetype == nil then config.mergetype = "invite"; end
-
-if config.mergetype == "all" then config.unmerging = false else config.unmerging = true end
-
---Spring.Echo("Config:\n" .. "\nmergetype:" .. config.mergetype .. "\nantigrief:" .. tostring(config.antigrief) .. "\nunmerging: " .. tostring(config.unmerging))
-
-local function GetTeamID(playerid)
-	return select(4,Spring.GetPlayerInfo(playerid))
-end
-
-local function GetTeamLeader(teamid)
-	return select(2,Spring.GetTeamInfo(teamid))
-end
-
-local function IsTeamLeader(playerid)
-	local teamid = GetTeamID(playerid)
-	local teamleaderid = select(2,Spring.GetTeamInfo(teamid))
-	if playerid == teamleaderid then
-		teamid,teamleaderid = nil
-		return true
-	else
-		teamid,teamleaderid = nil
 		return false
 	end
 end
 
-local function IsPlayerOnSameTeam(playerid,playerid2)
-	local id1 = GetTeamID(playerid)
+local function IsPlayerOnSameTeam(playerID,playerid2)
+	local id1 = GetTeamID(playerID)
 	local id2 = GetTeamID(playerid2)
 	if id1 == id2 then
-		id1,id2 = nil
 		return true
 	else
-		id1,id2 = nil
 		return false
 	end
 end
 
-local function GetSquadSize(teamid)
-	return #Spring.GetPlayerList(teamid,true)
+local function GetSquadSize(teamID)
+	return #spGetPlayerList(teamID, true)
 end
 
-if (gadgetHandler:IsSyncedCode()) then
-	local Invites = {}
-	local controlledplayers = {}
-	local originalplayers = {}
-	local originalunits = {}
-
-	local function GetLowestID(list,includeai)
-		local lowest = 9001
-		local aipresent = false
-		local isAI
-		for _,id in pairs(list) do
-			isAI = select(4,Spring.GetTeamInfo(id))
-			if isAI then aipresent = true end
-			if id < lowest and id > 0 and isAI == false and includeai == false then lowest = id end
-			if id < lowest and id > 0 and includeai == true then lowest = id end
+local function ProccessCommand(str)
+	local command, targetID
+	local i = 1
+	-- A "word" is anything between two spaces or the start and the first space. So ProccessCommand("1 2 3 4")
+	-- would return 2 3 4 (first 'word' is ignored, only 2nd, 3rd, and 4th count).
+	for word in strGmatch(str, "%S+") do 
+		if i == 2 then
+			command = word
+		elseif i == 3 then
+			targetID = word
+			break
 		end
-		return lowest,aipresent
+		i = i + 1
 	end
+	return command, targetID -- less creating tables this way. Old version would create a table, this one is slightly smarter.
+end
 
-	local function UnmergePlayer(player) -- Takes playerid, not teamid!!!
-		local name,_ = Spring.GetPlayerInfo(player)
-		if originalplayers[player] and config.unmerging then
-			Spring.Echo("game_message: Unmerging player " .. name)
-			if originalplayers[player] then
-				GG.Overdrive.RemoveTeamIncomeRedirect(originalplayers[player]) -- Reset team income/storage.
-				local target = originalplayers[player]
-				Spring.AssignPlayerToTeam(player,originalplayers[player])
-				for _,unit in pairs(originalunits[target]) do
-					if Spring.ValidUnitID(unit) and Spring.AreTeamsAllied(Spring.GetUnitTeam(unit),target) then
-						Spring.TransferUnit(unit,target,true)
-					end
+local function IsTeamAfk(teamID)
+	local _, shares = GG.Lagmonitor.GetResourceShares()
+	if shares == 0 then
+		return true
+	else
+		return false
+	end
+end
+
+local function UnmergePlayer(playerID) -- Takes playerID, not teamID!!!
+	local name,_ = spGetPlayerInfo(playerID)
+	if not config.permanentMerge then
+		spEcho("game_message: Unmerging player " .. name)
+		if originalTeamID[playerID] then
+			local orgTeamID = originalTeamID[playerID]
+			spAssignPlayerToTeam(playerID,orgTeamID)
+			controlledTeams[orgTeamID] = nil
+			local unitID
+			for i = 1, #originalUnits[orgTeamID] do
+				unitID = originalUnits[orgTeamID][i]
+				if spValidUnitID(unitID) and spAreTeamsAllied(spGetUnitTeam(unitID), orgTeamID) then
+					spTransferUnit(unitID, orgTeamID, true)
 				end
-				originalunits[target] = nil
-				target,controlledplayers[player] = nil -- cleanup.
 			end
+			spSetTeamRulesParam(originalTeamID[playerID], "isCommsharing", nil)
+			originalUnits[orgTeamID],controlledPlayers[playerID] = nil
+		else
+			spEcho("[Commshare]: Tried to unmerge a player that never merged (Perhaps cheated in?)")
+		end
+	else
+		spEcho("[Commshare]: Unmerging is forbidden in this game mode!")
+	end
+end
+
+local function MergeUnits(teamID, target)
+	originalUnits[teamID] = spGetTeamUnits(teamID)
+	local unitID
+	for i = 1, #originalUnits[teamID] do
+		unitID = originalUnits[teamID][i]
+		if spValidUnitID(unitID) then
+			spTransferUnit(unitID, target, true)
 		end
 	end
+end
 	
-	local function MergeUnits(team,target)
-		local units = Spring.GetTeamUnits(team)
-		originalunits[team] = units
-		for i=1, #units do
-			if  Spring.ValidUnitID(units[i]) then
-				Spring.TransferUnit(units[i],target,true)
-			end
+local function MergePlayer(playerID,target)
+	if playerID == nil then
+		spEcho("[Commshare] Tried to merge a nil player!")
+		return
+	end
+	local orgTeamID = GetTeamID(playerID)
+	local name,_,spec,_,_,allyteam  = spGetPlayerInfo(playerID)
+	if spAreTeamsAllied(orgTeamID,target) and (not spec) and target ~= GaiaID then
+		spEcho("[Commshare] Assigning player id " .. playerID .. "(" .. name .. ") to team " .. target)
+		if GetSquadSize(orgTeamID) - 1 == 0 then
+			local metal = spGetTeamResources(orgTeamID,"metal")
+			local energy = spGetTeamResources(orgTeamID,"energy")
+			controlledTeams[orgTeamID] = target
+			spShareTeamResource(orgTeamID,target,"metal",metal)
+			spShareTeamResource(orgTeamID,target,"energy",energy)
+			MergeUnits(orgTeamID,target)
+			spSetTeamRulesParam(orgTeamID,"isCommsharing",target,public)
+		end
+		spAssignPlayerToTeam(playerID,target)
+		if originalTeamID[playerID] == nil then
+			originalTeamID[playerID] = orgTeamID
+		end
+		controlledPlayers[playerID] = target
+	else
+		spEcho("[Commshare] Merger error.")
+	end
+end
+
+local function MergeTeams(team1,team2) -- bandaid for an issue during planning.
+	local playerlist = spGetPlayerList(team1,true)
+	for i = 1, #playerlist do
+		MergePlayer(playerlist[i],team2)
+	end
+end
+
+local function MergeAllHumans(teamlist)
+	local mergeid = -1
+	local AI,teamLeader
+	for i = 1, #teamlist do
+		AI = select(4, spGetTeamInfo(teamlist[i]))
+		if not AI and mergeid ~= -1 then
+			spEcho("[Commshare] Merging team " .. teamlist[i])
+			teamLeader = select(2,spGetTeamInfo(teamlist[i])) 
+			-- Needed because of recursion error. Only one player on a team at game start anyways.
+			MergePlayer(teamLeader,mergeid)
+		elseif not AI and mergeid == -1 then
+			mergeid = teamlist[i]
+			spEcho("[Commshare] MergeID is " .. mergeid)
+		else
+			spEcho("[Commshare] Skipping team " .. i .. " [AI]")
 		end
 	end
-	
-	local function MergePlayer(playerid,target)
-		if player == nil then
-			Spring.Echo("Commshare: Tried to merge a nil player!")
+end
+
+local function MergeAll()
+	local ally = spGetAllyTeamList()
+	for i = 1, #ally do
+		local teamlist = spGetTeamList(ally[i])
+		if #teamlist > 1 then
+			spEcho("[Commshare] Merging alliance " .. i)
+			MergeAllHumans(teamlist)
+		end
+	end
+end
+
+local function SendInvite(player, target) -- targetid is which player is the merger
+	if spGetGameFrame() > config.mintime then
+		local targetspec = select(3, spGetPlayerInfo(target))
+		local _,_,dead,ai,_ = spGetTeamInfo(GetTeamID(target))
+		if player == target or GetTeamID(target) == GetTeamID(player) then
+			spEcho("[Commshare] " .. select(1,spGetPlayerInfo(player)) .. " tried to merge with theirself or a squad member!")
 			return
 		end
-		local originalteam = GetTeamID(playerid)
-		local name,_,spec  = Spring.GetPlayerInfo(playerid)
-		if Spring.AreTeamsAllied(originalteam,target) and spec == false and target ~= Spring.GetGaiaTeamID() and config.mergetype ~= "none" then
-			Spring.Echo("Commshare: Assigning player id " .. playerid .. "(" .. name .. ") to team " .. target)
-			local name,_,spec,_,_,allyteam = Spring.GetPlayerInfo(playerid)
-			if GetSquadSize(originalteam) - 1 == 0 then
-				MergeUnits(originalteam,target)
-				Spring.ShareTeamResource(originalteam,target,"metal",metal)
-				Spring.ShareTeamResource(originalteam,target,"energy",energy)
-			end
-			Spring.AssignPlayerToTeam(playerid,target)
-			if originalplayers[playerid] == nil then
-				originalplayers[playerid] = originalteam
-			end
-			controlledplayers[playerid] = target
-			GG.Overdrive.RedirectTeamIncome(originalteam, target)
-		else
-			Spring.Echo("Commshare: Merger error.")
+		if targetspec then
+			spEcho("[Commshare] " .. select(1,spGetPlayerInfo(player)) .. " tried to merge with a spectator!")
+			return
 		end
-	end
-	
-	local function MergeTeams(team1,team2) -- bandaid for an issue during planning.
-		local playerlist = Spring.GetPlayerList(team1,true)
-		local playerlist2 = Spring.GetPlayerList(team2,true)
-		if GetSquadSize(team1) >= GetSquadSize(team2) then
-			for _,id in pairs(playerlist) do
-				MergePlayer(id,team2)
-			end
-		else
-			for _,id in pairs(playerlist2) do
-				MergePlayer(id,team1)
-			end
+		if targetid == player then
+			local teamID = GetTeamID(target)
+			target = GetTeamLeader(teamID)
 		end
-		playerlist,playerlist2 = nil
-	end
-	
-	local function SendInvite(player,target,targetid) -- targetplayer is which player is the merger
-		if Spring.GetGameFrame() > config.mintime then
-			local targetspec = select(3,Spring.GetPlayerInfo(target))
-			local _,_,dead,ai,_ = Spring.GetTeamInfo(GetTeamID(targetid))
-			if player == target then
-				SendToUnsync("errors",player,"You can't merge with yourself!")
-				return
+		if not dead and not ai then
+			if invites[target] == nil then
+				invites[target] = {}
 			end
-			if IsTeamLeader(player) and targetid ~= player then
-				SendToUnsync("errors",player,"You can't invite players when you aren't the team leader!")
-				return
-			end
-			if targetspec then
-				SendToUnsync("errors",player,"You can't merge with specs!")
-				return
-			end
-			if targetid == player then
-				local teamid = GetTeamID(target)
-				target = GetTeamLeader(teamid)
-			end
-			if not dead and not ai then
-				if Invites[player] == nil then
-					Invites[player] = {}
-				end
-				Invites[player][target] = {timeleft = 45,controller = targetid}
-				SendToUnsync("addinvite",player,target,targetid)
-			end
+			invites[target][player] = {id = player, timeleft = 60}
 		end
-	end
-	
-	
-	local function AcceptInvite(player,target)
-		Spring.Echo("verifying invite")
-		if Invites[player][target] and Invites[target][player] then
-			Spring.Echo("invite verified")
-			if Invites[player][target]["controller"] ~= player then
-				MergePlayer(target,GetTeamID(player))
-			else -- target->player
-				MergeTeams(GetTeamID(target),GetTeamID(player))
-				teamlist = nil
-			end
-			Invites[player][target] = nil
-			Invites[target][player] = nil
-		else
-			SendToUnsynced("errors",player,"Invalid merge request!")
-		end
-	end		
-	
-	function gadget:PlayerAdded(playerID)
-		if Spring.GetGameFrame() > config.mintime then
-			local name,active,spec,team,ally,_	 = Spring.GetPlayerInfo(playerID)
-			if spec == false and active == true and config.mergetype ~= "none" and controlledplayers[team] then
-				MergePlayer(playerID,controlledplayers[playerID])
-				Spring.Echo("game_message: Player " .. name .. "has been remerged!")
-			end
-		end
-	end
-	
-	function gadget:GameFrame(f)
-		if f%30 == 0 then
-			for player,invites in pairs(Invites) do
-				for id,data in pairs(invites) do
-					data["timeleft"] = data["timeleft"] - 1
-					if data["timeleft"] == 0 then
-						data = nil
-					end
-				end
-			end
-		end
-		if f== config.mintime then
-			local ally = Spring.GetAllyTeamList()
-			Spring.Echo("game_message: Share mode avaliable!")
-			if config.mergetype == "all" then
-				for i=1,#ally do
-					teamlist = Spring.GetTeamList(ally[i])
-					if teamlist ~= nil and #teamlist > 1 then
-						local mergeid,_ = GetLowestID(teamlist,false)
-						for _,team in pairs(teamlist) do
-							name = select(1,Spring.GetPlayerInfo(pid))
-							if mergeid == team then
-								Spring.Echo("MergeID is " .. mergeid .. "(" .. tostring(name) .. ")")
-							else
-								_,pid,_,isAi = Spring.GetTeamInfo(team)
-								if isAi == false then
-									MergeTeams(team,mergeid)
-								end
-							end
-						end
-					end
-				end
-				ally,mergeid,name,isAi = nil
-			end
-		end
-	end
-	
-	function gadget:RecvLuaMsg(msg,playerid) -- Entry points for widgets to interact with the gadget
-		if string.find(msg,"sharemode") then -- Format for messages: sharemode_cmd_aug1_aug2
-			local cmdlower = string.lower(msg)
-			local proccmd = {}
-			proccmd = ProccessCommand(cmdlower)
-			for i=1,#proccmd do
-				Spring.Echo(playerid .. "sent:\n" .. i .. ":" .. tostring(proccmd[i]))
-			end
-			if proccmd[2] and string.find(proccmd[2],"invite") then
-				if proccmd[3] then
-					proccmd[3] = string.gsub(proccmd[3],"%D","")
-					if proccmd[3] ~= "" and proccmd[4] then
-						SendInvite(playerid,tonumber(proccmd[3]),tonumber(proccmd[4])) -- #4 should be the controller id.
-						return
-					end
-				else
-					SendToUnsynced("errors",playerid,"Error: Invalid invite!")
-					return
-				end
-			elseif proccmd[2] and string.find(proccmd[2],"accept") then
-				proccmd[3] = string.gsub(proccmd[3],"%D","")
-				if proccmd[3] then proccmd[3] = tonumber(proccmd[3]) end
-				if proccmd[3] and Invites[proccmd[3]] and Invites[proccmd[3]][playerid] then
-					AcceptInvite(proccmd[3],playerid)
-					Spring.Echo("invite accepted")
-					return
-				end
-			elseif proccmd[2] and string.find(proccmd[2],"unmerge") then
-				if controlledplayers[playerid] then
-					UnmergePlayer(playerid)
-					return
-				else
-					SendToUnsynced("errors",playerid,"You aren't on any squad!")
-					return
-				end
-			elseif proccmd[2] and string.find(proccmd[2],"decline") then
-				if proccmd[3] then
-					proccmd[3] = string.gsub(proccmd[3],"%D","")
-					Invites[playerid][tonumber(proccmd[3])] = nil
-					SendToUnsynced("widgetstuff",tonumber(proccmd[3]),nil)
-					return
-				else
-					SendToUnsynced("errors",playerid,"Invalid decline.")
-				end
-			elseif proccmd[2] and string.find(proccmd[2],"kick") and proccmd[3] then
-				if IsTeamLeader(playerid) then
-					proccmd[3] = string.gsub(proccmd[3],"%D","")
-					if proccmd[3] then
-						if IsPlayerOnSameTeam(playerid,proccmd[3]) then
-							UnmergePlayer(proccmd[3])
-							SendToUnsynced("errors",proccmd[3],"You were kicked from the squad.")
-							return
-						else
-							SendToUnsynced("errors",playerid,"Player isn't on the same squad!")
-							return
-						end
-					else
-						SendToUnsynced("errors",playerid,"Invalid kick command")
-						return
-					end
-				else
-					SendToUnsynced("errors",playerid,"You aren't squad leader!")
-					return
-				end
-			end
-		end
-	end
-	
-	function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
-		if controlledplayers[unitTeam] then
-			Spring.TransferUnit(unitID,controlledplayers[unitTeam],false) -- this is in case of late commer coms,etc. False maybe fixes spamming of unit transfered?
-		end
-	end
-	
-else -- unsynced stuff
-	local unsyncedinvitetable = {}
-	
-	local function Errors(_,playerid,msg)
-		if Spring.GetMyPlayerID() == playerid then
-			Spring.Echo("game_message: " .. msg)
-		end
-	end
-	
-	local function AddInvite(_,playerid,target,controller)
-		if unsyncedinvitetable[playerid] == nil then
-			unsyncedinvitetable[playerid] = {}
-		end
-		unsyncedinvitetable[playerid][target] = {timeleft = 45, controller = controller}
-	end
-	
-	function gadget:GameFrame(f)
-		if f%30 == 0 then
-			for player,invites in pairs(unsyncedinvitetable) do
-				for id,data in pairs(invites) do
-					data["timeleft"] = data["timeleft"] - 1
-					if data["timeleft"] == 0 then
-						data = nil
-					end
-				end
-			end
-		end
-		WG.CommshareInvites = unsyncedinvitetable[Spring.GetMyPlayerID()]
-	end
-	
-	function gadget:Initialize()
-		gadgetHandler:AddSyncAction("errors", Errors)
-		gadgetHandler:AddSyncAction("addinvite",AddInvite)
 	end
 end
+
+local function AcceptInvite(player,target)
+	spEcho("verifying invite")
+	if invites[player][target] then
+		spEcho("invite verified")
+		local teamID = GetTeamID(player)
+		if GetTeamLeader(teamID) == player and GetSquadSize(teamID) > 1 then
+			MergeTeams(GetTeamID(player),GetTeamID(target))
+		else
+			MergePlayer(player,GetTeamID(target))
+		end
+		invites[player][target] = nil
+		if invites[target] then
+			invites[target][player] = nil
+		end
+	else
+		spEcho("[Commshare] Invalid invite: " .. player,target .. "!")
+	end
+end
+
+------------------ Callins ------------------
+	
+function gadget:GameFrame(frame)
+	if frame%30 == 0 then
+		local invitecount
+		for player, invites in pairs(invites) do
+			invitecount = 0
+			for key,data in pairs(invites) do
+				invitecount = invitecount+1
+				if data.timeleft > 0 then
+					data.timeleft = data.timeleft - 1
+				end
+				if data.timeleft == 0 then 
+					invitecount = invitecount-1
+					invites[key] = nil
+					spSetPlayerRulesParam(player, "commshare_invite_" .. invitecount .. "_id", nil)
+					spSetPlayerRulesParam(player, "commshare_invite_" .. invitecount .. "_timeleft", nil)
+				elseif data.timeleft > 0 then
+					spSetPlayerRulesParam(player, "commshare_invite_" .. invitecount .. "_timeleft", data.timeleft)
+					spSetPlayerRulesParam(player, "commshare_invite_" .. invitecount .. "_id", data.id)
+				end
+			end
+			spSetPlayerRulesParam(player, "commshare_invitecount",invitecount)
+			if invitecount == 0 then 
+				-- Cleanup the table so that next second this doesn't run.
+				invites[player] = nil
+			end
+		end
+	end
+	if firstMintime and frame >= config.mintime and config.permanentMerge then
+		MergeAll()
+		firstMintime = false
+	end
+end
+
+function gadget:RecvLuaMsg(message, playerID) -- Entry points for widgets to interact with the gadget
+	if strFind(message, "sharemode") then
+		local command,targetID = ProccessCommand(strLower(message))
+		local name = select(1, spGetPlayerInfo(playerID)) 
+		if command == nil then
+			spEcho("[Commshare] " .. player .. "(" .. name .. ") sent an invalid command")
+			return
+		end
+		-- process augs --
+		if targetID then
+			targetID = strGsub(targetID,"%D","")
+			if targetID ~= "" then
+				targetID = tonumber(targetID)
+			end
+		end
+
+		if strFind(command,"remerge") then -- remerging seems impossible gadget side.
+			local _,active,spec,_ = spGetPlayerInfo(playerID)
+			if controlledPlayers[playerID] and not spec then
+				spAssignPlayerToTeam(playerID, controlledPlayers[playerID])
+				spEcho("game_message: Player " .. name .. " has been remerged!")
+			end
+		elseif strFind(command,"unmerge") then
+			local afk = IsTeamAfk(GetTeamID(playerID))
+			spEcho("team is afk: " .. tostring(afk))
+			if controlledPlayers[playerID] and not afk then
+				UnmergePlayer(playerID)
+				return
+			else
+				spEcho("[Commshare] " .. playerID .. "(" .. name .. ") isn't on a squad!")
+				return
+			end
+		end
+
+		if type(targetID) ~= "number" then
+			return
+		end
+
+		-- Do commands --
+		if strFind(command, "invite") then
+			SendInvite(playerID, targetID)
+			if invites[playerID] and invites[playerID][targetID] and invites[targetID][playerID] then
+				AcceptInvite(playerID,targetID)
+			end
+		elseif strFind(command, "accept") then
+			if invites[playerID] and invites[playerID][targetID] then
+				AcceptInvite(playerID,targetID)
+				return
+			else
+				spEcho("[Commshare] " .. playerID .. "(" .. name .. ") sent an invalid accept command: " .. targetID .. " doesn't exist.")
+			end
+		elseif strFind(command,"decline") then
+			invites[playerID][targetID] = nil
+		elseif strFind(command,"kick") then
+			if IsTeamLeader(playerID) then
+				if IsPlayerOnSameTeam(playerID,targetID) then
+					UnmergePlayer(targetID)
+					return
+				else
+					spEcho("[Commshare] " .. playerID .. "(" .. name .. ") tried to kick a player that isn't on their team! ID: " .. targetID)
+					return
+				end
+			else
+				spEcho("[Commshare] " .. playerID .. "(" .. name .. ") isn't a leader! Cannot kick this player.")
+				return
+			end
+		end
+	end
+end
+
+function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
+	if controlledTeams[unitTeam] then
+		spTransferUnit(unitID, controlledTeams[unitTeam], true) -- this is in case of late commer coms,etc.
+	end
+end
+--[[ No longer needed since share menu does not allow empty teams to receive units. Unbind sharedialogue instead!
+function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
+	if controlledTeams[newTeam] and GetSquadSize(oldTeam) > 0 then
+		spTransferUnit(unitID, controlledTeams[newTeam], true)
+	end
+end]]

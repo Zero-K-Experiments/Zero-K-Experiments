@@ -13,17 +13,14 @@ unitDef = {
   buildPic                      = [[AMGEO.png]],
   buildTime                     = 1500,
   category                      = [[SINK UNARMED]],
-  collisionVolumeOffsets        = [[0 0 0]],
-  collisionVolumeScales         = [[90 70 90]],
-  collisionVolumeType           = [[Box]],
   corpse                        = [[DEAD]],
 
   customParams                  = {
     description_de = [[Erzeugt Energie (100) - RISKANT]],
     description_fr = [[Produit de l'énergie (100) - DANGEREUX]],
-    helptext       = [[The Moho Geothermal Powerplant produces a massive amount of energy. It requires protection, though, as destroying it results in a devastating explosion.]],
-    helptext_de    = [[Das Moho Geothermisches Kraftwerk erzeugt eine große Menge an Energie, doch stellt es auch ein lohnendes Angriffsziel dar.]],
-    helptext_fr    = [[La centrale géothermique Moho produit une quantité important d'énergie. Son explosion peut être catastrophique selon son emplacement.]],
+    helptext       = [[The Advanced Geothermal Powerplant produces a massive amount of energy. It requires protection, though, as destroying it results in a devastating explosion.]],
+    helptext_de    = [[Das Verbessert Geothermisches Kraftwerk erzeugt eine große Menge an Energie, doch stellt es auch ein lohnendes Angriffsziel dar.]],
+    helptext_fr    = [[La centrale géothermique superieure produit une quantité important d'énergie. Son explosion peut être catastrophique selon son emplacement.]],
     pylonrange     = 150,
 	removewait     = 1,
   },
@@ -39,7 +36,7 @@ unitDef = {
   maxDamage                     = 3250,
   maxSlope                      = 255,
   minCloakDistance              = 150,
-  objectName                    = [[amgeo.dae]],
+  objectName                    = [[amgeo.s3o]],
   script                        = [[amgeo.lua]],
   seismicSignature              = 4,
   selfDestructAs                = [[NUCLEAR_MISSILE]],
@@ -54,7 +51,7 @@ unitDef = {
       featureDead      = [[HEAP]],
       footprintX       = 5,
       footprintZ       = 5,
-      object           = [[amgeo_dead.dae]],
+      object           = [[amgeo_dead.s3o]],
     },
 
     HEAP  = {

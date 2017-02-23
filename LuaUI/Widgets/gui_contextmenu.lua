@@ -1077,10 +1077,15 @@ local function printAbilities(ud, unitID)
 	end
 
 	if ud.metalStorage > 0 then
-		cells[#cells+1] = 'Stores: '
+		cells[#cells+1] = 'Stores metal: '
 		cells[#cells+1] = ud.metalStorage .. " M"
 	end
-
+	
+	if ud.energyStorage > 0 then
+		cells[#cells+1] = 'Stores energy: '
+		cells[#cells+1] = ud.energyStorage .. " E"
+	end
+	
 	if (#cells > 2 and cells[#cells-1] == '') then
 		cells[#cells] = nil
 		cells[#cells] = nil
@@ -1288,6 +1293,13 @@ local function printunitinfo(ud, buttonWidth, unitID)
 		statschildren[#statschildren+1] = Label:New{ caption = numformat(ud.turnRate * Game.gameSpeed * COB_angle_to_degree) .. " deg/s", textColor = color.stats_fg, }
 	end
 
+	local metal = (isCommander and (Spring.GetUnitRulesParam(unitID, "wanted_metalIncome") or 0) or ((ud.metalMake or 0) + (ud.customParams.income_metal or 0)))
+
+	if metal ~= 0 then
+		statschildren[#statschildren+1] = Label:New{ caption = 'Metal: ', textColor = color.stats_fg, }
+		statschildren[#statschildren+1] = Label:New{ caption = (metal > 0 and '+' or '') .. numformat(metal,2) .. " M/s", textColor = color.stats_fg, }
+	end
+	
 	local energy = (isCommander and (Spring.GetUnitRulesParam(unitID, "wanted_energyIncome") or 0) or ((ud.energyMake or 0) - (ud.customParams.upkeep_energy or 0) + (ud.customParams.income_energy or 0)))
 
 	if energy ~= 0 then
@@ -1483,23 +1495,9 @@ local function tooltipBreakdown(tooltip)
 	local unitname = nil
 
 	if tooltip:find('Build', 1, true) == 1 then
-		local start,fin = tooltip:find([[ - ]], 1, true)
-		if start and fin then
-			local unitHumanName
-			local buildType
-			if (tooltip:find('Build Unit:', 1, true) == 1) then
-				buildType = 'buildunit'
-				unitHumanName = tooltip:sub(13,start-1)
-			else
-				buildType = 'build'
-				unitHumanName = tooltip:sub(8,start-1)
-			end
-			local udef = GetUnitDefByHumanName(unitHumanName)
-			
-			return udef or false
-			
-		end
-		
+		local name = string.sub(tooltip, 6)
+		local ud = name and UnitDefNames[name]
+		return ud or false
 	elseif tooltip:find('Morph', 1, true) == 1 then
 		local unitHumanName = tooltip:gsub('Morph into a (.*)(time).*', '%1'):gsub('[^%a \-]', '')
 		local udef = GetUnitDefByHumanName(unitHumanName)
@@ -1556,9 +1554,9 @@ MakeStatsWindow = function(ud, x,y, unitID)
 	local children = {
 		ScrollPanel:New{
 			--horizontalScrollbar = false,
-			x=0,y=15,
-			width='100%',
-			bottom = B_HEIGHT*2,
+			x=5,y=15,
+			right = 5,
+			bottom = B_HEIGHT + 10,
 			padding = {2,2,2,2},
 			children = printunitinfo(ud, window_width, unitID) ,
 		},	
@@ -1566,10 +1564,10 @@ MakeStatsWindow = function(ud, x,y, unitID)
 			caption = 'Close', 
 			OnClick = { function(self) KillStatsWindow(num) end }, 
 			
-			x=0,
+			x=5,
 			height=B_HEIGHT,
-			right=10,
-			bottom=1,
+			right=5,
+			bottom=5,
 			
 			--backgroundColor=color.sub_back_bg, 
 			--textColor=color.sub_back_fg,
@@ -1589,6 +1587,7 @@ MakeStatsWindow = function(ud, x,y, unitID)
 		resizable = true,
 		parent = screen0,
 		backgroundColor = color.stats_bg, 
+		classname = "main_window_small",
 		
 		minWidth = 250,
 		minHeight = 300,
@@ -1598,7 +1597,6 @@ MakeStatsWindow = function(ud, x,y, unitID)
 		children = children,
 	}
 	AdjustWindow(statswindows[num])
-	
 end
 
 local function PriceWindow(unitID, action)
@@ -1787,6 +1785,7 @@ local function MakeUnitContextMenu(unitID,x,y)
 		y = y,  
 		clientWidth  = window_width,
 		clientHeight = window_height,
+		classname = "main_window_small",
 		resizable = false,
 		parent = screen0,
 		backgroundColor = color.context_bg, 

@@ -181,8 +181,9 @@ local function CreateWindow()
 		draggable = false,
 		clientWidth  = WINDOW_WIDTH,
 		clientHeight = WINDOW_HEIGHT,
-		x = (vsx - WINDOW_WIDTH)/2,
-		y = ((vsy - WINDOW_HEIGHT)/2),
+		x = math.floor((vsx - WINDOW_WIDTH)/2),
+		y = math.floor((vsy - WINDOW_HEIGHT)/2),
+		classname = "main_window",
 		parent = screen0,
 		caption = "COMMANDER SELECTOR",
 		}
@@ -199,7 +200,7 @@ local function CreateWindow()
 		autosize = false,
 		resizeItems = true,
 		x=0, right=0,
-		y=0, bottom=36,
+		y=3, bottom=38,
 		centerItems = false,
 	}
 	-- add posters
@@ -261,13 +262,13 @@ local function CreateWindow()
 		width = cbWidth,
 		x = WINDOW_WIDTH*0.5 + (WINDOW_WIDTH*0.5 - cbWidth)/2,
 		height = 30,
-		bottom = 2,
+		bottom = 5,
 		OnClick = {function() Close() end}
 	}
 	trainerCheckbox = Chili.Checkbox:New{
 		parent = mainWindow,
-		x = 4,
-		bottom = 2,
+		x = 6,
+		bottom = 5,
 		width = 160,
 		caption = "Hide Trainer Comms",
 		checked = options.hideTrainers.value,
@@ -345,6 +346,7 @@ function widget:Initialize()
 			height = "100%",
 			x = 0,
 			y = 0,
+			classname = "overlay_button",
 			OnClick = {function() Spring.SendCommands({"luaui "..actionShow}) end}
 		}
 		
@@ -374,6 +376,7 @@ function widget:Update(dt)
 end
 
 function widget:Shutdown()
+	cameraMoved = true -- do not move camera to startbox
 	Close(true)
 end
 

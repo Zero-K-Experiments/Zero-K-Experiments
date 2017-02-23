@@ -1,7 +1,7 @@
 unitDef = {
   unitname            = [[slowmort]],
   name                = [[Moderator]],
-  description         = [[Distruptor Skirmisher Walker]],
+  description         = [[Disruptor Skirmisher Walker]],
   acceleration        = 0.2,
   activateWhenBuilt   = true,
   brakeRate           = 0.6,
@@ -52,7 +52,7 @@ unitDef = {
 
   },
 
-  sightDistance       = 660,
+  sightDistance       = 473,
   trackOffset         = 0,
   trackStrength       = 8,
   trackStretch        = 0.8,
@@ -218,7 +218,7 @@ unitDef = {
       featureDead      = [[HEAP]],
       footprintX       = 2,
       footprintZ       = 2,
-      object           = [[CORMORT_DEAD.s3o]],
+      object           = [[cormort_dead_no_gun.s3o]],
     },
 
 

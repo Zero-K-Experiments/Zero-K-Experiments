@@ -42,12 +42,19 @@ local MIN_WIDTH = 200
 local COMMAND_SECTION_WIDTH = 74 -- percent
 local STATE_SECTION_WIDTH = 24 -- percent
 
-local SELECT_BUTTON_COLOR = {0.8, 0, 0, 1}
-local SELECT_BUTTON_FOCUS_COLOR = {0.8, 0, 0, 1}
+local SELECT_BUTTON_COLOR = {0.98, 0.48, 0.26, 0.85}
+local SELECT_BUTTON_FOCUS_COLOR = {0.98, 0.48, 0.26, 0.85}
+local BUTTON_DISABLE_COLOR = {0.1, 0.1, 0.1, 0.85}
+local BUTTON_DISABLE_FOCUS_COLOR = {0.1, 0.1, 0.1, 0.85}
+
+local DRAW_NAME_COMMANDS = {
+	[CMD.STOCKPILE] = true, -- draws stockpile progress (command handler sends correct string).
+}
 
 -- Defined upon learning the appropriate colors
 local BUTTON_COLOR
 local BUTTON_FOCUS_COLOR
+local BUTTON_BORDER_COLOR
 
 local NO_TEXT = ""
 
@@ -59,12 +66,14 @@ EPIC_NAME_UNITS = "epic_chili_integral_menu_tab_units"
 -- Command Handling and lower variables
 
 configurationName = "Configs/integral_menu_config.lua"
-local commandPanels, commandPanelMap, commandDisplayConfig, hiddenCommands, textConfig, buttonLayoutConfig -- In Initialize = include("Configs/integral_menu_config.lua")
+local commandPanels, commandPanelMap, commandDisplayConfig, hiddenCommands, textConfig, buttonLayoutConfig, instantCommands -- In Initialize = include("Configs/integral_menu_config.lua")
+local customCmdActions = include("Configs/customCmdTypes.lua")
 
 local statePanel = {}
 local tabPanel
 local selectionIndex = 0
 local background
+local returnToOrdersCommand = false
 
 local buildTabHolder, buttonsHolder -- Required for padding update setting
 --------------------------------------------------------------------------------
@@ -82,6 +91,10 @@ options = {
 		name = "Opacity",
 		type = "number",
 		value = 0.8, min = 0, max = 1, step = 0.01,
+		OnChange = function(self)
+			background.backgroundColor = {1,1,1,self.value}
+			background:Invalidate()
+		end,
 	},
 	keyboardType = {
 		type='radioButton', 
@@ -96,8 +109,8 @@ options = {
 		noHotkey = true,
 	},
 	selectionClosesTab = {
-		name = 'Selection Closes Tab',
-		tooltip = "When enabled, selecting a build option will switch the tab back to Orders (except for build options in the factory queue tab).",
+		name = 'Construction Closes Tab',
+		tooltip = "When enabled, issuing or cancelling a construction command will switch back to the Orders tab (except for build options in the factory queue tab).",
 		type = 'bool',
 		value = true,
 		noHotkey = true,
@@ -194,7 +207,10 @@ options = {
 	},
 }
 
-local function TabClickFunction()
+local function TabClickFunction(mouse)
+	if not mouse then
+		return false
+	end
 	local _,_, meta,_ = Spring.GetModKeyState()
 	if not meta then 
 		return false
@@ -214,6 +230,57 @@ local alreadyRemovedTag = {}
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Utility
+
+local lastCmdID
+local function UpdateButtonSelection(cmdID)
+	if cmdID ~= lastCmdID then
+		if lastCmdID and buttonsByCommand[lastCmdID] then
+			buttonsByCommand[lastCmdID].SetSelection(false)
+		end
+		if buttonsByCommand[cmdID] then
+			buttonsByCommand[cmdID].SetSelection(true)
+		end
+		lastCmdID = cmdID
+	end
+end
+
+local gridKeysEnabled = true
+local function SetGridHotkeysEnabled(newEnabled)
+	if newEnabled == gridKeysEnabled then
+		return
+	end
+	gridKeysEnabled = newEnabled
+	
+	if gridKeysEnabled then
+		for i = 1, #commandPanels do
+			local data = commandPanels[i]
+			if data.gridHotkeys and ((not data.disableableKeys) or options.unitsHotkeys2.value) then
+				data.buttons.ApplyGridHotkeys()
+			end
+		end
+	else
+		for i = 1, #commandPanels do
+			local data = commandPanels[i]
+			if data.gridHotkeys and ((not data.disableableKeys) or options.unitsHotkeys2.value) then
+				data.buttons.RemoveGridHotkeys()
+			end
+		end
+	end
+end
+
+local function UpdateReturnToOrders(cmdID)
+	if returnToOrdersCommand and returnToOrdersCommand ~= cmdID then
+		commandPanelMap.orders.tabButton.DoClick()
+		returnToOrdersCommand = false
+	end
+	
+	if (not returnToOrdersCommand) and options.ctrlDisableGrid.value then
+		local alt, ctrl, meta, shift = Spring.GetModKeyState()
+		SetGridHotkeysEnabled(not ctrl)
+	else
+		SetGridHotkeysEnabled(not returnToOrdersCommand)
+	end
+end
 
 local function GenerateGridKeyMap(name)
 	local gridMap = include("Configs/keyboard_layout.lua")[name]
@@ -272,9 +339,9 @@ local function UpdateBackgroundSkin()
 		local selectedCount = Spring.GetSelectedUnitsCount()
 		if selectedCount and selectedCount > 0 then
 			if options.flushLeft.value then
-				newClass = skin.panel_0120
+				newClass = skin.panel_0120_small
 			else
-				newClass = skin.panel_2100
+				newClass = skin.panel_2100_small
 			end
 		else
 			if options.flushLeft.value then
@@ -305,9 +372,14 @@ local function UpdateBackgroundSkin()
 	
 	background.tiles = newClass.tiles
 	background.TileImageFG = newClass.TileImageFG
-	background.backgroundColor = newClass.backgroundColor
 	background.TileImageBK = newClass.TileImageBK
 	background:Invalidate()
+	
+	-- Update buttons holder padding, not background.
+	if newClass.padding then
+		buttonsHolder.padding = newClass.padding
+		buttonsHolder:UpdateClientArea()
+	end
 end
 
 --------------------------------------------------------------------------------
@@ -450,17 +522,14 @@ local function QueueClickFunc(mouse, right, alt, ctrl, meta, shift, queueCmdID, 
 	return true
 end
 
-local function ClickFunc(mouse, cmdID, isStructure, factoryUnitID, isQueueButton, queueBlock, useGrid)
+local function ClickFunc(mouse, cmdID, isStructure, factoryUnitID, isQueueButton, queueBlock)
 	local left, right = mouse == 1, mouse == 3
 	local alt, ctrl, meta, shift = Spring.GetModKeyState()
 	if factoryUnitID and isQueueButton then
 		QueueClickFunc(mouse, right, alt, ctrl, meta, shift, cmdID, factoryUnitID, queueBlock)
 		return true
 	end
-	
-	if useGrid and ctrl and (not mouse) and options.ctrlDisableGrid.value then
-		return false
-	end
+
 	
 	if alt and factoryUnitID and options.altInsertBehind.value then
 		local state = Spring.GetUnitStates(factoryUnitID)
@@ -480,6 +549,9 @@ local function ClickFunc(mouse, cmdID, isStructure, factoryUnitID, isQueueButton
 	local index = Spring.GetCmdDescIndex(cmdID)
 	if index then
 		Spring.SetActiveCommand(index, mouse or 1, left, right, alt, ctrl, meta, shift)
+		if not instantCommands[cmdID] then
+			UpdateButtonSelection(cmdID)
+		end
 		if alt and isStructure and WG.Terraform_SetPlacingRectangle then
 			WG.Terraform_SetPlacingRectangle(-cmdID)
 		end
@@ -508,10 +580,10 @@ local function GetButton(parent, selectionIndex, x, y, xStr, yStr, width, height
 		if isDisabled then
 			return false
 		end
-		local sucess = ClickFunc(mouse, cmdID, isStructure, factoryUnitID, isQueueButton, x, usingGrid)
+		local sucess = ClickFunc(mouse, cmdID, isStructure, factoryUnitID, isQueueButton, x)
 		if sucess and onClick then
 			-- Don't do the onClick if the command was not eaten by the menu.
-			onClick()
+			onClick(cmdID)
 		end
 		return sucess
 	end
@@ -561,6 +633,9 @@ local function GetButton(parent, selectionIndex, x, y, xStr, yStr, width, height
 	end
 	if not BUTTON_FOCUS_COLOR then
 		BUTTON_FOCUS_COLOR = button.focusColor
+	end
+	if not BUTTON_BORDER_COLOR then
+		BUTTON_BORDER_COLOR = button.borderColor
 	end
 	
 	local image
@@ -644,11 +719,15 @@ local function GetButton(parent, selectionIndex, x, y, xStr, yStr, width, height
 			SetImage("")
 		end
 		if isDisabled then
-			button.backgroundColor = {0,0,0,1}
+			button.backgroundColor = BUTTON_DISABLE_COLOR
+			button.focusColor = BUTTON_DISABLE_FOCUS_COLOR
+			button.borderColor = BUTTON_DISABLE_FOCUS_COLOR
 			image.color = {0.3, 0.3, 0.3, 1}
 			externalFunctionsAndData.ClearGridHotkey()
 		else
-			button.backgroundColor = {1,1,1,0.7}
+			button.backgroundColor = BUTTON_COLOR
+			button.focusColor = BUTTON_FOCUS_COLOR
+			button.borderColor = BUTTON_BORDER_COLOR
 			image.color = {1, 1, 1, 1}
 			if hotkeyText then
 				SetText(textConfig.topLeft.name, hotkeyText)
@@ -707,7 +786,7 @@ local function GetButton(parent, selectionIndex, x, y, xStr, yStr, width, height
 		hotkeyText = '\255\0\255\0' .. key
 		SetText(textConfig.topLeft.name, hotkeyText)
 	end
-
+	
 	function externalFunctionsAndData.ClearGridHotkey()
 		SetText(textConfig.topLeft.name)
 	end
@@ -781,6 +860,11 @@ local function GetButton(parent, selectionIndex, x, y, xStr, yStr, width, height
 		externalFunctionsAndData.SetSelection(false)
 		externalFunctionsAndData.SetBuildQueueCount(nil)
 		
+		-- Update stockpile progress
+		if command and DRAW_NAME_COMMANDS[command.id] and command.name then
+			SetText(textConfig.bottomRightLarge.name, command.name)
+		end
+		
 		if cmdID == newCmdID then
 			local isStateCommand = command and (command.type == CMDTYPE.ICON_MODE and #command.params > 1)
 			if isStateCommand then
@@ -809,7 +893,7 @@ local function GetButton(parent, selectionIndex, x, y, xStr, yStr, width, height
 			if buttonLayout.tooltipOverride then
 				button.tooltip = buttonLayout.tooltipOverride
 			else
-				local tooltip = "Build Unit: " .. ud.humanName .. " - " .. ud.tooltip .. "\n"
+				local tooltip = (buttonLayout.tooltipPrefix or "") .. ud.name
 				button.tooltip = tooltip
 			end
 			SetImage("#" .. -cmdID, WG.GetBuildIconFrame(UnitDefs[-cmdID]))
@@ -833,7 +917,6 @@ local function GetButton(parent, selectionIndex, x, y, xStr, yStr, width, height
 				SetText(textConfig.topLeft.name, hotkey)
 			end
 		end
-		
 		button.tooltip = tooltip
 		
 		if isStateCommand then
@@ -843,7 +926,25 @@ local function GetButton(parent, selectionIndex, x, y, xStr, yStr, width, height
 		else
 			local texture = (displayConfig and displayConfig.texture) or command.texture
 			SetImage(texture)
+			
+			-- Remove stockpile progress
+			if not (command and DRAW_NAME_COMMANDS[command.id] and command.name) then
+				SetText(textConfig.bottomRightLarge.name, nil)
+			end
 		end
+	end
+	
+	function externalFunctionsAndData.GetScreenPosition()
+		if not button:IsVisibleOnScreen() then
+			return false
+		end
+		local x, y = button:LocalToScreen(0, 0)
+		if not x then
+			return false
+		end
+		x = x + button.width/2
+		y = y + button.height/2
+		return x, y, button.width, button.height
 	end
 
 	return externalFunctionsAndData
@@ -857,6 +958,7 @@ local function GetButtonPanel(parent, rows, columns, vertical, generalButtonLayo
 	local height = tostring(100/rows) .. "%"
 	
 	local gridMap
+	local gridEnabled = true
 	
 	local externalFunctions = {}
 	
@@ -901,7 +1003,7 @@ local function GetButtonPanel(parent, rows, columns, vertical, generalButtonLayo
 		newButton = GetButton(parent, selectionIndex, x, y, xStr, yStr, width, height, buttonLayout, isStructure, onClick)
 		
 		buttonList[#buttonList + 1] = newButton
-		if gridMap then
+		if gridMap and gridEnabled then
 			newButton.UpdateGridHotkey(gridMap)
 		end
 		
@@ -923,14 +1025,15 @@ local function GetButtonPanel(parent, rows, columns, vertical, generalButtonLayo
 	end
 	
 	function externalFunctions.ApplyGridHotkeys(newGridMap)
-		gridMap = newGridMap
+		gridMap = newGridMap or gridMap
+		gridEnabled = true
 		for i = 1, #buttonList do
 			buttonList[i].UpdateGridHotkey(gridMap)
 		end
 	end
 	
 	function externalFunctions.RemoveGridHotkeys()
-		gridMap = nil
+		gridEnabled = false
 		for i = 1, #buttonList do
 			buttonList[i].RemoveGridHotkey()
 		end
@@ -1032,8 +1135,8 @@ end
 
 local function GetTabButton(panel, contentControl, name, humanName, hotkey, loiterable, OnSelect)
 	
-	local function DoClick()
-		if TabClickFunction() then
+	local function DoClick(mouse)
+		if TabClickFunction(mouse) then
 			return
 		end
 		panel.SwitchToTab(name)
@@ -1044,9 +1147,14 @@ local function GetTabButton(panel, contentControl, name, humanName, hotkey, loit
 	end
 	
 	local button = Button:New {
+		classname = "button_tab",
 		caption = humanName,
 		padding = {0, 0, 0, 0},
-		OnClick = {DoClick},
+		OnClick = {
+			function()
+				DoClick(true)
+			end
+		},
 	}
 	button.backgroundColor[4] = 0.4
 	
@@ -1103,13 +1211,26 @@ local function GetTabButton(panel, contentControl, name, humanName, hotkey, loit
 		if loiterable and not hideHotkey then
 			externalFunctionsAndData.SetHotkeyActive(not isSelected)
 		end
-		button.backgroundColor[4] = isSelected and 1 or 0.4
+		button.backgroundColor[4] = isSelected and 0.8 or 0.4
 		button:Invalidate()
 	end
 	
 	function externalFunctionsAndData.SetFontSize(newSize)
 		button.font.size = newSize
 		button:Invalidate()
+	end
+	
+	function externalFunctionsAndData.GetScreenPosition()
+		if not button:IsVisibleOnScreen() then
+			return false
+		end
+		local x, y = button:LocalToScreen(0, 0)
+		if not x then
+			return false
+		end
+		x = x + button.width/2
+		y = y + button.height/2
+		return x, y, button.width, button.height
 	end
 	
 	return externalFunctionsAndData
@@ -1371,17 +1492,18 @@ local function InitializeControls()
 		resizable = false,
 		tweakDraggable = true,
 		tweakResizable = true,
-		padding = {0, 0, 0, -1},
+		padding = {0, 0, 0, 0},
 		color = {0, 0, 0, 0},
 		parent = screen0,
 	}
-		
+	mainWindow:SendToBack()
+	
 	buildTabHolder = Control:New{
 		x = options.leftPadding.value,
 		y = "0%",
 		right = options.rightPadding.value,
 		height = "15%",
-		padding = {2, 2, 2, 0},
+		padding = {2, 2, 2, -1},
 		parent = mainWindow,
 	}
 	
@@ -1408,9 +1530,11 @@ local function InitializeControls()
 		parent = mainWindow,
 	}
 	
-	local function ReturnToOrders()
-		if options.selectionClosesTab.value then
-			commandPanelMap.orders.tabButton.DoClick()
+	buildTabHolder:SendToBack() -- behind background
+	
+	local function ReturnToOrders(cmdID)
+		if options.selectionClosesTab.value and cmdID then
+			returnToOrdersCommand = cmdID
 		end
 	end
 	
@@ -1586,28 +1710,49 @@ options.fancySkinning.OnChange = UpdateBackgroundSkin
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
+-- External functions
+
+local externalFunctions = {} -- Appear unused in repo but are used by missions.
+
+function externalFunctions.GetCommandButtonPosition(cmdID)
+	if not buttonsByCommand[cmdID] then
+		return
+	end
+	local button = buttonsByCommand[cmdID]
+	local x, y, w, h = button.GetScreenPosition()
+	return x, y, w, h
+end
+
+function externalFunctions.GetTabPosition(tabName)
+	for i = 1, #commandPanels do
+		local data = commandPanels[i]
+		if data.name == tabName then
+			local tab = data.tabButton
+			local x, y, w, h = tab.GetScreenPosition()
+			return x, y, w, h
+		end
+	end
+	return false
+end
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- Widget Interface
 
 local initialized = false
 
-local lastCmdID
 function widget:Update()
 	local _,cmdID = Spring.GetActiveCommand()
-	if cmdID ~= lastCmdID then
-		if lastCmdID and buttonsByCommand[lastCmdID] then
-			buttonsByCommand[lastCmdID].SetSelection(false)
-		end
-		if buttonsByCommand[cmdID] then
-			buttonsByCommand[cmdID].SetSelection(true)
-		end
-		
-		lastCmdID = cmdID
-	end
+	UpdateButtonSelection(cmdID)
+	UpdateReturnToOrders(cmdID)
 end
 
 function widget:KeyPress(key, modifier, isRepeat)
-
 	if isRepeat then
+		return false
+	end
+	
+	if returnToOrdersCommand or (modifier.ctrl and options.ctrlDisableGrid.value) then
 		return false
 	end
 	
@@ -1627,7 +1772,9 @@ function widget:KeyPress(key, modifier, isRepeat)
 	end
 
 	if (key == KEYSYMS.ESCAPE or gridKeyMap[key]) and commandPanel.onClick then
-		commandPanel.onClick()
+		if commandPanelMap.orders then
+			commandPanelMap.orders.tabButton.DoClick()
+		end
 		return true
 	end
 	return false
@@ -1660,7 +1807,7 @@ function widget:GameFrame(n)
 end
 
 function widget:Initialize()
-	commandPanels, commandPanelMap, commandDisplayConfig, hiddenCommands, textConfig, buttonLayoutConfig = include(configurationName)
+	commandPanels, commandPanelMap, commandDisplayConfig, hiddenCommands, textConfig, buttonLayoutConfig, instantCommands = include(configurationName)
 	
 	RemoveAction("nextmenu")
 	RemoveAction("prevmenu")
@@ -1681,4 +1828,6 @@ function widget:Initialize()
 	screen0 = Chili.Screen0
 	
 	InitializeControls()
+	
+	WG.IntegralMenu = externalFunctions
 end

@@ -188,7 +188,7 @@ function SetUnitLuaDraw(unitID,nodraw)
   if (nodraw) then
     noDrawUnits[unitID] = (noDrawUnits[unitID] or 0) + 1
     if (noDrawUnits[unitID]==1) then
-      --if (Game.version=="0.76b1") then
+      --if (Spring.Utilities.GetEngineVersion()=="0.76b1") then
         Spring.UnitRendering.ActivateMaterial(unitID,1)
         --Spring.UnitRendering.SetLODLength(unitID,1,-1000)
         for pieceID in ipairs(Spring.GetUnitPieceList(unitID) or {}) do
@@ -201,7 +201,7 @@ function SetUnitLuaDraw(unitID,nodraw)
   else
     noDrawUnits[unitID] = (noDrawUnits[unitID] or 0) - 1
     if (noDrawUnits[unitID]==0) then
-      --if (Game.version=="0.76b1") then
+      --if (Spring.Utilities.GetEngineVersion()=="0.76b1") then
         Spring.UnitRendering.DeactivateMaterial(unitID,1)
       --else
       --  Spring.UnitRendering.SetUnitLuaDraw(unitID,false)
@@ -691,13 +691,13 @@ local function IsUnitFXVisible(fx)
 		end
 	end
 
-	if (not fx.onActive)or(unitActive) then
+	if (not fx.onActive) or (unitActive) then
 		if fx.alwaysVisible then
 			return true
 		elseif (fx.Visible) then
 			return fx:Visible()
 		else
-			local unitRadius = (spGetUnitRadius(unitID) + 40)
+			local unitRadius = (spGetUnitRadius(unitID) or 0) + 40
 			local r = fx.radius or 0
 			return Spring.IsUnitVisible(unitID, unitRadius + r)
 		end
@@ -826,9 +826,9 @@ local function GameFrame(_,n)
   --// update team/player status
   local spec, specFullView = spGetSpectatingState()
   if (specFullView) then
-    LocalAllyTeamID = scGetReadAllyTeam()
+    LocalAllyTeamID = scGetReadAllyTeam() or 0
   else
-    LocalAllyTeamID = spGetLocalAllyTeamID()
+    LocalAllyTeamID = spGetLocalAllyTeamID() or 0
   end
   --// create delayed FXs
   if (effectsInDelay[1]) then

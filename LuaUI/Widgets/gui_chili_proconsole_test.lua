@@ -582,7 +582,7 @@ options = {
 		end
 	},
 	backlogShowWithChatEntry = {
-		name = "Show backlog when echatting",
+		name = "Auto-toggle backlog",
 		desc = "Enable to have the backlog enabled when entering text and disabled when not entering text.",
 		type = 'bool',
 		value = false,
@@ -815,9 +815,7 @@ local function formatMessage(msg)
 end
 
 local function MessageIsChatInfo(msg)
-	return string.find(msg.argument,'enabled!') or
-	string.find(msg.argument,'disabled!') or 
-	string.find(msg.argument,'Speed set to') or
+	return string.find(msg.argument,'Speed set to') or
 	string.find(msg.argument,'following') or
 	string.find(msg.argument,'Connection attempted') or
 	string.find(msg.argument,'exited') or 
@@ -935,8 +933,8 @@ local function AddMessage(msg, target, remake)
 						x=0;y=0;
 						width = 30,
 						height = 20,
+						classname = "overlay_button_tiny",
 						--backgroundColor = {1,1,1,options.pointButtonOpacity.value},
-						backgroundColor = {1,1,1,1},
 						padding = {2,2,2,2},
 						children = {
 							WG.Chili.Image:New {
@@ -1503,8 +1501,8 @@ function widget:Initialize()
 		--backgroundColor = {1,1,1,1},
 	}
 	backlogButtonImage = WG.Chili.Image:New {
-		width = inputsize - 7,
-		height = inputsize - 7,
+		width = "100%",
+		height = "100%",
 		keepAspect = true,
 		--color = {0.7,0.7,0.7,0.4},
 		file = 'LuaUI/Images/arrowhead.png',
@@ -1516,7 +1514,8 @@ function widget:Initialize()
 		bottom = 4,
 		width = inputsize - 3,
 		height = inputsize - 3,
-		padding = { 1,1,1,1 },
+		classname = "overlay_button_tiny",
+		padding = {1,1,1,1},
 		caption = '',
 		tooltip = 'Swap between decaying chat and scrollable chat backlog.',
 		OnClick = {SwapBacklog},

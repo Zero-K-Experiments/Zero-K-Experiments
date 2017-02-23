@@ -35,8 +35,9 @@ local function InitializeThingsThatShouldNotBeInitializedOutsideACallinExclaimat
 	local public_seed = 123 * string.len(Spring.GetModOptions().commandertypes or "some string")
 	private_seed = math.random(13,37) * public_seed
 
+	Spring.Echo("Startboxes public_seed", public_seed)
 	Spring.SetGameRulesParam("public_random_seed", public_seed)
-	startboxConfig = ParseBoxes()
+	startboxConfig = ParseBoxes(public_seed)
 	math.randomseed(private_seed)
 
 	GG.startBoxConfig = startboxConfig
@@ -191,7 +192,7 @@ function gadget:Initialize()
 		end
 	end
 
-	if (shuffleMode == "off") then
+	if (shuffleMode == "off") or (shuffleMode == "disable") then
 
 		for i = 1, #allyTeamList do
 			local allyTeamID = allyTeamList[i]
@@ -264,7 +265,7 @@ function gadget:Initialize()
 	end
 end
 
-function gadget:AllowStartPosition(x, y, z, playerID, readyState)
+function gadget:AllowStartPosition(playerID, teamID, readyState, x, y, z, rx, ry, rz)
 	if (x == 0 and z == 0) then
 		-- engine default startpos
 		return false
@@ -275,6 +276,13 @@ function gadget:AllowStartPosition(x, y, z, playerID, readyState)
 	end
 
 	local teamID = select(4, Spring.GetPlayerInfo(playerID))
+
+	if (shuffleMode == "disable") then
+		-- note this is after the AI check; toasters still have to obey
+		Spring.SetTeamRulesParam (teamID, "valid_startpos", 1)
+		return true
+	end
+
 	local boxID = Spring.GetTeamRulesParam(teamID, "start_box_id")
 
 	if (not boxID) or CheckStartbox(boxID, x, z) then

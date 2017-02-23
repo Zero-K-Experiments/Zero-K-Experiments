@@ -32,18 +32,24 @@ unitDef = {
   canstop                       = [[1]],
   category                      = [[SINK UNARMED]],
   collisionVolumeOffsets        = [[0 0 0]],
-  collisionVolumeScales         = [[112 112 112]],
-  collisionVolumeType           = [[ellipsoid]],
+  collisionVolumeScales         = [[104 70 40]],
+  collisionVolumeType           = [[box]],
+  selectionVolumeOffsets        = [[0 0 30]],
+  selectionVolumeScales         = [[104 70 100]],
+  selectionVolumeType           = [[box]],
   corpse                        = [[DEAD]],
 
   customParams                  = {
     description_de = [[Produziert Spezial- und Sprungdüsenroboter, Baut mit 10 M/s]],
     helptext       = [[The esoteric Jumpjet/Specialist Plant offers unique tactical options for rapidly closing the distance in a knife fight, or getting over hills and rivers to cut a path through enemy lines. Key units: Pyro, Moderator, Jack, Firewalker, Sumo]],
     helptext_de    = [[Hier werden außergewöhnliche Einheiten erzeugt, die durch spezielle Fähigkeiten Distanzen schnell überbrücken können, um in den Nahkampf zu treten oder auch, um Hindernisse schnell zu überbrücken. Wichtigste Einheiten: Pyro, Moderator, Jack, Firewalker, Sumo]],
+    aimposoffset   = [[0 0 -28]],
+    midposoffset   = [[0 0 -28]],
     canjump  = [[1]],
 	no_jump_handling = [[1]],
     sortName = [[5]],
-	modelradius    = [[56]],
+	modelradius    = [[38]],
+	solid_factory = [[3]],
   },
 
   energyMake                    = 0.3,
@@ -60,6 +66,7 @@ unitDef = {
   maxWaterDepth                 = 0,
   metalMake                     = 0.3,
   minCloakDistance              = 150,
+  moveState        				= 1,
   noAutoFire                    = false,
   objectName                    = [[factoryjump.s3o]],
   script						= [[factoryjump.lua]],
@@ -70,7 +77,7 @@ unitDef = {
   turnRate                      = 0,
   useBuildingGroundDecal        = true,
   workerTime                    = 10,
-  yardMap                       = [[ooooooo ooooooo occccco occccco occccco occccco ycccccy]],
+  yardMap                       = [[ooooooo ooooooo ooooooo ccccccc ccccccc ccccccc ccccccc]],
 
   featureDefs                   = {
 

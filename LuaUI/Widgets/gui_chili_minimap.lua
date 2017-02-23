@@ -143,6 +143,7 @@ options_order = {
 	'radar_preset_green_in_blue', 
 	
 	-- Minimap options
+	'disableMinimap',
 	'hideOnOverview',
 	'use_map_ratio',
 	'opacity', 
@@ -361,6 +362,13 @@ options = {
 --------------------------------------------------------------------------
 -- Minimap path area 'Settings/HUD Panels/Minimap'
 --------------------------------------------------------------------------
+	disableMinimap = {
+		name = 'Disable Minimap',
+		type = 'bool',
+		value = false,
+		OnChange = function(self) MakeMinimapWindow() end,
+		path = minimap_path,
+	},
 	hideOnOverview = {
 		name = 'Hide on Overview',
 		type = 'bool',
@@ -478,9 +486,9 @@ options = {
 		path = minimap_path,
 		items = {
 			{key = 'panel', name = 'None'},
-			{key = 'panel_1100', name = 'Bottom Left',},
+			{key = 'panel_1100_large', name = 'Bottom Left',},
 			{key = 'panel_2100', name = 'Bottom Left Flush',},
-			{key = 'panel_0110', name = 'Bottom Right'},
+			{key = 'panel_0110_large', name = 'Bottom Right'},
 			{key = 'panel_0120', name = 'Bottom Right Flush'},
 			{key = 'panel_1001', name = 'Top Left',},
 		},
@@ -498,6 +506,10 @@ options = {
 			map_panel.TileImageFG = newClass.TileImageFG
 			--map_panel.backgroundColor = newClass.backgroundColor
 			map_panel.TileImageBK = newClass.TileImageBK
+			if newClass.padding then
+				map_panel.padding = newClass.padding
+				map_panel:UpdateClientArea()
+			end
 			map_panel:Invalidate()
 			
 			fakewindow.tiles = newClass.tiles
@@ -590,6 +602,7 @@ function widget:Update() --Note: these run-once codes is put here (instead of in
 		end
 		if cs.name ~= "ov" and tabbedMode then
 			Chili.Screen0:AddChild(window)
+			window:BringToFront()
 			tabbedMode = false
 		end
 	end
@@ -659,6 +672,10 @@ end
 MakeMinimapWindow = function()
 	if (window) then
 		window:Dispose()
+	end
+	
+	if options.disableMinimap.value then
+		return
 	end
 	
 	-- Set the size for the default settings.
@@ -768,7 +785,7 @@ MakeMinimapWindow = function()
 		parent = Chili.Screen0,
 		name   = 'Minimap Window',
 		color = {0, 0, 0, 0},
-		padding = {0, -1, 0, -1},
+		padding = {0, 0, 0, 0},
 		width = (window and window.width) or width,
 		height = (window and window.height) or height,
 		x = (window and window.x) or 0,
@@ -782,10 +799,11 @@ MakeMinimapWindow = function()
 		dragUseGrip = false,
 		minWidth = 100,
 		minHeight = 100,
-		maxWidth = screenWidth*0.8,
-		maxHeight = screenHeight*0.8,
+		maxWidth = screenWidth,
+		maxHeight = screenHeight,
 		fixedRatio = options.use_map_ratio.value == 'arwindow',
 	}
+	window:BringToFront()
 	
 	options.use_map_ratio.OnChange(options.use_map_ratio)
 	
@@ -799,7 +817,7 @@ MakeMinimapWindow = function()
 		dockable = false;
 		draggable = false,
 		resizable = false,
-		padding = {0, 0, 0, -1},
+		padding = {0, 0, 0, 0},
 		children = {
 			map_panel,
 			((not options.hidebuttons.value) and buttons_panel) or nil,
@@ -1008,7 +1026,7 @@ end
 
 function widget:DrawScreen() 
 	local cs = Spring.GetCameraState()
-	if (window.hidden or cs.name == "ov") then 
+	if (options.disableMinimap.value or window.hidden or cs.name == "ov") then 
 		gl.ConfigMiniMap(0,0,0,0) --// a phantom map still clickable if this is not present.
 		lx = 0
 		ly = 0

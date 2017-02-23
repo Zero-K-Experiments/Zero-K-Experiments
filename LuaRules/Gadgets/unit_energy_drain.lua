@@ -118,14 +118,14 @@ function gadget:GameFrame(n)
 			local newUpkeep, upkeepPerUpdate = GetUnitUpkeep(unitID, def)
 			
 			if newUpkeep ~= data.oldUpkeep then
-				GG.StartMiscPriorityResourcing(unitID, data.teamID, newUpkeep, true, 3)
+				GG.StartMiscPriorityResourcing(unitID, newUpkeep, true, 3)
 				
 				data.oldUpkeep = newUpkeep
 				data.resTable.e = upkeepPerUpdate
 			end
 
 			-- Check drain
-			local enabled = (GG.AllowMiscPriorityBuildStep(unitID, data.teamID, true) and spUseUnitResource(unitID, data.resTable))
+			local enabled = (GG.AllowMiscPriorityBuildStep(unitID, data.teamID, true, data.resTable) and spUseUnitResource(unitID, data.resTable))
 			
 			if enabled ~= data.oldEnabled then
 				spSetUnitRulesParam(unitID, "forcedOff", (enabled and 0) or 1, INLOS_ACCESS)
@@ -149,7 +149,7 @@ end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	if drainUnitDefID[unitDefID] and not unitMap[unitID] then
-		GG.AddMiscPriorityUnit(unitID, teamID)
+		GG.AddMiscPriorityUnit(unitID)
 	end
 end
 

@@ -109,6 +109,26 @@ local function ReadFile(zip, name, file)
 end
 GG.SaveLoad.ReadFile = ReadFile
 
+local function FacingFromHeading (h)
+	if h > 0 then
+		if h < 8192 then
+			return 's'
+		elseif h < 24576 then
+			return 'e'
+		else
+			return 'n'
+		end
+	else
+		if h >= -8192 then
+			return 's'
+		elseif h >= -24576 then
+			return 'w'
+		else
+			return 'n'
+		end
+	end
+end
+
 local function boolToNum(bool)
 	if bool then return 1
 	else return 0 end
@@ -192,15 +212,18 @@ local function LoadUnits()
 		-- with that unitID then the new unit will fail to be created. The old unit
 		-- do not immediately de-allocate their ID on Spring.DestroyUnit so some blocking
 		-- can occur with explicitly set IDs.
-		local newID = spCreateUnit(data.unitDefName, px, py, pz, 0, data.unitTeam, isNanoFrame, false)
+		local newID = spCreateUnit(data.unitDefName, px, py, pz, FacingFromHeading(data.heading), data.unitTeam, isNanoFrame, false)
 		if newID then
 			data.newID = newID
 			-- position and velocity
 			spSetUnitVelocity(newID, unpack(data.vel))
 			--spSetUnitDirection(newID, unpack(data.dir))	-- FIXME: callin does not exist
-			Spring.MoveCtrl.Enable(newID)
-			Spring.MoveCtrl.SetHeading(newID, data.heading)	-- workaround?
-			Spring.MoveCtrl.Disable(newID)
+			
+			if not UnitDefNames[data.unitDefName].isBuilding then
+				Spring.MoveCtrl.Enable(newID)
+				Spring.MoveCtrl.SetHeading(newID, data.heading)	-- workaround?
+				Spring.MoveCtrl.Disable(newID)
+			end
 			-- health
 			spSetUnitMaxHealth(newID, data.maxHealth)
 			spSetUnitHealth(newID, {health = data.health, capture = data.captureProgress, paralyze = data.paralyzeDamage, build = data.buildProgress})
@@ -760,10 +783,8 @@ local function SaveUnits()
 		-- save rulesparams
 		unitInfo.rulesParams = {}		
 		local params = Spring.GetUnitRulesParams(unitID)
-		for i=1,#params do
-			for name,value in pairs(params[i]) do
-				unitInfo.rulesParams[name] = value 
-			end
+		for name,value in pairs(params) do
+			unitInfo.rulesParams[name] = value 
 		end
 	end
 	savedata.unit = data
@@ -793,6 +814,39 @@ local function SaveFeatures()
 	savedata.feature = data
 end
 
+local function GetProjectileSaveInfo(projectileID)
+	local isWeapon, isPiece = Spring.GetProjectileType(projectileID)
+	if not isWeapon then
+		return
+	end
+	
+	local projectileInfo = {}
+	-- basic projectile information
+	local projectileDefID = spGetProjectileDefID(projectileID)
+	projectileInfo.projectileDefID = projectileDefID
+	projectileInfo.teamID = spGetProjectileTeamID(projectileID)
+	projectileInfo.ownerID = spGetProjectileOwnerID(projectileID)
+	local timeToLive = spGetProjectileTimeToLive(projectileID)
+	projectileInfo.timeToLive = timeToLive
+	-- save position/velocity
+	projectileInfo.pos = {spGetProjectilePosition(projectileID)}
+	projectileInfo.velocity = {spGetProjectileVelocity(projectileID)}
+	-- save tracking and interception
+	local targetType, target = spGetProjectileTarget(projectileID)
+	projectileInfo.targetType = targetType
+	projectileInfo.target = target
+	projectileInfo.isIntercepted = spGetProjectileIsIntercepted(projectileID)
+	
+	local wd = WeaponDefs[projectileDefID]
+	if wd and wd.type == "StarburstLauncher" and wd.customParams then
+		local cp = wd.customParams
+		-- Some crazyness with how these values are interpreted:
+		-- flightTime (ttl) is multiplied by 32 when weaponDefs are loaded. 
+		-- weaponTimer (upTime) is multiplied by 30 when the weapon is loaded.
+		projectileInfo.upTime = math.max(0, cp.weapontimer*30 - math.max(0, cp.flighttime*32 - timeToLive))
+	end
+	return projectileInfo
+end
 
 local function SaveProjectiles()
 	local data = {}
@@ -800,32 +854,9 @@ local function SaveProjectiles()
 	-- Collect projectiles for 600 outside the map to get wobbly ones or those chasing flying units.
 	for i = 1, #projectiles do
 		local projectileID = projectiles[i]
-		data[projectileID] = {}
-		local projectileInfo = data[projectileID]
-		
-		-- basic projectile information
-		local projectileDefID = spGetProjectileDefID(projectileID)
-		projectileInfo.projectileDefID = projectileDefID
-		projectileInfo.teamID = spGetProjectileTeamID(projectileID)
-		projectileInfo.ownerID = spGetProjectileOwnerID(projectileID)
-		local timeToLive = spGetProjectileTimeToLive(projectileID)
-		projectileInfo.timeToLive = timeToLive
-		-- save position/velocity
-		projectileInfo.pos = {spGetProjectilePosition(projectileID)}
-		projectileInfo.velocity = {spGetProjectileVelocity(projectileID)}
-		-- save tracking and interception
-		local targetType, target = spGetProjectileTarget(projectileID)
-		projectileInfo.targetType = targetType
-		projectileInfo.target = target
-		projectileInfo.isIntercepted = spGetProjectileIsIntercepted(projectileID)
-		
-		local wd = WeaponDefs[projectileDefID]
-		if wd and wd.type == "StarburstLauncher" and wd.customParams then
-			local cp = wd.customParams
-			-- Some crazyness with how these values are interpreted:
-			-- flightTime (ttl) is multiplied by 32 when weaponDefs are loaded. 
-			-- weaponTimer (upTime) is multiplied by 30 when the weapon is loaded.
-			projectileInfo.upTime = math.max(0, cp.weapontimer*30 - math.max(0, cp.flighttime*32 - timeToLive))
+		local projectileInfo = GetProjectileSaveInfo(projectileID)
+		if projectileInfo then
+			data[projectileID] = projectileInfo
 		end
 	end
 	savedata.projectile = data
@@ -840,10 +871,8 @@ local function SaveGeneralInfo()
 	-- gameRulesParams
 	data.gameRulesParams = {}
 	local gameRulesParams = spGetGameRulesParams()
-	for i=1,#gameRulesParams do
-		for name,value in pairs(gameRulesParams[i]) do
-			data.gameRulesParams[name] = value 
-		end
+	for name,value in pairs(gameRulesParams) do
+		data.gameRulesParams[name] = value 
 	end
 	
 	-- team stuff - rulesparams, resources
@@ -858,10 +887,8 @@ local function SaveGeneralInfo()
 		
 		local rulesParams = spGetTeamRulesParams(teamID) or {}
 		data.teams[teamID].rulesParams = {}
-		for j=1,#rulesParams do
-			for name,value in pairs(rulesParams[j]) do
-				data.teams[teamID].rulesParams[name] = value 
-			end
+		for name,value in pairs(rulesParams) do
+			data.teams[teamID].rulesParams[name] = value 
 		end
 	end
 	

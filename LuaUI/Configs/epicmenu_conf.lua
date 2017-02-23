@@ -183,11 +183,14 @@ confdata.subMenuIcons = {
 	['Settings/HUD Panels/Replay Controls'] 		= imgPath..'epicmenu/key_play_pause.png',
 	['Settings/HUD Panels/Unit Stats Help Window'] 	= imgPath..'advplayerslist/random.png',
 	['Settings/HUD Panels/Player List'] 			= imgPath..'epicmenu/people.png',
-	['Settings/HUD Panels/Docking'] 				= imgPath..'epicmenu/anchor.png',
+	['Settings/HUD Panels/Extras/Docking'] 				= imgPath..'epicmenu/anchor.png',
 	['Settings/HUD Panels/Selected Units Panel'] 	= imgPath..'epicmenu/grid.png',
 }
 
 -- SETUP MENU HERE
+
+ShButton('', 'Save Game', (function() if WG.SaveGame then WG.SaveGame.CreateSaveWindow() end end), nil, nil, imgPath .. 'commands/Bold/unload.png')
+ShButton('', 'Load Game', (function() if WG.SaveGame then WG.SaveGame.CreateLoadWindow() end end), nil, nil, imgPath .. 'commands/Bold/load.png')
 
 --- GENERAL SETTINGS --- settings about settings
 local generalPath = 'Settings/Reset Settings'
@@ -205,7 +208,6 @@ local generalPath = 'Settings/Reset Settings'
 						'mapborder 1',
 						"luaui disablewidget SelectionHalo",
 						"luaui disablewidget SelectionCircle",
-						"luaui disablewidget UnitShapes",
 					}
 				end,
 				'Use this if your performance is poor'
@@ -238,10 +240,7 @@ local gameSpeedPath = 'Game/Game Speed'
 	ShLabel(gamePath, '')
 	ShButton(gamePath, 'Choose Commander Type', (function() spSendCommands{"luaui showstartupinfoselector"} end), nil, nil, imgPath..'epicmenu/corcommander.png' ) 
 	
-	--ShButton(gamePath, 'Save Game', (function() WG.SaveGame.CreateWindow(true) end), nil, nil, nil)
-	--ShButton(gamePath, 'Load Game', (function() WG.SaveGame.CreateWindow(false) end), nil, nil, nil)
-	
---	ShButton(gamePath, 'Constructor Auto Assist', function() spSendCommands{"luaui togglewidget Constructor Auto Assist"} end)
+	--ShButton(gamePath, 'Constructor Auto Assist', function() spSendCommands{"luaui togglewidget Constructor Auto Assist"} end)
 
 -- global build command
 local GBCPath = 'Game/Worker AI'
@@ -249,7 +248,7 @@ local gbcinfo = "Global Build Command gives you a global, persistent build queue
 "then give any worker build-related commands. Placing buildings on top of existing jobs while holding \255\200\200\200Shift\255\255\255\255 cancels them, and without shift replaces them. \n" ..
 "You can also exclude workers from GBC's control by using the state toggle button in the unit's orders menu. " ..
 "Units also get a job area removal command, the default hotkey is \255\255\90\90alt-s\255\255\255\255.\n \n" .. "It can also handle repair/reclaim/res, and automatically converts area res to reclaim for targets that cannot be resurrected.\n \n"
-ShButton(GBCPath, 'Toggle Global Build Command', function() Spring.SendCommands{"luaui togglewidget Global Build Command"} end, gbcinfo)
+ShButton(GBCPath, 'Toggle Global Build Command', function() spSendCommands{"luaui togglewidget Global Build Command"} end, gbcinfo)
 
 --- CAMERA ---
 local cameraPath = 'Settings/Camera'
@@ -313,6 +312,7 @@ local oldCameraPath = 'Settings/Camera/Old Camera Shortcuts'
 --- HUD Panels --- Only settings that pertain to windows/icons at the drawscreen level should go here.
 local HUDPath = 'Settings/HUD Panels/Extras'
 	ShButton(HUDPath, 'Tweak Mode (Esc to exit)', 'luaui tweakgui', 'Tweak Mode. Move and resize parts of the user interface. (Hit Esc to exit)')
+	ShButton(HUDPath .. "/Display Keys", 'Toggle input visualizer', function() spSendCommands{"luaui togglewidget Display Keys"} end, "Shows pressed key combinations and mouse buttons.")
 
 local HUDSkinPath = 'Settings/HUD Panels/Extras/HUD Skin'
 	AddOption(HUDSkinPath,
@@ -326,9 +326,11 @@ local HUDSkinPath = 'Settings/HUD Panels/Extras/HUD Skin'
 			{ key = 'Blueprint', name = 'Blueprint', },
 			{ key = 'Carbon', name = 'Carbon', },
 			{ key = 'Robocracy', name = 'Robocracy', },
+			--{ key = 'DarkGlass', name = 'DarkGlass', }, -- Broken
 			{ key = 'DarkHive', name = 'DarkHive', },
-			{ key = 'Evolved', name = 'Evolved', },
 			{ key = 'DarkHiveSquare', name = 'DarkHive (square)', },
+			{ key = 'Evolved', name = 'Evolved', },
+			--{ key = 'Glass', name = 'Glass', }, -- Broken
 			{ key = 'Twilight', name = 'Twilight', },
 		},
 	})
@@ -353,8 +355,8 @@ local pathSelectionPlatters = 'Settings/Interface/Selection/Team Platters'
 local pathSelectionBluryHalo = 'Settings/Interface/Selection/Blurry Halo Selections'
 	ShButton(pathSelectionShapes, 'Toggle Selection Shapes', function() spSendCommands{"luaui togglewidget UnitShapes"} end, "Draws coloured shapes under selected units")
 	ShButton(pathSelectionXrayHalo, 'Toggle Selection XRay&Halo', function() spSendCommands{"luaui togglewidget XrayHaloSelections"} end, "Highlights bodies of selected units")	
-	ShButton(pathSelectionPlatters, 'Toggle Team Platters', function() Spring.SendCommands{"luaui togglewidget TeamPlatter"} end, "Puts team-coloured disk below units")
-	ShButton(pathSelectionBluryHalo, 'Toggle Blurry Halo Selections', function() Spring.SendCommands{"luaui togglewidget Selection BlurryHalo"} end, "Places blurry halo around selected units")
+	ShButton(pathSelectionPlatters, 'Toggle Team Platters', function() spSendCommands{"luaui togglewidget TeamPlatter"} end, "Puts team-coloured disk below units")
+	ShButton(pathSelectionBluryHalo, 'Toggle Blurry Halo Selections', function() spSendCommands{"luaui togglewidget Selection BlurryHalo"} end, "Places blurry halo around selected units")
 
   
 --- MISC --- Ungrouped. If some of the settings here can be grouped together, make a new subsection or its own section.
@@ -466,7 +468,7 @@ local pathGraphicsMap = 'Settings/Graphics/Map Detail'
 		step = 0.01,
 		value = 1,
 		icon = imgPath..'epicmenu/stock_brightness.png',
-		OnChange = function(self) Spring.SendCommands{"luaui enablewidget Darkening", "luaui darkening " .. 1-self.value} end, 
+		OnChange = function(self) spSendCommands{"luaui enablewidget Darkening", "luaui darkening " .. 1-self.value} end, 
 	} )
 
 	AddOption(pathGraphicsMap, 
@@ -478,7 +480,7 @@ local pathGraphicsMap = 'Settings/Graphics/Map Detail'
 		max = 256, 
 		step = 8,
 		value = 128,
-		OnChange = function(self) Spring.SendCommands{"GroundDetail " .. self.value} end, 
+		OnChange = function(self) spSendCommands{"GroundDetail " .. self.value} end, 
 	})
 
 	AddOption(pathGraphicsMap, 
@@ -504,7 +506,7 @@ local pathGraphicsExtras = 'Settings/Graphics/Effects'
 		step = 250,
 		value = 10000,
 		springsetting = 'MaxParticles',
-		OnChange=function(self) Spring.SendCommands{"maxparticles " .. self.value } end, 
+		OnChange=function(self) spSendCommands{"maxparticles " .. self.value } end, 
 	} )
 	ShButton(pathGraphicsExtras, 'Toggle Lups (Lua Particle System)', function() spSendCommands{'luaui togglewidget LupsManager','luaui togglewidget Lups'} end )
 	ShButton(pathGraphicsExtras, 'Toggle Nightvision', function() spSendCommands{'luaui togglewidget Nightvision Shader'} end, 'Applies a nightvision filter to screen')
@@ -521,7 +523,7 @@ local pathUnitVisiblity = 'Settings/Graphics/Unit Visibility'
 		min = 1, 
 		max = 10000,
 		springsetting = 'UnitLodDist',
-		OnChange = function(self) Spring.SendCommands{"distdraw " .. self.value} end 
+		OnChange = function(self) spSendCommands{"distdraw " .. self.value} end 
 	} )
 	AddOption(pathUnitVisiblity,
 	{
@@ -530,7 +532,7 @@ local pathUnitVisiblity = 'Settings/Graphics/Unit Visibility'
 	  min = 1, 
 	  max = 1000,
 	  springsetting = 'UnitIconDist',
-	  OnChange = function(self) Spring.SendCommands{"disticon " .. self.value} end 
+	  OnChange = function(self) spSendCommands{"disticon " .. self.value} end 
 	  } )
 	AddOption(pathUnitVisiblity,
 	{
@@ -543,7 +545,7 @@ local pathUnitVisiblity = 'Settings/Graphics/Unit Visibility'
 	ShButton(pathUnitVisiblity,'Toggle Unit Halos', function() spSendCommands{"luaui togglewidget Halo"} end, "Shows halo around units")
 	
 	local pathSpotter = 'Settings/Graphics/Unit Visibility/Spotter'
-		ShButton(pathSpotter, 'Toggle Unit Spotter', function() Spring.SendCommands{"luaui togglewidget Spotter"} end, "Puts team-coloured blob below units")
+		ShButton(pathSpotter, 'Toggle Unit Spotter', function() spSendCommands{"luaui togglewidget Spotter"} end, "Puts team-coloured blob below units")
 	local pathXrayShader = 'Settings/Graphics/Unit Visibility/XRay Shader'
 		ShButton(pathXrayShader, 'Toggle XRay Shader', function() spSendCommands{"luaui togglewidget XrayShader"} end, "Highlights edges of units")
 	local pathUnitOutline = 'Settings/Graphics/Unit Visibility/Outline'

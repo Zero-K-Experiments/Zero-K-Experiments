@@ -28,6 +28,7 @@ Object = {
   OnMouseOver     = {},
   OnMouseOut      = {},
   OnKeyPress      = {},
+  OnTextInput     = {},
   OnFocusUpdate   = {},
 
   disableChildrenHitTest = false, --// if set childrens are not clickable/draggable etc - their mouse events are not processed
@@ -208,7 +209,12 @@ function Object:SetParent(obj)
     self.parent = nil
     return
   end
-
+  
+  -- Children always appear to visible when they recieve new parents because they
+  -- are added to the visible child list.
+  self.visible = true
+  self.hidden = false
+  
   self.parent = MakeWeakLink(obj, self.parent)
 
   self:Invalidate()
@@ -803,6 +809,14 @@ function Object:LocalToObject(x, y, obj)
   return self.parent:LocalToObject(x, y, obj)
 end
 
+
+function Object:IsVisibleOnScreen()
+  if (not self.parent) or (not self.visible) then
+    return false
+  end
+  return (self.parent):IsVisibleOnScreen()
+end
+
 --//=============================================================================
 
 function Object:_GetMaxChildConstraints(child)
@@ -908,6 +922,15 @@ end
 
 function Object:KeyPress(...)
   if (self:CallListeners(self.OnKeyPress, ...)) then
+    return self
+  end
+
+  return false
+end
+
+
+function Object:TextInput(...)
+  if (self:CallListeners(self.OnTextInput, ...)) then
     return self
   end
 

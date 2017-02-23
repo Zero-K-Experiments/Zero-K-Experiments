@@ -214,13 +214,16 @@ end
 local function getEngineArrays(statistic, labelCaption)
 	local teamScores = {}
 	local teams	= Spring.GetTeamList()
-	local graphLength = Spring.GetTeamStatsHistory(0)-1
+	local graphLength = Spring.GetTeamStatsHistory(0) - 1
 	local generalHistory = Spring.GetTeamStatsHistory(0, 0, graphLength)
-	local time = generalHistory[graphLength]["time"]
+	local totalTime = 0
+	if generalHistory and generalHistory[graphLength] then
+		totalTime = generalHistory[graphLength]["time"] or 0
+	end
 	--Applies label of the selected graph at bottom of window
 	graphLabel:SetCaption(labelCaption)
 	
-	graphTime:SetCaption("Total Time: " .. formatTime(time))
+	graphTime:SetCaption("Total Time: " .. formatTime(totalTime))
 	curGraph.caption = labelCaption
 	curGraph.name = statistic
 
@@ -288,12 +291,12 @@ function loadpanel()
 	local screen0 = Chili.Screen0
 	local selW = 150
 
-	window0 = Chili.Panel:New {
+	window0 = Chili.Control:New {
 		x = "0",
 		y = "0",
 		width = "100%", 
 		height = "100%",
-		padding = {5,5,5,5}
+		padding = {0,0,0,4}
 	}
 	lineLabels 	= Chili.Control:New {
 		parent = window0,
@@ -315,7 +318,7 @@ function loadpanel()
 	}
 	graphPanel = Chili.Panel:New {
 		parent = window0,
-		x = selW, 
+		x = selW + 4, 
 		right = 30,
 		y = 0, 
 		bottom = 40,

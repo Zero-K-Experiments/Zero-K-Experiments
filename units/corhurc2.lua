@@ -30,6 +30,7 @@ unitDef = {
     helptext_fr    = [[Une escardre de Phoenix est une des pires chose qui puisse apparaître sur les radars ennemis. Rapides et efficaces, le Firestorm tapisse le sol de bombes au napalm faisant des dégâts r l'impact et sur la durée.]],
 	helptext_de    = [[Die Napalmbomben des Firestorms dezimieren große Haufen an Einheiten und leichten Bauwerken.]],
 	modelradius    = [[10]],
+	requireammo    = [[1]],
   },
 
   explodeAs           = [[GUNSHIPEX]],
@@ -112,7 +113,7 @@ unitDef = {
       model                   = [[wep_b_fabby.s3o]],
       myGravity               = 0.7,
       noSelfDamage            = true,
-      reloadtime              = 10,
+      reloadtime              = 1,
       soundHit                = [[weapon/burn_mixed]],
       soundStart              = [[weapon/bomb_drop_short]],
       sprayangle              = 64000,

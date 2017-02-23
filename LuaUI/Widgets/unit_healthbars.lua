@@ -24,8 +24,6 @@ end
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
---//for backward compatibility with old weapon indexes
-local reverseCompat = ((Game.version:find('91.0') == 1)) and 1 or 0
 
 local barHeight = 3
 local barWidth  = 14  --// (barWidth)x2 total width!!!
@@ -77,6 +75,7 @@ local messages = {
 	teleport = "teleport",
 	ability = "ability",
 	reload = "reload",
+	reammo = "reammo",
 	slow = "slow",
 	goo = "goo",
 	jump = "jump",
@@ -199,6 +198,7 @@ local barColors = {
   stock   = { 0.50,0.50,0.50,barAlpha },
   reload  = { 0.00,0.60,0.60,barAlpha },
   reload2 = { 0.80,0.60,0.00,barAlpha },
+  reammo  = { 0.00,0.60,0.60,barAlpha },
   jump    = { 0.00,0.90,0.00,barAlpha },
   sheath  = { 0.00,0.20,1.00,barAlpha },
   fuel    = { 0.70,0.30,0.00,barAlpha },
@@ -755,15 +755,12 @@ do
       --// STOCKPILE
       if (ci.canStockpile) then
         local stockpileBuild
-		numStockpiled,numStockpileQued,stockpileBuild = GetUnitStockpile(unitID)
+		numStockpiled, numStockpileQued, stockpileBuild = GetUnitStockpile(unitID)
 		if ci.gadgetStock then
 			stockpileBuild = GetUnitRulesParam(unitID,"gadgetStockpile")
 		end
-        if (numStockpiled) then
-          stockpileBuild = stockpileBuild or 0
-          if (stockpileBuild>0) then
-            AddBar(messages.stockpile,stockpileBuild,"stock",(fullText and floor(stockpileBuild*100)..'%') or '')
-          end
+        if numStockpiled and stockpileBuild and (numStockpileQued ~= 0) then
+          AddBar(messages.stockpile,stockpileBuild,"stock",(fullText and floor(stockpileBuild*100)..'%') or '')
         end
       else
         numStockpiled = false
@@ -850,20 +847,25 @@ do
       end
 
 	  --// SPECIAL WEAPON
-	  
 	  local specialReloadState = GetUnitRulesParam(unitID,"specialReloadFrame")
       if (specialReloadState and specialReloadState > gameFrame) then
 		local special = 1-(specialReloadState-gameFrame)/(ud.customParams.specialreloadtime or 1*30)
         AddBar(messages.ability,special,"reload2",(fullText and floor(special*100)..'%') or '')
       end	  
 	  
+	  --// REAMMO
+	  local reammoProgress = GetUnitRulesParam(unitID, "reammoProgress")
+      if reammoProgress then
+        AddBar(messages.reammo,reammoProgress,"reammo",(fullText and floor(reammoProgress*100)..'%') or '')
+      end
+	  
 	  
       --// RELOAD
       if ci.dyanmicComm or (ci.reloadTime >= options.minReloadTime.value) then
         local primaryWeapon = GetUnitRulesParam(unitID, "primary_weapon_override") or ci.primaryWeapon
-        _,reloaded,reloadFrame = GetUnitWeaponState(unitID,primaryWeapon - reverseCompat)
+        _,reloaded,reloadFrame = GetUnitWeaponState(unitID,primaryWeapon)
         if (reloaded==false) then
-		  local reloadTime = Spring.GetUnitWeaponState(unitID, primaryWeapon - reverseCompat , 'reloadTime')
+		  local reloadTime = Spring.GetUnitWeaponState(unitID, primaryWeapon, 'reloadTime')
 		  if (not ci.dyanmicComm) or (reloadTime >= options.minReloadTime.value) then 
 		    ci.reloadTime = reloadTime
 		    -- When weapon is disabled the reload time is constantly set to be almost complete. 

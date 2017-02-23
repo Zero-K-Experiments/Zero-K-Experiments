@@ -27,9 +27,12 @@ unitDef = {
   canPatrol              = true,
   canStop                = true,
   category               = [[UNARMED FLOAT]],
-  collisionVolumeOffsets = [[-15 -20 -15]],
-  collisionVolumeScales  = [[120 120 160]],
+  collisionVolumeOffsets = [[0 5 0]],
+  collisionVolumeScales  = [[48 48 184]],
   collisionVolumeType    = [[cylZ]],
+  selectionVolumeOffsets = [[36 0 0]],
+  selectionVolumeScales  = [[120 50 184]],
+  selectionVolumeType    = [[box]],
   corpse                 = [[DEAD]],
 
   customParams           = {
@@ -38,13 +41,18 @@ unitDef = {
 	helptext_de    = [[Im Shipyard kannst du Schiffe jeder Art und für jeden Zweck bauen.]],
     sortName       = [[7]],
 	unstick_help   = 1,
+    aimposoffset   = [[-25 0 -15]],
+    midposoffset   = [[-25 0 -15]],
+	solid_factory = [[3]],
+	modelradius    = [[50]],
+	solid_factory_rotation = [[1]], -- 90 degrees counter clockwise
   },
 
   energyMake             = 0.3,
   energyUse              = 0,
   explodeAs              = [[LARGE_BUILDINGEX]],
-  footprintX             = 9,
-  footprintZ             = 14,
+  footprintX             = 8,
+  footprintZ             = 12,
   iconType               = [[facship]],
   idleAutoHeal           = 5,
   idleTime               = 1800,
@@ -54,6 +62,7 @@ unitDef = {
   metalMake              = 0.3,
   minCloakDistance       = 150,
   minWaterDepth          = 15,
+  moveState        		 = 1,
   objectName             = [[seafac.s3o]],
   script				 = [[factoryship.lua]],
   seismicSignature       = 4,
@@ -63,7 +72,7 @@ unitDef = {
   turnRate               = 0,
   waterline              = 0,
   workerTime             = 10,
-  yardMap                = [[yyyyyyyyy yoooooooy yoooooooy yooccccoy yooccccoy yooccccoy yooccccoy yooccccoy yooccccoy yooccccoy yooccccoy yooccccoy yocccccoy yocccccoy]],
+  yardMap                = [[oooccccc oooccccc oooccccc oooccccc oooccccc oooccccc oooccccc oooccccc oooccccc oooccccc oooccccc oooccccc]],
 
   featureDefs            = {
 

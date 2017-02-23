@@ -25,6 +25,12 @@ local textConfig = {
 		y = "11%",
 		fontsize = 12,
 	},
+	bottomRightLarge = {
+		name = "bottomRightLarge",
+		right = "14%",
+		bottom = "16%",
+		fontsize = 14,
+	},
 	queue = {
 		name = "queue",
 		right = "18%",
@@ -38,10 +44,10 @@ local textConfig = {
 local buttonLayoutConfig = {
 	command = {
 		image = {
-			x = "9%",
-			y = "9%",
-			right = "9%",
-			height = "82%",
+			x = "7%",
+			y = "7%",
+			right = "7%",
+			bottom = "7%",
 			keepAspect = true,
 		},
 		ClickFunction = CommandClickFunction,
@@ -49,11 +55,23 @@ local buttonLayoutConfig = {
 	build = {
 		image = {
 			x = "5%",
-			y = "3%",
+			y = "4%",
 			right = "5%",
-			bottom = 13,
+			bottom = 12,
 			keepAspect = false,
 		},
+		tooltipPrefix = "Build",
+		showCost = true
+	},
+	buildunit = {
+		image = {
+			x = "5%",
+			y = "4%",
+			right = "5%",
+			bottom = 12,
+			keepAspect = false,
+		},
+		tooltipPrefix = "BuildUnit",
 		showCost = true
 	},
 	queue = {
@@ -199,7 +217,7 @@ local commandPanels = {
 		hotkeyReplacement = "Orders",
 		gridHotkeys = true,
 		disableableKeys = true,
-		buttonLayoutConfig = buttonLayoutConfig.build,
+		buttonLayoutConfig = buttonLayoutConfig.buildunit,
 	},
 }
 
@@ -208,4 +226,23 @@ for i = 1, #commandPanels do
 	commandPanelMap[commandPanels[i].name] = commandPanels[i]
 end
 
-return commandPanels, commandPanelMap, commandDisplayConfig, hiddenCommands, textConfig, buttonLayoutConfig
+local instantCommands = {
+	[CMD.SELFD] = true,
+	[CMD.STOP] = true,
+	[CMD.WAIT] = true,
+	[CMD_FIND_PAD] = true,
+	[CMD_EMBARK] = true,
+	[CMD_DISEMBARK] = true,
+	[CMD_LOADUNITS_SELECTED] = true,
+	[CMD_ONECLICK_WEAPON] = true,
+	[CMD_UNIT_CANCEL_TARGET] = true,
+	[CMD_STOP_NEWTON_FIREZONE] = true,
+	[CMD_RECALL_DRONES] = true,
+	[CMD_MORPH_UPGRADE_INTERNAL] = true,
+	[CMD_UPGRADE_STOP] = true,
+	[CMD_STOP_PRODUCTION] = true,
+	[CMD_RESETFIRE] = true,
+	[CMD_RESETMOVE] = true,
+}
+
+return commandPanels, commandPanelMap, commandDisplayConfig, hiddenCommands, textConfig, buttonLayoutConfig, instantCommands

@@ -135,7 +135,7 @@ local showTidal = false
 if not confdata.description then confdata.description = '' end
 local gameInfoText = ''
 	..Game.modName ..br..br
-	..'Spring Engine version: '..Game.version..br..br	
+	..'Spring Engine version: '..Spring.Utilities.GetEngineVersion()..br..br	
 	..'Map: ' ..Game.mapName ..br
 		
 	..'    Size: '..Game.mapX..' x '..Game.mapY..br        
@@ -495,8 +495,17 @@ local function RemoveAction(cmd, types)
 	return widgetHandler.actionHandler:RemoveAction(widget, cmd, types)
 end
 
-
+local sentBug = false
 local function GetFullKey(path, option)
+	if not option.key then
+		if not sentBug then
+			Spring.Echo("Error, option missing key", path, option)
+			Spring.Utilities.TableEcho(option, "option")
+			Spring.Echo("Error, option missing key", path, option)
+			sentBug = true
+		end
+		return "badKey"
+	end
 	--local curkey = path .. '_' .. option.key
 	local fullkey = ('epic_'.. option.wname .. '_' .. option.key)
 	fullkey = fullkey:gsub(' ', '_')
@@ -672,13 +681,14 @@ local function MakeFlags()
 		y = settings.sub_pos_y,  
 		clientWidth  = window_width,
 		clientHeight = window_height,
+		classname = "main_window_small_tall",
 		maxWidth = 200,
 		parent = screen0,
 		backgroundColor = color.sub_bg,
 		children = {
 			ScrollPanel:New{
-				x=0,y=15,
-				right=5,bottom=0+B_HEIGHT,
+				x=5,y=15,
+				right=5,bottom=3+B_HEIGHT,
 				
 				children = {
 					Grid:New{
@@ -691,7 +701,7 @@ local function MakeFlags()
 				}
 			},
 			--close button
-			Button:New{ caption = 'Close',  x=10, y=0-B_HEIGHT, bottom=5, right=5,
+			Button:New{ caption = 'Close',  x=5, y=0-B_HEIGHT, bottom=5, right=5,
 				name = 'makeFlagCloseButton';
 				OnClick = { function(self) window_flags:Dispose(); window_flags = nil; end },  
 				width=window_width-20, 
@@ -713,13 +723,14 @@ local function MakeHelp(caption, text)
 		y = settings.sub_pos_y,  
 		clientWidth  = window_width,
 		clientHeight = window_height,
+		classname = "main_window_small",
 		parent = screen0,
 		backgroundColor = color.sub_bg,
 		children = {
 			ScrollPanel:New{
-				x=0,y=15,
+				x=5,y=15,
 				right=5,
-				bottom=B_HEIGHT,
+				bottom=B_HEIGHT + 3,
 				height = window_height - B_HEIGHT*3 ,
 				children = {
 					TextBox:New{ x=0,y=10, text = text, textColor = color.sub_fg, width  = window_width - 40, }
@@ -728,7 +739,7 @@ local function MakeHelp(caption, text)
 			--Close button
 			Button:New{ 
 				caption = 'Close', OnClick = { function(self) self.parent:Dispose() end }, 
-				x=10, bottom=1, right=50, height=B_HEIGHT,
+				x=45, bottom=1, right=45, height=B_HEIGHT,
 				name = 'makeHelpCloseButton';
 				--backgroundColor = color.sub_close_bg, textColor = color.sub_close_fg, 
 				--classname = "navigation_button",
@@ -1383,6 +1394,7 @@ local function MakeKeybindWindow( path, option, hotkey )
 		caption = 'Set a HotKey',
 		x = (scrW-window_width)/2,  
 		y = (scrH-window_height)/2,  
+		classname = "main_window_small_flat",
 		clientWidth  = window_width,
 		clientHeight = window_height,
 		parent = screen0,
@@ -1390,8 +1402,8 @@ local function MakeKeybindWindow( path, option, hotkey )
 		resizable=false,
 		draggable=false,
 		children = {
-			Label:New{ y=10, caption = 'Press a key combo', textColor = color.sub_fg, },
-			Label:New{ y=30, caption = '(Hit "Escape" to clear keybinding)', textColor = color.sub_fg, },
+			Label:New{x = 8, y=20, caption = 'Press a key combo', textColor = color.sub_fg, },
+			Label:New{x = 8, y=38, caption = '(Hit "Escape" to clear keybinding)', textColor = color.sub_fg, },
 		}
 	}
 end
@@ -1489,11 +1501,11 @@ local function MakeHotkeyedControl(control, path, option, icon, noHotkey)
 	}
 end
 
+local unresetableSettings = {button = true, label = true, menu = true}
 local function ResetWinSettings(path)
 	for _,elem in ipairs(pathoptions[path]) do
 		local option = elem[2]
-		
-		if not ({button=1, label=1, menu=1})[option.type] then
+		if not (unresetableSettings[option.type] or option.developmentOnly) then
 			if option.default ~= nil then --fixme : need default
 				if option.type == 'bool' or option.type == 'number' then
 					option.value = option.valuelist and GetIndex(option.valuelist, option.default) or option.default
@@ -1527,7 +1539,7 @@ end
 local function SearchElement(termToSearch,path)
 	local filtered_pathOptions = {}
 	local tree_children = {} --used for displaying buttons
-	local maximumResult = 23 --maximum result to display. Any more it will just say "too many"
+	local maximumResult = 50 --maximum result to display. Any more it will just say "too many"
 	
 	local DiggDeeper = function() end --must declare itself first before callin self within self
 	DiggDeeper = function(currentPath)
@@ -1549,7 +1561,7 @@ local function SearchElement(termToSearch,path)
 				if option.desc and option.desc:find(currentPath) and option.name:find("...") then --this type of button is defined in AddOption(path,option,wname) (a link into submenu)
 					local menupath = option.desc
 					if pathoptions[menupath] then
-						if #pathoptions[menupath] >= 1 then
+						if #pathoptions[menupath] >= 1 and menupath ~= "" then
 							DiggDeeper(menupath) --travel into & search into this branch
 						else --dead end
 							hide = true
@@ -1887,9 +1899,9 @@ MakeSubWindow = function(path, pause)
 	local window_children = {}
 	window_children[#window_children+1] =
 		ScrollPanel:New{
-			x=0,y=15,
-			bottom=B_HEIGHT+20,
-			width = '100%',
+			x=5,y=15,
+			bottom=B_HEIGHT+26,
+			right = 5,
 			children = {
 				StackPanel:New{
 					x=0,
@@ -1912,8 +1924,8 @@ MakeSubWindow = function(path, pause)
 	window_height = window_height + B_HEIGHT
 	
 	local buttonBar = Grid:New{
-		x=0;bottom=0;
-		right=10,height=B_HEIGHT,
+		x=5;bottom=5;
+		right=5,height=B_HEIGHT,
 		columns = 4,
 		padding = {0, 0, 0, 0},
 		itemMargin = {0, 0, 0, 0}, --{1, 1, 1, 1},
@@ -1926,7 +1938,7 @@ MakeSubWindow = function(path, pause)
 		--x=0,
 		width=180;
 		right = 5,
-		bottom=B_HEIGHT;
+		bottom=B_HEIGHT + 5;
 		
 		caption = 'Show Advanced Settings', 
 		checked = settings.showAdvanced, 
@@ -2001,10 +2013,11 @@ MakeSubWindow = function(path, pause)
 	window_sub_cur = Window:New{  
 		caption= (searchedElement and "Searching in: \"" .. path .. "...\"") or ((not root) and (path) or "MAIN MENU"),
 		x = settings.sub_pos_x,  
-		y = settings.sub_pos_y, 
+		y = math.floor(settings.sub_pos_y), 
 		clientWidth = window_width,
+		classname = "main_window_tall",
 		--clientHeight = window_height+B_HEIGHT*4,
-		height = settings.subwindow_height,
+		height = math.floor(settings.subwindow_height),
 		minWidth = 250,
 		minHeight = 350,		
 		--resizable = false,
@@ -2082,8 +2095,9 @@ local function MakeExitConfirmWindow(text, action)
 	window_exit_confirm = Window:New{
 		name='exitwindow_confirm',
 		parent = screen0,
-		x = screen_width/2 - menu_width/2,  
-		y = screen_height/2 - menu_height/2,  
+		x = math.floor(screen_width/2 - menu_width/2),  
+		y = math.floor(screen_height/2 - menu_height/2),  
+		classname = "main_window_small_flat",
 		dockable = false,
 		clientWidth = menu_width,
 		clientHeight = menu_height,
@@ -2165,7 +2179,7 @@ local function GetMainPanel(parent, width, height)
 				padding = {0,2,0,0},
 				itemMargin = {1,0,0,0},
 				children = {
-					Image:New{ file= LUAUI_DIRNAME .. 'Images/clock.png', width = 20,height = 20,  },
+					Image:New{ file= LUAUI_DIRNAME .. 'Images/clock.png', width = 20,height = 26,  },
 					lbl_clock,
 				},
 			}
@@ -2182,7 +2196,7 @@ local function GetMainPanel(parent, width, height)
 			padding = {0,2,0,0},
 			itemMargin = {1,0,0,0},
 			children = {
-				Image:New{ file= LUAUI_DIRNAME .. 'Images/epicmenu/game.png', width = 20,height = 20,  },
+				Image:New{ file= LUAUI_DIRNAME .. 'Images/epicmenu/game.png', width = 20,height = 26,  },
 				lbl_gtime,
 			},
 		}
@@ -2395,7 +2409,7 @@ local function GetMainPanel(parent, width, height)
 		name= 'subMenuButton',
 		OnClick = { function() ActionSubmenu(nil,'') end, },
 		textColor = color.game_fg,
-		height = height - 6,
+		height = height - 9,
 		width = B_WIDTH_TOMAINMENU + 1,
 		caption = "Menu (\255\0\255\0"..WG.crude.GetHotkey("crudesubmenu").."\008)",
 		padding = btn_padding,
@@ -2413,7 +2427,7 @@ local function GetMainPanel(parent, width, height)
 			name = 'lobbyButton',
 			OnClick = { function() ViewLobby() end, },
 			textColor = color.game_fg,
-			height = height - 6,
+			height = height - 9,
 			width = B_WIDTH_TOMAINMENU + 1,
 			caption = "Lobby (\255\0\255\0"..WG.crude.GetHotkey("viewlobby").."\008)",
 			padding = btn_padding,
@@ -2468,7 +2482,7 @@ local function GetMainPanel(parent, width, height)
 		backgroundColor = color.empty,
 		color = color.empty,
 		margin = {0,0,0,0},
-		padding = {0,0,3,5},
+		padding = {0,0,3,6},
 		parent = parent,
 		
 		children = {
@@ -2483,7 +2497,7 @@ local function GetMainPanel(parent, width, height)
 				itemMargin = {1,1,1,1},
 				autoArrangeV = false,
 				autoArrangeH = false,
-						
+				
 				children = stackChildren,
 			}
 		}
@@ -2530,7 +2544,7 @@ local function MakeMenuBar()
 		dockable = true,
 		backgroundColor = color.empty,
 		color = color.empty,
-		padding = {-1,0,0,0},
+		padding = {0,0,0,0},
 		parent = screen0,
 		OnResize = {
 			function (obj)
@@ -2552,8 +2566,6 @@ local function MakeMenuBar()
 		y = 0,
 		right = 0,
 		bottom = 0,
-		backgroundColor = color.main_bg,
-		color = color.main_bg,
 		parent = window_crude,
 	}
 	settings.show_crudemenu = true
@@ -2598,7 +2610,10 @@ local function MakeQuitButtons()
 						if (paused) and AllowPauseOnMenuChange() then
 							spSendCommands("pause")
 						end
-						spSendCommands{"spectator"} 
+						local frame = Spring.GetGameFrame()
+						if frame and frame > 0 then
+							spSendCommands{"spectator"}
+						end
 					end)
 				end
 			end,
@@ -2686,11 +2701,11 @@ function widget:Initialize()
 	-- Set default positions of windows on first run
 	local screenWidth, screenHeight = Spring.GetWindowGeometry()
 	if not settings.subwindow_height then
-		settings.subwindow_height = 550
+		settings.subwindow_height = 582
 	end
 	if not settings.sub_pos_x then
-		settings.sub_pos_x = screenWidth/2 - 150
-		settings.sub_pos_y = screenHeight/2 - settings.subwindow_height * 0.55
+		settings.sub_pos_x = math.floor(screenWidth/2 - 150)
+		settings.sub_pos_y = math.floor(screenHeight/2 - settings.subwindow_height * 0.55)
 	end
 	
 	if not keybounditems then
@@ -2860,6 +2875,10 @@ function widget:Initialize()
 		panel_background.TileImageFG = newClass.TileImageFG
 		--panel_background.backgroundColor = newClass.backgroundColor
 		panel_background.TileImageBK = newClass.TileImageBK
+		if newClass.padding then
+			panel_background.padding = newClass.padding
+			panel_background:UpdateClientArea()
+		end
 		panel_background:Invalidate()
 	end
 		
@@ -3107,6 +3126,7 @@ end
 
 function ViewLobby()
 	if Spring.SendLuaMenuMsg then
+		Spring.Echo("SendLuaMenuMsg showLobby")
 		Spring.SendLuaMenuMsg("showLobby")
 	end
 end
