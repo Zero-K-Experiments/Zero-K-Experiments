@@ -19,7 +19,7 @@ unitDef = {
   corpse                 = [[DEAD]],
 
   customParams           = {
-    helptext       = [[Cheap, fast, and fragile, this Picket Ship is a good scout and spotter for more expensive ships. In numbers, their disarming missiles are effective against larger targets.]],
+    helptext       = [[Cheap, fast, and fragile, this Pocket Ship is a good scout and spotter for more expensive ships. In numbers, their disarming missiles can be effective against larger targets.]],
     modelradius    = [[12]],
     turnatfullspeed = [[1]],
   },
@@ -104,6 +104,7 @@ unitDef = {
       turnRate                = 60000,
       turret                  = true,
       weaponAcceleration      = 350,
+      weaponTimer             = 5,
       weaponType              = [[MissileLauncher]],
       weaponVelocity          = 750,
     },
@@ -122,12 +123,15 @@ unitDef = {
         disarmDamageMult = 5.0,
         disarmDamageOnly = 0,
         disarmTimer      = 3, -- seconds
-		
+	
 		light_color = [[1 1 1]],
+
+        timeslow_damagefactor = 2,
+
       },
 	  
       damage                  = {
-        default = 34.1,
+        default = 15,
         subs    = 5,
       },
 
@@ -141,7 +145,7 @@ unitDef = {
       impulseFactor           = 0.4,
       interceptedByShieldType = 2,
       model                   = [[wep_armpt.s3o]],
-      range                   = 330,
+      range                   = 300,
       reloadtime              = 1.5,
       smokeTrail              = true,
       soundHit                = [[weapon/missile/small_lightning_missile]],
@@ -153,6 +157,7 @@ unitDef = {
       turnRate                = 60000,
       turret                  = true,
       weaponAcceleration      = 300,
+      weaponTimer             = 5,
       weaponType              = [[MissileLauncher]],
       weaponVelocity          = 800,
     },

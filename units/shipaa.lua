@@ -170,7 +170,7 @@ unitDef = {
       },
 
       edgeEffectiveness       = 0.85,
-      explosionGenerator      = [[custom:LARGE_MUZZLE_FLASH_FX]],
+      explosionGenerator      = [[custom:flakplosion]],
       impulseBoost            = 0,
       impulseFactor           = 0,
       interceptedByShieldType = 1,
